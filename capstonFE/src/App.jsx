@@ -1,13 +1,18 @@
-import React, { use, useEffect } from 'react';
-import axios from 'axios';
+import React, { use, useEffect } from "react";
+import axios from "axios";
+import Discover from "./components/Discover";
 function App() {
-  useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_BASE_URL}`)
-      .then((data) => console.log(data))
-      .catch((err) => console.log(err));
-  }, []);
-  return <>Capstone</>;
+	useEffect(() => {
+		axios
+			.get(`${import.meta.env.VITE_API_BASE_URL}`)
+			.then((data) => console.log(data))
+			.catch((err) => console.log(err));
+	}, []);
+	return (
+		<>
+			<Discover />
+		</>
+	);
 }
 
 export default App;
