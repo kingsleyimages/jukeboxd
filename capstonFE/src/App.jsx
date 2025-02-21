@@ -12,34 +12,25 @@ import Login from "./components/Login";
 import Callback from "./components/Callback";
 
 function App() {
-
-	// useEffect(() => {
-	// 	axios
-	// 		.get(`${import.meta.env.VITE_API_BASE_URL}`)
-	// 		.then((data) => console.log(data))
-	// 		.catch((err) => console.log(err));
-	// }, []);
-=======
-
-	return (
-		<>
-			<BrowserRouter>
-				<Navbar />
-				<Routes>
-					<Route element={<ProtectedRoute />}>
-						<Route path="/account" element={<Me />} />
-					</Route>
-					<Route path="/callback" element={<Callback />} />
-					<Route path="/home" element={<Home />} />
-					<Route path="/mixtapes" element={<Mixtapes />} />
-					<Route path="/discover" element={<Discover />} />
-					<Route path="/search" element={<Search />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/register" element={<Register />} />
-				</Routes>
-			</BrowserRouter>
-		</>
-	);
+  return (
+    <>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/account" element={<Me />} />
+          </Route>
+          <Route path="/callback" element={<Callback />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/mixtapes" element={<Mixtapes />} />
+          <Route path="/discover" element={<Discover />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
+    </>
+  );
 }
 
 export default App;
