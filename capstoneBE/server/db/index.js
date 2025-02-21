@@ -82,7 +82,7 @@ const createTables = async () => {
 
 module.exports = {
   client,
-  ...require('./user.js'),
-  ...require('./review.js'),
+  // ...require('./user.js'),
+  // ...require('./review.js'),
   createTables,
 };
