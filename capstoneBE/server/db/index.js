@@ -1,9 +1,8 @@
 const pg = require("pg");
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
-
-// Create a new pool instance
-const pool = new pg.Pool();
+const { Pool } = require('pg');
+const pool = new Pool();
 
 const createTables = async () => {
   const SQL = `

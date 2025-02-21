@@ -50,12 +50,35 @@ function Discover() {
 	}, []);
 
 	useEffect(() => {
+		// UNCOMMENT WHEN BACKEND IS COMPLETE & LINE ON 116
+
+		// async function sendAlbumsToDatabase(albums) {
+		// 	try {
+		// 		const response = await fetch(
+		// 			"http://localhost:3000/api/albums",
+		// 			{
+		// 				method: "POST",
+		// 				headers: {
+		// 					"Content-Type": "application/json",
+		// 				},
+		// 				body: JSON.stringify(albums),
+		// 			}
+		// 		);
+		// 		if (!response) {
+		// 			throw new Error("Failed to save albums to database");
+		// 		}
+		// 		console.log("Saved albums to database");
+		// 	} catch (error) {
+		// 		console.error("Error sending albums to database: ", error);
+		// 	}
+		// }
+
 		async function getTopAlbums() {
 			if (!accessToken) return; // Ensure access token is available before making API call
 
 			try {
 				const response = await fetch(
-					"https://api.spotify.com/v1/browse/new-releases?limit=50", // 🔥 Change limit to 50
+					"https://api.spotify.com/v1/browse/new-releases?limit=50",
 					{
 						method: "GET",
 						headers: {
@@ -82,6 +105,15 @@ function Discover() {
 				}
 
 				setAlbums(data.albums.items);
+				// const formattedAlbums = data.albums.item.map((album) => ({
+				// 	id: album.id,
+				// 	name: album.name,
+				// 	artist: album.artists[0].name,
+				// 	image: album.images[0].url,
+				// 	spotifyUrl: album.external_urls.spotify,
+				// }));
+
+				// sendAlbumsToDatabase(formattedAlbums); THIS AS WELL
 			} catch (error) {
 				console.error("Failed to fetch top albums:", error);
 			}
@@ -90,6 +122,7 @@ function Discover() {
 		getTopAlbums();
 	}, [accessToken]); // Run only when accessToken updates
 
+	console.log(albums);
 	return (
 		<div className="container">
 			{albums.length > 0 ? (

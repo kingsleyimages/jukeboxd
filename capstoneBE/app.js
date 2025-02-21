@@ -1,12 +1,9 @@
 require('dotenv').config();
-console.log("PGUSER:", process.env.PGUSER);
-console.log("PGPASSWORD:", process.env.PGPASSWORD ? "****" : "undefined");
-console.log("PGHOST:", process.env.PGHOST);
-console.log("PGDATABASE:", process.env.PGDATABASE);
-console.log("PGPORT:", process.env.PGPORT);
-
 const express = require('express');
 const { Pool } = require('pg');
+const { createTables } = require('./server/db/index');
+const userRoutes = require('./server/api/userRoutes'); // Import userRoutes
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -26,7 +23,7 @@ const pool = new Pool({
 });
 
 // API Routes
-app.use('/api', require('./server/api'));
+app.use('/api/user', userRoutes); // Register userRoutes with the base path '/api/user'
 
 // Default Route
 app.get('/', (req, res) => {

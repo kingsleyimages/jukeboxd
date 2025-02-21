@@ -1,8 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { getUserByUsername, createUser } = require('../db/user');
+const { getUserByUsername, createUser } = require('../db/user'); // Correct import
 const router = express.Router();
+const { client } = require("../db/index.js");
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
@@ -10,20 +11,27 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
+    console.log('Login request received:', { username, password });
+
     try {
         const user = await getUserByUsername(username);
         if (!user) {
+            console.log('User not found');
             return res.status(401).json({ message: 'Invalid username or password' });
         }
 
+        console.log('User found:', user);
+
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
+            console.log('Invalid password');
             return res.status(401).json({ message: 'Invalid username or password' });
         }
 
         const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
         res.json({ token });
     } catch (error) {
+        console.error('Error during login:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
