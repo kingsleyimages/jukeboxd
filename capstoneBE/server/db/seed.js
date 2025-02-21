@@ -13,4 +13,4 @@ const seed = async () => {
     throw error;
   }
 };
-// seed();
+seed();

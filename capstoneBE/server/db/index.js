@@ -1,4 +1,4 @@
-const pg = require('pg');
+const pg = require("pg");
 const client = new pg.Client();
 
 const createTables = async () => {
@@ -81,7 +81,7 @@ const createTables = async () => {
     );
   `;
   await client.query(SQL);
-  console.log('tables created');
+  console.log("tables created");
 };
 
 module.exports = {
