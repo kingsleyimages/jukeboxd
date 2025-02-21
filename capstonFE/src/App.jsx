@@ -12,6 +12,15 @@ import Login from "./components/Login";
 import Callback from "./components/Callback";
 
 function App() {
+
+	// useEffect(() => {
+	// 	axios
+	// 		.get(`${import.meta.env.VITE_API_BASE_URL}`)
+	// 		.then((data) => console.log(data))
+	// 		.catch((err) => console.log(err));
+	// }, []);
+=======
+
 	return (
 		<>
 			<BrowserRouter>
