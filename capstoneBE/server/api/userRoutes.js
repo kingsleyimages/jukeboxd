@@ -3,11 +3,12 @@ const router = express.Router();
 
 const { createUser } = require("../db/user.js");
 
-router.post("/", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
   console.log(req.body);
   try {
     const response = await createUser(
       req.body.username,
+      req.body.email,
       req.body.password,
       req.body.role
     );

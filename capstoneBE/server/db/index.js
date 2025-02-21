@@ -1,4 +1,4 @@
-const pg = require('pg');
+const pg = require("pg");
 const client = new pg.Client();
 
 const createTables = async () => {
@@ -15,6 +15,7 @@ const createTables = async () => {
     
       id UUID PRIMARY KEY,
       username VARCHAR(20) NOT NULL UNIQUE,
+      email VARCHAR(255) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
       role VARCHAR(20) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -77,7 +78,7 @@ const createTables = async () => {
     );
   `;
   await client.query(SQL);
-  console.log('tables created');
+  console.log("tables created");
 };
 
 module.exports = {
