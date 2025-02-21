@@ -12,12 +12,12 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 
 function App() {
-	useEffect(() => {
-		axios
-			.get(`${import.meta.env.VITE_API_BASE_URL}`)
-			.then((data) => console.log(data))
-			.catch((err) => console.log(err));
-	}, []);
+	// useEffect(() => {
+	// 	axios
+	// 		.get(`${import.meta.env.VITE_API_BASE_URL}`)
+	// 		.then((data) => console.log(data))
+	// 		.catch((err) => console.log(err));
+	// }, []);
 	return (
 		<>
 			<BrowserRouter>
