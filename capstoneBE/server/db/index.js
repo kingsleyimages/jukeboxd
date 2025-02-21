@@ -1,9 +1,12 @@
 const pg = require("pg");
-const client = new pg.Client();
+const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
+
+// Create a new pool instance
+const pool = new pg.Pool();
 
 const createTables = async () => {
   const SQL = `
-    
     DROP TABLE IF EXISTS comments;
     DROP TABLE IF EXISTS friends;
     DROP TABLE IF EXISTS mixtapes;
@@ -12,7 +15,6 @@ const createTables = async () => {
     DROP TABLE IF EXISTS albums;
     DROP TABLE IF EXISTS users;
     CREATE TABLE users(
-    
       id UUID PRIMARY KEY,
       username VARCHAR(20) NOT NULL UNIQUE,
       email VARCHAR(255) NOT NULL UNIQUE,
@@ -77,13 +79,26 @@ const createTables = async () => {
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
-  await client.query(SQL);
+
+  await pool.query(SQL);
   console.log("tables created");
+
+  // Insert dummy data
+  const users = [
+    { username: 'user1', email: 'user1@example.com', password: 'password123', role: 'user' },
+    { username: 'user2', email: 'user2@example.com', password: 'mypassword', role: 'admin' },
+    { username: 'user3', email: 'user3@example.com', password: 'supersecret', role: 'user' },
+  ];
+
+  for (const user of users) {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    await pool.query('INSERT INTO users (id, username, email, password, role) VALUES ($1, $2, $3, $4, $5)', [uuidv4(), user.username, user.email, hashedPassword, user.role]);
+  }
+
+  console.log("dummy data inserted");
 };
 
 module.exports = {
-  client,
-  // ...require('./user.js'),
-  // ...require('./review.js'),
+  pool,
   createTables,
 };

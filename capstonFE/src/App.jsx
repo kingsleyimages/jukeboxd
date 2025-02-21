@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import axios from "axios";
 import Discover from "./components/Discover";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -10,14 +9,9 @@ import Mixtapes from "./components/Mixtapes";
 import Search from "./components/Search";
 import Register from "./components/Register";
 import Login from "./components/Login";
+import Callback from "./components/Callback";
 
 function App() {
-	useEffect(() => {
-		axios
-			.get(`${import.meta.env.VITE_API_BASE_URL}`)
-			.then((data) => console.log(data))
-			.catch((err) => console.log(err));
-	}, []);
 	return (
 		<>
 			<BrowserRouter>
@@ -26,8 +20,7 @@ function App() {
 					<Route element={<ProtectedRoute />}>
 						<Route path="/account" element={<Me />} />
 					</Route>
-					{/* <Route path="/callback" element={<Callback />} /> */} //
-					necesssary for authentication
+					<Route path="/callback" element={<Callback />} />
 					<Route path="/home" element={<Home />} />
 					<Route path="/mixtapes" element={<Mixtapes />} />
 					<Route path="/discover" element={<Discover />} />
