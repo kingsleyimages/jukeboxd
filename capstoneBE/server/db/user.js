@@ -5,6 +5,11 @@ const jwt = require("jsonwebtoken");
 
 const createUser = async (username, email, password, role) => {
   console.log(username, email, password, role);
+
+  if (!password) {
+    throw new Error("Password is required");
+  }
+
   const SQL = `
     INSERT INTO users(id, username, email, password, role) VALUES($1, $2, $3, $4, $5) RETURNING *
   `;
@@ -24,16 +29,33 @@ const authenticate = async ({ username, password }) => {
   SELECT id, password, email, role FROM users WHERE username = $1;`;
 
   const response = await client.query(SQL, [username]);
-  if (
-    !response.rows.length ||
-    !(await bcrypt.compare(password, response.rows[0].password))
-  ) {
-    const error = new Error("not authoruized");
+  if (!response.rows.length) {
+    console.log("User not found");
+    const error = new Error("not authorized");
     error.status = 401;
     throw error;
   }
-  const myToken = jwt.sign({ id: response.rows[0].id }, process.env.JWT_SECRET);
-  console.log("authetication success, token generated");
+
+  const user = response.rows[0];
+  console.log("Retrieved user:", user);
+
+  if (!user.password) {
+    console.log("User password is undefined");
+    const error = new Error("not authorized");
+    error.status = 401;
+    throw error;
+  }
+
+  const passwordMatch = await bcrypt.compare(password, user.password);
+  if (!passwordMatch) {
+    console.log("Password does not match");
+    const error = new Error("not authorized");
+    error.status = 401;
+    throw error;
+  }
+
+  const myToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+  console.log("authentication success, token generated");
   return { token: myToken };
 };
 
@@ -48,4 +70,23 @@ const userExists = async (username) => {
   }
 };
 
-module.exports = { createUser, authenticate, userExists };
+
+const getAllUsers = async () => {
+  const SQL = `SELECT id, username, email, role FROM users;`;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+
+const getAllComments = async () => {
+  const SQL = `SELECT * FROM comments;`;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+
+const getAllReviews = async () => {
+  const SQL = `SELECT * FROM reviews;`;
+  const response = await client.query(SQL);
+  return response.rows;
+};
+
+module.exports = { createUser, authenticate, userExists, getAllUsers, getAllComments, getAllReviews };
