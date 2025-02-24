@@ -124,35 +124,50 @@ function Discover() {
   };
 
   return (
-    <div className={styles.container}>
-      {albums.length > 0 ? (
-        albums.map((album) => (
-          <div key={album.id} className={styles.albumCard}>
-            {/* <p>ID: {album.id}</p> */}
-            <h3>{album.name}</h3>
-            <img src={album.images[0].url} alt={album.name} width={200} />
+    <>
+      <h1 className={styles.pageHeader}>
+        Share Your Love of Music on Jukeboxd!
+      </h1>
+      <p className={styles.tagLine}>
+        Welcome to <span>Jukeboxd</span>, the ultimate destination for music
+        lovers who crave deep discussions, insightful reviews, and a community
+        that shares their passion for sound. Whether you're exploring new
+        genres, debating the best pressings of classic albums, or searching for
+        hidden gems, this is the place to connect with fellow audiophiles. Share
+        your own reviews, rate albums, and discover music through the
+        perspectives of others who appreciate high-quality sound as much as you
+        do. Join us in celebrating the art of music—one review at a time!
+      </p>
+      <div className={styles.container}>
+        {albums.length > 0 ? (
+          albums.map((album) => (
+            <div key={album.id} className={styles.albumCard}>
+              {/* <p>ID: {album.id}</p> */}
+              <h3>{album.name}</h3>
+              <img src={album.images[0].url} alt={album.name} width={200} />
 
-            <h4>{album.artists[0].name}</h4>
-            <div>
-              <button
-                className={styles.button}
-                onClick={() => handleViewDetails(album.id)}>
-                View Details
-              </button>
-              <a
-                href={album.external_urls.spotify}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}>
-                Listen on Spotify
-              </a>
+              <h4>{album.artists[0].name}</h4>
+              <div>
+                <button
+                  className={styles.button}
+                  onClick={() => handleViewDetails(album.id)}>
+                  View Details
+                </button>
+                <a
+                  href={album.external_urls.spotify}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.link}>
+                  Listen on Spotify
+                </a>
+              </div>
             </div>
-          </div>
-        ))
-      ) : (
-        <p>Loading albums...</p>
-      )}
-    </div>
+          ))
+        ) : (
+          <p>Loading albums...</p>
+        )}
+      </div>
+    </>
   );
 }
 
