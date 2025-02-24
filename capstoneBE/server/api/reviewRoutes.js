@@ -4,8 +4,12 @@ const {
   createReview,
   fetchReviewsByAlbumId,
   fetchReviewsByUserId,
+  fetchReviews,
+  deleteReview,
+  updateReview,
 } = require('../db/review.js');
 
+// create a review for an album
 router.post('/album/:albumId/create', async (req, res, next) => {
   console.log('route logic');
   try {
@@ -24,7 +28,17 @@ router.post('/album/:albumId/create', async (req, res, next) => {
     next(error);
   }
 });
+// fetch all reviews
 
+router.get('/', async (req, res, next) => {
+  try {
+    const reviews = await fetchReviews();
+    res.send(reviews);
+  } catch (error) {
+    next(error);
+  }
+});
+// fetch all reviews for an album
 router.get('/album/:albumId/', async (req, res, next) => {
   try {
     const reviews = await fetchReviewsByAlbumId(req.params.albumId);
@@ -33,10 +47,30 @@ router.get('/album/:albumId/', async (req, res, next) => {
     next(error);
   }
 });
+// fetch all reviews by a user
 router.get('/user/:userId/', async (req, res, next) => {
   try {
     const reviews = await fetchReviewsByUserId(req.params.userId);
     res.send(reviews);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// delete a review by id
+router.delete('/:id/delete', async (req, res, next) => {
+  try {
+    const response = await deleteReview(req.params.id);
+    res.send(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put('/:id/update', async (req, res, next) => {
+  try {
+    const response = await updateReview(req.params.id, req.body.review);
+    res.send(response);
   } catch (error) {
     next(error);
   }
