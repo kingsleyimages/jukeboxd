@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import "../App.css"; 
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -30,41 +31,70 @@ const Register = () => {
       console.log("registration success");
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data || "Registration failed");
+      setError(err.response?.data?.message || "Registration failed. Please try again.");
     }
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        {error && <p>{error}</p>}
-        <button type="submit">Register</button>
+    <div className="register-container">
+      <div className="register-header">
+        <h2>Create Your Account</h2>
+        <p>Join our community today</p>
+      </div>
+      
+      <form className="register-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            name="username"
+            placeholder="Choose a username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            className="form-input"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="Your email address"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="form-input"
+          />
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Create a secure password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="form-input"
+          />
+        </div>
+        
+        {error && <div className="error-message">{error}</div>}
+        
+        <button type="submit" className="register-button">
+          Create Account
+        </button>
       </form>
+      
+      <div className="login-link">
+        Already have an account? <Link to="/login">Log in</Link>
+      </div>
     </div>
   );
 };
