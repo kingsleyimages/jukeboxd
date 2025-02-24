@@ -23,7 +23,10 @@ const fetchAllFriends = async () => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM friends
+      SELECT u1.username AS user, u2.username AS friend
+      FROM friends
+      INNER JOIN users u1 ON friends.user_id = u1.id
+      INNER JOIN users u2 ON friends.friend_id = u2.id
     `
     );
     return rows;
@@ -34,12 +37,18 @@ const fetchAllFriends = async () => {
 
 // get all friends of a user
 
+// get all friends of a user
 const fetchFriendsById = async (userId) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM friends
-      WHERE user_id = $1 OR friend_id = $1
+      SELECT users.username FROM users
+      INNER JOIN friends ON users.id = friends.friend_id
+      WHERE friends.user_id = $1
+      UNION
+      SELECT users.username FROM users
+      INNER JOIN friends ON users.id = friends.user_id
+      WHERE friends.friend_id = $1
     `,
       [userId]
     );
