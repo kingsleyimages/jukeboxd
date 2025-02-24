@@ -35,7 +35,7 @@ const fetchAlbums = async () => {
 
 const fetchAlbumById = async (id) => {
   const SQL = `
-    SELECT * FROM albums WHERE id = $1
+    SELECT * FROM albums WHERE spotify_id = $1
   `;
   const response = await client.query(SQL, [id]);
   return response.rows[0];
