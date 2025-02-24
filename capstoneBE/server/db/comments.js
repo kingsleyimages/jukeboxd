@@ -1,44 +1,31 @@
 const { client } = require('./index');
 const uuid = require('uuid');
-// const bcrypt = require('bcrypt');
 
-// create a review for an album
-const createReview = async (
-  albumId,
-  userId,
-  review,
-  headline,
-  rating,
-  favorite
-) => {
-  console.log('DB generation of review');
-  console.log(albumId, userId, review, headline, rating, favorite);
+const createComment = async (reviewId, userId, comment) => {
+  console.log('DB generation of Comments');
+  console.log(userId, reviewId, comment);
   try {
-    const SQL = `INSERT INTO reviews (id, album_id, user_id, rating, favorite, headline, review)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    const SQL = `INSERT INTO comments (id, user_id, review_id, comment)
+    VALUES ($1, $2, $3, $4)
     RETURNING *;
     `;
     const { rows } = await client.query(SQL, [
       uuid.v4(),
-      albumId,
       userId,
-      rating,
-      favorite,
-      headline,
-      review,
+      reviewId,
+      comment,
     ]);
     return rows[0];
   } catch (error) {
     console.log(error);
   }
 };
-//fetch all reviews
 
-const fetchReviews = async () => {
+const fetchComments = async () => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
+      SELECT * FROM comments
     `
     );
     return rows;
@@ -46,14 +33,12 @@ const fetchReviews = async () => {
     console.log(error);
   }
 };
-
-// fetch all reviews for an album
-const fetchReviewsByAlbumId = async (id) => {
+const fetchCommentsByReviewId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
-      WHERE album_id = $1
+      SELECT * FROM comments
+      WHERE review_id = $1
     `,
       [id]
     );
@@ -62,13 +47,11 @@ const fetchReviewsByAlbumId = async (id) => {
     console.log(error);
   }
 };
-
-// fetch all reviews by a user
-const fetchReviewsByUserId = async (id) => {
+const fetchCommentsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
+      SELECT * FROM comments
       WHERE user_id = $1
     `,
       [id]
@@ -78,12 +61,12 @@ const fetchReviewsByUserId = async (id) => {
     console.log(error);
   }
 };
-// delete a review by id
-const deleteReview = async (id) => {
+
+const deleteComment = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      DELETE FROM reviews
+      DELETE FROM comments
       WHERE id = $1
       RETURNING *;
     `,
@@ -95,30 +78,29 @@ const deleteReview = async (id) => {
   }
 };
 
-//update a review by id
-
-const updateReview = async (id, review) => {
+const updateComment = async (id, comment) => {
   try {
     const { rows } = await client.query(
       `
-      UPDATE reviews
-      SET review = $2,
+      UPDATE comments
+      SET comment = $2,
       updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
       RETURNING *;
     `,
-      [id, review]
+      [id, comment]
     );
     return rows[0];
   } catch (error) {
     console.log(error);
   }
 };
+
 module.exports = {
-  createReview,
-  fetchReviewsByAlbumId,
-  fetchReviewsByUserId,
-  fetchReviews,
-  deleteReview,
-  updateReview,
+  createComment,
+  fetchCommentsByReviewId,
+  fetchCommentsByUserId,
+  deleteComment,
+  updateComment,
+  fetchComments,
 };
