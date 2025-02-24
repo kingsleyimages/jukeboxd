@@ -94,6 +94,9 @@ function Discover() {
 
         setAlbums(data.albums.items);
 
+        // save albums to database
+        //uncomment this block to save albums to database
+
         // const formattedAlbums = data.albums.items.map(
         //   async (album) =>
         //     await sendAlbumsToDatabase({
