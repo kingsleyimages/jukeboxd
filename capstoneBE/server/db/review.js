@@ -38,7 +38,10 @@ const fetchReviews = async () => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
+      SELECT users.username, review, rating, favorite, headline
+      FROM reviews
+      INNER JOIN users
+      ON reviews.user_id = users.id
     `
     );
     return rows;
@@ -52,12 +55,15 @@ const fetchReviewsByAlbumId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
+      SELECT users.username, review, rating, favorite, headline
+      FROM reviews
+      INNER JOIN users
+      ON reviews.user_id = users.id
       WHERE album_id = $1
     `,
       [id]
     );
-    return rows[0];
+    return rows;
   } catch (error) {
     console.log(error);
   }
@@ -68,12 +74,15 @@ const fetchReviewsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
+      SELECT users.username, review, rating favorite, headline
+      FROM reviews
+      INNER JOIN users
+      ON reviews.user_id = users.id
       WHERE user_id = $1
     `,
       [id]
     );
-    return rows[0];
+    return rows;
   } catch (error) {
     console.log(error);
   }
@@ -97,17 +106,17 @@ const deleteReview = async (id) => {
 
 //update a review by id
 
-const updateReview = async (id, review) => {
+const updateReview = async (id, review, headline, rating, favorite) => {
   try {
     const { rows } = await client.query(
       `
       UPDATE reviews
-      SET review = $2,
+      SET review = $2, headline= $3, rating = $4, favorite = $5,
       updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
       RETURNING *;
     `,
-      [id, review]
+      [id, review, headline, rating, favorite]
     );
     return rows[0];
   } catch (error) {

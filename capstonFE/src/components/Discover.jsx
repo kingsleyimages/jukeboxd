@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from '../css/Discover.module.css';
 
 function Discover() {
   const [albums, setAlbums] = useState([]);
-  const [accessToken, setAccessToken] = useState("");
+  const [accessToken, setAccessToken] = useState('');
   const navigate = useNavigate();
-
 
   useEffect(() => {
     async function fetchAccessToken() {
@@ -21,9 +21,8 @@ function Discover() {
         const response = await fetch('https://accounts.spotify.com/api/token', {
           method: 'POST',
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: "Basic " + btoa(`${clientId}:${clientSecret}`),
-
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization: 'Basic ' + btoa(`${clientId}:${clientSecret}`),
           },
           body: 'grant_type=client_credentials',
         });
@@ -125,25 +124,28 @@ function Discover() {
   };
 
   return (
-    <div className="container">
+    <div className={styles.container}>
       {albums.length > 0 ? (
         albums.map((album) => (
-          <div key={album.id} className="album-card">
-            <p>ID: {album.id}</p>
-            <p>Name: {album.name}</p>
-            <p>Artist: {album.artists[0].name}</p>
+          <div key={album.id} className={styles.albumCard}>
+            {/* <p>ID: {album.id}</p> */}
+            <h3>{album.name}</h3>
             <img src={album.images[0].url} alt={album.name} width={200} />
+
+            <h4>{album.artists[0].name}</h4>
             <div>
+              <button
+                className={styles.button}
+                onClick={() => handleViewDetails(album.id)}>
+                View Details
+              </button>
               <a
                 href={album.external_urls.spotify}
                 target="_blank"
                 rel="noopener noreferrer"
-              >
+                className={styles.link}>
                 Listen on Spotify
               </a>
-              <button onClick={() => handleViewDetails(album.id)}>
-                View Details
-              </button>
             </div>
           </div>
         ))
