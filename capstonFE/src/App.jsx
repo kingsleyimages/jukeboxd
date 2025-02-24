@@ -13,6 +13,14 @@ import Callback from "./components/Callback";
 import SingleAlbumDetails from "./components/SingleAlbumDetails";
 
 function App() {
+  // const [userId, setUserId] = useState(null);
+
+  // useEffect(() => {
+  //   const storedUserId = localStorage.getItem("userId");
+  //   setUserId(storedUserId);
+  //   console.log("App loaded, userId:", storedUserId);
+  // }, []);
+
   return (
     <>
       <BrowserRouter>

@@ -1,5 +1,5 @@
-const { client } = require('./index');
-const uuid = require('uuid');
+const { client } = require("./index");
+const uuid = require("uuid");
 // const bcrypt = require('bcrypt');
 
 // create a review for an album
@@ -11,7 +11,7 @@ const createReview = async (
   rating,
   favorite
 ) => {
-  console.log('DB generation of review');
+  console.log("DB generation of review");
   console.log(albumId, userId, review, headline, rating, favorite);
   try {
     const SQL = `INSERT INTO reviews (id, album_id, user_id, rating, favorite, headline, review)
@@ -48,16 +48,35 @@ const fetchReviews = async () => {
 };
 
 // fetch all reviews for an album
+// const fetchReviewsByAlbumId = async (id) => {
+//   try {
+//     const { rows } = await client.query(
+//       `
+//       SELECT * FROM reviews
+//       WHERE album_id = $1
+//     `,
+//       [id]
+//     );
+//     return rows[0];
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// Updated fetchReviewsByAlbumId function with JOIN to include usernames
 const fetchReviewsByAlbumId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
-      WHERE album_id = $1
+      SELECT r.*, u.username
+      FROM reviews r
+      JOIN users u ON r.user_id = u.id
+      WHERE r.album_id = $1
+      ORDER BY r.created_at DESC;
     `,
       [id]
     );
-    return rows[0];
+    return rows;
   } catch (error) {
     console.log(error);
   }
@@ -73,7 +92,7 @@ const fetchReviewsByUserId = async (id) => {
     `,
       [id]
     );
-    return rows[0];
+    return rows;
   } catch (error) {
     console.log(error);
   }

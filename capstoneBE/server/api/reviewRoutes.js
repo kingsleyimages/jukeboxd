@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const {
   createReview,
@@ -7,15 +7,15 @@ const {
   fetchReviews,
   deleteReview,
   updateReview,
-} = require('../db/review.js');
+} = require("../db/review.js");
 
 // base route and return for the api for reviewss
 
 // /api/reviews
 
 // create a review for an album
-router.post('/album/:albumId/create', async (req, res, next) => {
-  console.log('route logic');
+router.post("/album/:albumId/create", async (req, res, next) => {
+  console.log("route logic");
   try {
     console.log(req.body);
     const review = await createReview(
@@ -34,7 +34,7 @@ router.post('/album/:albumId/create', async (req, res, next) => {
 });
 // fetch all reviews
 
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const reviews = await fetchReviews();
     res.send(reviews);
@@ -42,8 +42,9 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
+
 // fetch all reviews for an album
-router.get('/album/:albumId/', async (req, res, next) => {
+router.get("/album/:albumId/", async (req, res, next) => {
   try {
     const reviews = await fetchReviewsByAlbumId(req.params.albumId);
     res.send(reviews);
@@ -51,8 +52,9 @@ router.get('/album/:albumId/', async (req, res, next) => {
     next(error);
   }
 });
+
 // fetch all reviews by a user
-router.get('/user/:userId/', async (req, res, next) => {
+router.get("/user/:userId/", async (req, res, next) => {
   try {
     const reviews = await fetchReviewsByUserId(req.params.userId);
     res.send(reviews);
@@ -62,7 +64,7 @@ router.get('/user/:userId/', async (req, res, next) => {
 });
 
 // delete a review by id
-router.delete('/:id/delete', async (req, res, next) => {
+router.delete("/:id/delete", async (req, res, next) => {
   try {
     const response = await deleteReview(req.params.id);
     res.send(response);
@@ -71,7 +73,7 @@ router.delete('/:id/delete', async (req, res, next) => {
   }
 });
 
-router.put('/:id/update', async (req, res, next) => {
+router.put("/:id/update", async (req, res, next) => {
   try {
     const response = await updateReview(req.params.id, req.body.review);
     res.send(response);
