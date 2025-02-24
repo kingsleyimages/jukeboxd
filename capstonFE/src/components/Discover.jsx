@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Discover() {
   const [albums, setAlbums] = useState([]);
   const [accessToken, setAccessToken] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchAccessToken() {
@@ -19,7 +21,7 @@ function Discover() {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: "Basic " + btoa(`${clientId}:${clientSecret}`), // Correct encoding
+            Authorization: "Basic " + btoa(`${clientId}:${clientSecret}`),
           },
           body: "grant_type=client_credentials",
         });
@@ -44,29 +46,8 @@ function Discover() {
   }, []);
 
   useEffect(() => {
-    async function sendAlbumsToDatabase(albums) {
-      try {
-        const response = await fetch(
-          "http://localhost:3000/api/albums/create",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(albums),
-          }
-        );
-        if (!response) {
-          throw new Error("Failed to save albums to database");
-        }
-        console.log("Saved albums to database");
-      } catch (error) {
-        console.error("Error sending albums to database: ", error);
-      }
-    }
-
     async function getTopAlbums() {
-      if (!accessToken) return; // Ensure access token is available before making API call
+      if (!accessToken) return;
 
       try {
         const response = await fetch(
@@ -93,27 +74,18 @@ function Discover() {
         }
 
         setAlbums(data.albums.items);
-
-        // const formattedAlbums = data.albums.items.map(
-        //   async (album) =>
-        //     await sendAlbumsToDatabase({
-        //       spotify_id: album.id,
-        //       name: album.name,
-        //       artist: album.artists[0].name,
-        //       image: album.images[0].url,
-        //       spotifyUrl: album.external_urls.spotify,
-        //     })
-        // );
-        // await Promise.all(formattedAlbums);
       } catch (error) {
         console.error("Failed to fetch top albums!:", error);
       }
     }
 
     getTopAlbums();
-  }, [accessToken]); // Run only when accessToken updates
+  }, [accessToken]);
 
-  console.log(albums);
+  const handleViewDetails = (albumId) => {
+    navigate(`/album/${albumId}`);
+  };
+
   return (
     <div className="container">
       {albums.length > 0 ? (
@@ -123,13 +95,18 @@ function Discover() {
             <p>Name: {album.name}</p>
             <p>Artist: {album.artists[0].name}</p>
             <img src={album.images[0].url} alt={album.name} width={200} />
-            <a
-              href={album.external_urls.spotify}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Listen on Spotify
-            </a>
+            <div>
+              <a
+                href={album.external_urls.spotify}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Listen on Spotify
+              </a>
+              <button onClick={() => handleViewDetails(album.id)}>
+                View Details
+              </button>
+            </div>
           </div>
         ))
       ) : (
