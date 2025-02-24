@@ -13,12 +13,14 @@ const createDummyData = async () => {
       { username: `user${uuid.v4().slice(0, 8)}`, email: `user${uuid.v4().slice(0, 8)}@example.com`, password: 'password22', role: 'user' },
     ];
 
+    const userIds = [];
     for (const user of users) {
       const hashedPassword = await bcrypt.hash(user.password, 5);
-      await client.query(
-        `INSERT INTO users(id, username, email, password, role) VALUES($1, $2, $3, $4, $5)`,
+      const result = await client.query(
+        `INSERT INTO users(id, username, email, password, role) VALUES($1, $2, $3, $4, $5) RETURNING id`,
         [uuid.v4(), user.username, user.email, hashedPassword, user.role]
       );
+      userIds.push(result.rows[0].id);
     }
 
     // Create dummy albums
@@ -30,16 +32,16 @@ const createDummyData = async () => {
     const albumIds = [];
     for (const album of albums) {
       const result = await client.query(
-        `INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5, $6) RETURNING id`,
-        [uuid.v4(), album.spotify_id, album.name, album.artist, album.image, album.spotifyUrl]
+        `INSERT INTO albums(id, spotify_id, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5) RETURNING id`,
+        [uuid.v4(), album.spotify_id, album.artist, album.image, album.spotifyUrl]
       );
       albumIds.push(result.rows[0].id);
     }
 
     // Create dummy reviews
     const reviews = [
-      { user_id: users[0].id, album_id: albumIds[0], rating: 5, favorite: true, headline: 'Great Album', review: 'This is a great album!' },
-      { user_id: users[1].id, album_id: albumIds[1], rating: 4, favorite: false, headline: 'Good Album', review: 'This is a good album.' },
+      { user_id: userIds[0], album_id: albumIds[0], rating: 5, favorite: true, headline: 'Great Album', review: 'This is a great album!' },
+      { user_id: userIds[1], album_id: albumIds[1], rating: 4, favorite: false, headline: 'Good Album', review: 'This is a good album.' },
     ];
 
     const reviewIds = [];
@@ -53,8 +55,8 @@ const createDummyData = async () => {
 
     // Create dummy comments
     const comments = [
-      { user_id: users[0].id, review_id: reviewIds[0], comment: 'I agree, this album is great!' },
-      { user_id: users[1].id, review_id: reviewIds[1], comment: 'I think it could be better.' },
+      { user_id: userIds[0], review_id: reviewIds[0], comment: 'I agree, this album is great!' },
+      { user_id: userIds[1], review_id: reviewIds[1], comment: 'I think it could be better.' },
     ];
 
     for (const comment of comments) {
