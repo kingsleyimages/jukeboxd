@@ -1,42 +1,33 @@
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
 const { client } = require("../db/index.js");
 
-const { createUser, authenticate, userExists } = require("../db/user.js");
+const { createUser, authenticate, userExists, getAllUsers, getAllComments, getAllReviews } = require("../db/user.js");
+const { authenticateToken, adminAuth } = require("./middlewares");
 
-//middleware to verify JWT token
-
-const authenticateToken = (req, res, next) => {
-  const token = req.header("Authorization")?.replace("Bearer ", "");
-  if (!token) return res.status(401).send("Access denied");
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).send("invalid token");
-    req.user = user;
-    next();
-  });
-};
-
-//register
+// Register
 router.post("/register", async (req, res, next) => {
-  console.log(req.body);
+  console.log("Received data:", req.body);
   try {
-    const response = await createUser(
-      req.body.username,
-      req.body.email,
-      req.body.password,
-      req.body.role
-    );
+    const { username, email, password, role } = req.body;
+    console.log("username:", username);
+    console.log("email:", email);
+    console.log("password:", password);
+    console.log("role:", role);
 
+    if (!username || !email || !password || !role) {
+      throw new Error('All fields are required');
+    }
+
+    const response = await createUser(username, email, password, role);
     res.status(201).send(response);
   } catch (error) {
     next(error);
   }
 });
 
-//login
+// Login
 router.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
   console.log("login request received", req.body);
@@ -53,7 +44,7 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-//get current user
+// Get current user
 router.get("/me", authenticateToken, async (req, res, next) => {
   try {
     console.log("authenticated user", req.user);
@@ -63,6 +54,19 @@ router.get("/me", authenticateToken, async (req, res, next) => {
   } catch (err) {
     console.error("error fetching user", err.message);
     res.status(500).send("unable to get info");
+  }
+});
+
+// Get all users, comments, and reviews (admin only)
+router.get("/admin/data", authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const users = await getAllUsers();
+    const comments = await getAllComments();
+    const reviews = await getAllReviews();
+    res.json({ users, comments, reviews });
+  } catch (err) {
+    console.error("error fetching data", err.message);
+    res.status(500).send("unable to get data");
   }
 });
 

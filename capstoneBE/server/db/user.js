@@ -54,7 +54,7 @@ const authenticate = async ({ username, password }) => {
     throw error;
   }
 
-  const myToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+  const myToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET);
   console.log("authentication success, token generated");
   return { token: myToken };
 };

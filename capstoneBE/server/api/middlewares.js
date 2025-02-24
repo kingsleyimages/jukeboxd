@@ -1,5 +1,3 @@
-// Middleware for Admin authentication
-
 const jwt = require("jsonwebtoken");
 
 const authenticateToken = (req, res, next) => {
@@ -15,9 +13,8 @@ const authenticateToken = (req, res, next) => {
 
 const adminAuth = (req, res, next) => {
     if (req.user && req.user.role === "admin") {
-    next();
-    }
-    else {
+        next();
+    } else {
         res.status(403).send("Access denied");
     }
 };
