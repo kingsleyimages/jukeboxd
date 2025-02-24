@@ -25,7 +25,9 @@ const fetchComments = async () => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM comments
+      SELECT users.username, comments.comment
+      FROM comments
+      INNER JOIN users ON comments.user_id = users.id
     `
     );
     return rows;
@@ -37,12 +39,14 @@ const fetchCommentsByReviewId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM comments
+      SELECT users.username, comments.comment
+      FROM comments
+      INNER JOIN users ON comments.user_id = users.id
       WHERE review_id = $1
     `,
       [id]
     );
-    return rows[0];
+    return rows;
   } catch (error) {
     console.log(error);
   }
@@ -51,8 +55,10 @@ const fetchCommentsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM comments
-      WHERE user_id = $1
+      SELECT users.username, comments.comment
+      FROM comments
+      INNER JOIN users ON comments.user_id = users.id
+      WHERE comments.user_id = $1
     `,
       [id]
     );
