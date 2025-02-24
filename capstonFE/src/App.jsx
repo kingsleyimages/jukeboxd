@@ -10,6 +10,7 @@ import Search from "./components/Search";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Callback from "./components/Callback";
+import SingleAlbumDetails from "./components/SingleAlbumDetails";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/album/:albumId" element={<SingleAlbumDetails />} />
         </Routes>
       </BrowserRouter>
     </>
