@@ -1,4 +1,4 @@
-const pg = require("pg");
+const pg = require('pg');
 const client = new pg.Client();
 
 const createTables = async () => {
@@ -11,7 +11,7 @@ const createTables = async () => {
     DROP TABLE IF EXISTS reviews;
     DROP TABLE IF EXISTS albums;
     DROP TABLE IF EXISTS users;
-    CREATE TABLE users(
+    CREATE TABLE IF NOT EXIST users(
       id UUID PRIMARY KEY,
       username VARCHAR(20) NOT NULL UNIQUE,
       email VARCHAR(255) NOT NULL UNIQUE,
@@ -21,7 +21,7 @@ const createTables = async () => {
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-    CREATE TABLE albums(
+    CREATE TABLE IF NOT EXIST albums(
       id UUID PRIMARY KEY,
       spotify_id VARCHAR(100) NOT NULL UNIQUE,
       name VARCHAR(255) NOT NULL,
@@ -32,7 +32,7 @@ const createTables = async () => {
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-    CREATE TABLE reviews(
+    CREATE TABLE IF NOT EXIST reviews(
       id UUID PRIMARY KEY,
       user_id UUID REFERENCES users(id) NOT NULL,
       album_id UUID REFERENCES albums(id) NOT NULL,
@@ -45,7 +45,7 @@ const createTables = async () => {
       CONSTRAINT unique_user_id_album_id UNIQUE (user_id, album_id)
     );
 
-    CREATE TABLE comments(
+    CREATE TABLE IF NOT EXIST comments(
       id UUID PRIMARY KEY,
       user_id UUID REFERENCES users(id) NOT NULL,
       review_id UUID REFERENCES reviews(id) NOT NULL,
@@ -55,7 +55,7 @@ const createTables = async () => {
       CONSTRAINT unique_user_id_review_id UNIQUE (user_id, review_id)
     );
 
-    CREATE TABLE friends(
+    CREATE TABLE IF NOT EXIST friends(
       id UUID PRIMARY KEY,
       user_id UUID REFERENCES users(id) NOT NULL,
       friend_id UUID REFERENCES users(id) NOT NULL,
@@ -64,14 +64,14 @@ const createTables = async () => {
       CONSTRAINT unique_user_id_friend_id UNIQUE (user_id, friend_id)
     );
 
-    CREATE TABLE songs(
+    CREATE TABLE IF NOT EXIST songs(
       id UUID PRIMARY KEY,
       spotify_id VARCHAR(100) NOT NULL UNIQUE,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-    CREATE TABLE mixtapes(
+    CREATE TABLE IF NOT EXIST mixtapes(
       id UUID PRIMARY KEY,
       user_id UUID REFERENCES users(id) NOT NULL,
       song_id UUID REFERENCES songs(id) NOT NULL,
@@ -81,7 +81,7 @@ const createTables = async () => {
     );
   `;
   await client.query(SQL);
-  console.log("tables created");
+  console.log('tables created');
 };
 
 module.exports = {
