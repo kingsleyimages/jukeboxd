@@ -9,6 +9,12 @@ const {
   updateComment,
 } = require('../db/comments.js');
 
+
+// base route and return for the api for comments
+
+// /api/comments
+
+
 // create a comment for a review
 router.post('/review/:reviewId/create', async (req, res, next) => {
   console.log('route logic');

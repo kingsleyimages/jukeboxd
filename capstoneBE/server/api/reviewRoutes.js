@@ -9,6 +9,10 @@ const {
   updateReview,
 } = require('../db/review.js');
 
+// base route and return for the api for reviewss
+
+// /api/reviews
+
 // create a review for an album
 router.post('/album/:albumId/create', async (req, res, next) => {
   console.log('route logic');

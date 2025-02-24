@@ -3,6 +3,10 @@ const router = express.Router();
 
 const { createAlbum, fetchAlbums, fetchAlbumById } = require('../db/album.js');
 
+// base route and return for the api for albums
+
+// /api/albums
+
 // create and album by saving spotify information to database
 router.post('/create', async (req, res, next) => {
   const { spotify_id, name, artist, image, spotifyUrl } = req.body;
