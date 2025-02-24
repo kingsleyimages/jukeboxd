@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ReviewCard from "./ReviewCard";
 
-const AlbumDetails = ({ userId }) => {
-  console.log(userId);
+const AlbumDetails = ({ token }) => {
+  console.log(token);
   const { albumId } = useParams();
   const [album, setAlbum] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -29,7 +29,7 @@ const AlbumDetails = ({ userId }) => {
     const formData = new FormData(e.target);
     const reviewData = Object.fromEntries(formData.entries());
 
-    if (!userId) {
+    if (!token) {
       alert("you need to be logged in to leave a review");
       return;
     }
@@ -39,8 +39,11 @@ const AlbumDetails = ({ userId }) => {
         `http://localhost:3000/api/reviews/album/${albumId}/create`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...reviewData, userId }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ ...reviewData }),
         }
       );
 
@@ -57,7 +60,7 @@ const AlbumDetails = ({ userId }) => {
   };
 
   if (!album) return <div>Loading...</div>;
-  console.log("Should show review form:", !!userId);
+  console.log("Should show review form:", !!token);
 
   return (
     <div>
@@ -72,7 +75,7 @@ const AlbumDetails = ({ userId }) => {
         <p>No Reviews for this album</p>
       )}
 
-      {userId && (
+      {token && (
         <form onSubmit={handleSubmitReview}>
           <h2>Leave a review</h2>
           <input type="text" name="headline" placeholder="Headline" required />

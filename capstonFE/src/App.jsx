@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Discover from "./components/Discover";
 import Navbar from "./components/Navbar";
@@ -13,13 +13,13 @@ import Callback from "./components/Callback";
 import SingleAlbumDetails from "./components/SingleAlbumDetails";
 
 function App() {
-  // const [userId, setUserId] = useState(null);
+  const [token, setToken] = useState("");
 
-  // useEffect(() => {
-  //   const storedUserId = localStorage.getItem("userId");
-  //   setUserId(storedUserId);
-  //   console.log("App loaded, userId:", storedUserId);
-  // }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setToken(token);
+    console.log("App loaded, userId:", token);
+  }, []);
 
   return (
     <>
@@ -36,7 +36,10 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/album/:albumId" element={<SingleAlbumDetails />} />
+          <Route
+            path="/album/:albumId"
+            element={<SingleAlbumDetails token={token} />}
+          />
         </Routes>
       </BrowserRouter>
     </>
