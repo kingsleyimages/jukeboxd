@@ -3,9 +3,20 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "../App.css";
 
+export const handleLogout = (navigate) => {
+  // Remove token and user data from localStorage
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  
+  // Redirect to home page
+  navigate("/");
+};
+
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const API_BASE_URL = "http://localhost:3000"; 
 
   // Determine initial mode based on current path
   const [isLoginMode, setIsLoginMode] = useState(
@@ -55,8 +66,10 @@ function Login() {
     setIsLoading(true);
 
     try {
+      console.log("Attempting login at:", `${API_BASE_URL}/api/users/login`);
+      
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/users/login`,
+        `${API_BASE_URL}/api/users/login`,
         {
           username: formData.username,
           password: formData.password,
@@ -67,14 +80,23 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
+      // Trigger storage event for Navbar to detect login
+      window.dispatchEvent(new Event("storage"));
+
       // Redirect to home page
-      navigate("/home");
+      navigate("/");
     } catch (err) {
-      setError(
-        err.response?.data?.message ||
-          "Login failed. Please check your credentials."
-      );
       console.error("Login error:", err);
+      
+      let errorMessage = "Login failed. Please check your credentials.";
+      
+      if (err.response) {
+        errorMessage = err.response.data?.message || `Error: ${err.response.status}`;
+      } else if (err.request) {
+        errorMessage = "No response from server. Please check your connection.";
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -100,8 +122,10 @@ function Login() {
     }
 
     try {
+      console.log("Attempting registration at:", `${API_BASE_URL}/api/users/register`);
+      
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/users/register`,
+        `${API_BASE_URL}/api/users/register`,
         {
           username: formData.username,
           password: formData.password,
@@ -110,17 +134,27 @@ function Login() {
         }
       );
 
+      console.log("Registration response:", response);
+
       // If successful, navigate to login with success message
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         navigate("/login", {
           state: { message: "Registration successful...time to rock & roll!" },
         });
       }
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Registration failed. Please try again."
-      );
       console.error("Registration error:", err);
+      
+      let errorMessage = "Registration failed. Please try again.";
+      
+      if (err.response) {
+        errorMessage = err.response.data?.message || `Server error: ${err.response.status}`;
+        console.log("Error response:", err.response.data);
+      } else if (err.request) {
+        errorMessage = "No response from server. Please check your connection.";
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
