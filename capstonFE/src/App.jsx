@@ -11,6 +11,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Callback from "./components/Callback";
 import SingleAlbumDetails from "./components/SingleAlbumDetails";
+import Admin from "./components/Admin"; // Import the Admin component
 
 function App() {
   const [token, setToken] = useState("");
@@ -28,6 +29,8 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/account" element={<Me />} />
+            <Route path="/admin" element={<Admin />} />{" "}
+            {/* Add the Admin route inside ProtectedRoute */}
           </Route>
           <Route path="/callback" element={<Callback />} />
           <Route path="/home" element={<Home />} />
