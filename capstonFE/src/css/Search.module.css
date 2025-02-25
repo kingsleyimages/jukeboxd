@@ -13,12 +13,12 @@
   justify-content: center;
   padding: 2%;
   border: 1px solid #8f8e8e;
-  margin: 2%;
-  max-width: 200px;
+  margin: 1%;
+  max-width: 250px;
 }
 .img {
   width: 100%;
-  max-width: 185px;
+  max-width: 200px;
   margin: 15px auto;
   display: block;
   border: 1px solid #8f8e8e;
