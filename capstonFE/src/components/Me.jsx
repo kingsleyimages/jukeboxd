@@ -51,7 +51,6 @@ function Me() {
 						data.access_token
 					);
 				}
-				fetchAccessToken();
 			} catch (error) {}
 		};
 	}, []);

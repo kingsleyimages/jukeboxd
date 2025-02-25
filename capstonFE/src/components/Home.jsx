@@ -1,15 +1,11 @@
-import React from 'react'
+import React from "react";
 
 function Home() {
-    const writeReview = async (e) => {
-        e.preventDefault();
-        
+	const writeReview = async (e) => {
+		e.preventDefault();
+	};
 
-    }
-
-  return (
-    <div>Home</div>
-  )
+	return <div>Home</div>;
 }
 
-export default Home
+export default Home;
