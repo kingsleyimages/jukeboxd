@@ -17,14 +17,14 @@ const { adminAuth, authenticateToken } = require('./middlewares.js');
 // create a review for an album
 router.post(
   '/album/:albumId/create',
-
+  authenticateToken
   async (req, res, next) => {
     console.log('route logic');
     try {
       console.log(req.body);
       const review = await createReview(
         req.params.albumId,
-        req.body.id,
+        req.user.id,
         req.body.review,
         req.body.headline,
         req.body.rating,
