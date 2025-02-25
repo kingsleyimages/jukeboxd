@@ -1,0 +1,57 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 80%;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2%;
+  border: 1px solid #8f8e8e;
+  margin: 2%;
+  max-width: 200px;
+}
+.img {
+  width: 100%;
+  max-width: 185px;
+  margin: 15px auto;
+  display: block;
+  border: 1px solid #8f8e8e;
+}
+.title {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.release {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+.title,
+.release {
+  color: rgb(222, 222, 222);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+.button {
+  background-color: #8f8e8e;
+  color: rgb(224, 224, 224);
+  padding: 5px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 100%;
+  max-width: 130px;
+  margin: 0 auto;
+  display: block;
+  margin: 7px auto;
+  letter-spacing: 1px;
+  line-height: 1rem;
+}
