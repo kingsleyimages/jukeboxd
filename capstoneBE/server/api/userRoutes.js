@@ -11,7 +11,7 @@ const {
   getAllComments,
   getAllReviews,
 } = require("../db/user.js");
-const { authenticateToken, adminAuth } = require("./middlewares");
+const { authenticateToken, adminAuth } = require("./middlewares.js");
 
 // Register
 router.post("/register", async (req, res, next) => {

@@ -10,6 +10,8 @@ const {
 } = require("../db/review.js");
 const { authenticate } = require("../db/user.js");
 const { authenticateToken } = require("./middlewares.js");
+ = require('../db/review.js');
+const { adminAuth, authenticateToken } = require('./middlewares.js');
 
 // base route and return for the api for reviewss
 
@@ -81,7 +83,13 @@ router.delete("/:id/delete", async (req, res, next) => {
 
 router.put("/:id/update", async (req, res, next) => {
   try {
-    const response = await updateReview(req.params.id, req.body.review);
+    const response = await updateReview(
+      req.params.id,
+      req.body.review,
+      req.body.headline,
+      req.body.rating,
+      req.body.favorite
+    );
     res.send(response);
   } catch (error) {
     next(error);
