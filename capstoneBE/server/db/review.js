@@ -1,19 +1,24 @@
-const { client } = require('./index');
-const uuid = require('uuid');
+const { client } = require("./index");
+const uuid = require("uuid");
 // const bcrypt = require('bcrypt');
 
 // create a review for an album
 const createReview = async (
-  albumId,
+  spotifyAlbumId,
   userId,
   review,
   headline,
   rating,
   favorite
 ) => {
-  console.log('DB generation of review');
-  console.log(albumId, userId, review, headline, rating, favorite);
+  console.log("DB generation of review");
+  // console.log(albumId, userId, review, headline, rating, favorite);
   try {
+    const albumId = await getAlbumIdBySpotifyId(spotifyAlbumId);
+    if (!albumId) {
+      console.error("invalid spotify id or album not found");
+    }
+
     const SQL = `INSERT INTO reviews (id, album_id, user_id, rating, favorite, headline, review)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
@@ -51,6 +56,22 @@ const fetchReviews = async () => {
 };
 
 // fetch all reviews for an album
+// const fetchReviewsByAlbumId = async (id) => {
+//   try {
+//     const { rows } = await client.query(
+//       `
+//       SELECT * FROM reviews
+//       WHERE album_id = $1
+//     `,
+//       [id]
+//     );
+//     return rows[0];
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// Updated fetchReviewsByAlbumId function with JOIN to include usernames
 const fetchReviewsByAlbumId = async (id) => {
   try {
     const { rows } = await client.query(
@@ -123,6 +144,22 @@ const updateReview = async (id, review, headline, rating, favorite) => {
     console.log(error);
   }
 };
+
+//get review by spotify id
+const getAlbumIdBySpotifyId = async (spotifyId) => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT id FROM albums WHERE spotify_id = $1
+    `,
+      [spotifyId]
+    );
+    return rows[0]?.id;
+  } catch (error) {
+    console.error("Error fetching album UUID:", error.message);
+  }
+};
+
 module.exports = {
   createReview,
   fetchReviewsByAlbumId,
