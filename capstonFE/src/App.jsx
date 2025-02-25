@@ -14,27 +14,31 @@ import SingleAlbumDetails from "./components/SingleAlbumDetails";
 import Admin from "./components/Admin"; // Import the Admin component
 
 function App() {
-  return (
-    <>
-      <BrowserRouter>
-        <Navbar />
-        <Routes>
-          <Route element={<ProtectedRoute />}>
-            <Route path="/account" element={<Me />} />
-            <Route path="/admin" element={<Admin />} /> {/* Add the Admin route inside ProtectedRoute */}
-          </Route>
-          <Route path="/callback" element={<Callback />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/mixtapes" element={<Mixtapes />} />
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/album/:albumId" element={<SingleAlbumDetails />} />
-        </Routes>
-      </BrowserRouter>
-    </>
-  );
+	return (
+		<>
+			<BrowserRouter>
+				<Navbar />
+				<Routes>
+					<Route element={<ProtectedRoute />}>
+						<Route path="/account" element={<Me />} />
+						<Route path="/admin" element={<Admin />} />{" "}
+						{/* Add the Admin route inside ProtectedRoute */}
+					</Route>
+					<Route path="/callback" element={<Callback />} />
+					<Route path="/" element={<Home />} />
+					<Route path="/mixtapes" element={<Mixtapes />} />
+					<Route path="/discover" element={<Discover />} />
+					<Route path="/search" element={<Search />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
+					<Route
+						path="/album/:albumId"
+						element={<SingleAlbumDetails />}
+					/>
+				</Routes>
+			</BrowserRouter>
+		</>
+	);
 }
 
 export default App;

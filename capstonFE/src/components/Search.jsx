@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import {
 	FormControl,
 	InputGroup,
@@ -35,7 +34,6 @@ function App() {
 			.then((result) => result.json())
 			.then((data) => {
 				setAccessToken(data.access_token);
-				console.log(data);
 			});
 	}, []);
 
