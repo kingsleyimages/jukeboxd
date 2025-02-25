@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
 // import "./App.css";
 import {
   FormControl,
@@ -17,6 +19,7 @@ function App() {
   const [searchInput, setSearchInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [albums, setAlbums] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let authParams = {
@@ -77,6 +80,10 @@ function App() {
         setAlbums(data.items);
       });
   }
+
+  const handleViewDetails = (albumId) => {
+    navigate(`/album/${albumId}`);
+  };
 
   return (
     <>
@@ -167,6 +174,9 @@ function App() {
                     }}
                   >
                     Album Link
+                  </Button>
+                  <Button onClick={() => handleViewDetails(album.id)}>
+                    View Details
                   </Button>
                 </Card.Body>
               </Card>
