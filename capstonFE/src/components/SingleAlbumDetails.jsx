@@ -7,7 +7,7 @@ const AlbumDetails = ({ token }) => {
   const { albumId } = useParams();
   const [album, setAlbum] = useState(null);
   const [reviews, setReviews] = useState([]);
-
+  console.log(album);
   useEffect(() => {
     const fetchAlbumDetails = async () => {
       try {
@@ -68,14 +68,14 @@ const AlbumDetails = ({ token }) => {
       <h1>{album.name}</h1>
       <p>Artist: {album.artist}</p>
       <img src={album.image} alt={album.name} />
-
       <h2>Reviews</h2>
-      {reviews.length > 0 ? (
-        reviews.map((review) => <ReviewCard key={review.id} review={review} />)
+      {album.reviews.length > 0 ? (
+        album.reviews.map((review) => (
+          <ReviewCard key={review.id} review={review} />
+        ))
       ) : (
         <p>No Reviews for this album</p>
       )}
-
       {token && (
         <form onSubmit={handleSubmitReview}>
           <h2>Leave a review</h2>
