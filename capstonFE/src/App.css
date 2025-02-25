@@ -751,3 +751,646 @@ nav a.active::after {
     font-size: 24px;
   }
 }
+
+/* Logged In User Account CSS */
+.account-page {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .account-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .account-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #333;
+  }
+  
+  .logout-button {
+    background-color: transparent;
+    color: #777;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .logout-button:hover {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  .account-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    background-color: #f9f9f9;
+  }
+  
+  .tab-button {
+    padding: 16px 24px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #777;
+    cursor: pointer;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.2s;
+  }
+  
+  .tab-button:hover {
+    color: #333;
+  }
+  
+  .tab-button.active {
+    color: #333;
+  }
+  
+  .tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #2a41e8;
+  }
+  
+  .tab-content {
+    padding: 32px;
+  }
+  
+  /* Profile Section */
+  .profile-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+  }
+  
+  .user-info-card, .account-stats .stat-card {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 24px;
+  }
+  
+  .user-info-card h2, .account-stats h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #333;
+  }
+  
+  .info-row {
+    display: flex;
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .info-label {
+    width: 150px;
+    font-weight: 600;
+    color: #777;
+  }
+  
+  .info-value {
+    color: #333;
+    flex: 1;
+  }
+  
+  .stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 16px;
+  }
+  
+  .stat-label {
+    color: #777;
+  }
+  
+  .stat-value {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* Favorites Section */
+  .favorites-section h2, .reviews-section h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  .empty-state p {
+    font-size: 18px;
+    color: #777;
+    margin-bottom: 20px;
+  }
+  
+  .cta-button {
+    display: inline-block;
+    background-color: #2a41e8;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .cta-button:hover {
+    background-color: #1c2eb3;
+  }
+  
+  .albums-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  
+  .album-card {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  
+  .album-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .album-image {
+    height: 180px;
+    overflow: hidden;
+  }
+  
+  .album-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .album-info {
+    padding: 16px;
+  }
+  
+  .album-info h3 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .album-info .artist {
+    color: #777;
+    margin: 0 0 4px 0;
+  }
+  
+  .album-info .year {
+    color: #999;
+    font-size: 14px;
+    margin: 0;
+  }
+  
+  .album-actions {
+    padding: 0 16px 16px;
+    display: flex;
+    gap: 8px;
+  }
+  
+  .view-button, .remove-button {
+    flex: 1;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .view-button {
+    background-color: #eef2ff;
+    color: #2a41e8;
+    text-decoration: none;
+    border: none;
+  }
+  
+  .remove-button {
+    background-color: #fff;
+    color: #e83a2a;
+    border: 1px solid #e83a2a;
+  }
+  
+  .view-button:hover {
+    background-color: #d9e1fd;
+  }
+  
+  .remove-button:hover {
+    background-color: #fff4f4;
+  }
+  
+  /* Reviews Section */
+  .reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  
+  .review-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px;
+  }
+  
+  .review-album {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .album-thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
+  .album-details h3 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .album-details p {
+    margin: 0;
+    color: #777;
+  }
+  
+  .review-content {
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .rating {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+  
+  .review-text {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  
+  .review-date {
+    font-size: 14px;
+    color: #999;
+  }
+  
+  .review-actions {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .edit-button {
+    background-color: #fff;
+    color: #2a41e8;
+    border: 1px solid #2a41e8;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .edit-button:hover {
+    background-color: #eef2ff;
+  }
+  
+  /* Loading & Error States */
+  .loading-spinner {
+    text-align: center;
+    padding: 60px 20px;
+    color: #777;
+    font-size: 18px;
+  }
+  
+  .error-message {
+    color: #e83a2a;
+    text-align: center;
+    padding: 20px;
+    font-size: 16px;
+    background-color: #fff4f4;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .retry-button {
+    display: block;
+    width: 150px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #2a41e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  
+  .retry-button:hover {
+    background-color: #1c2eb3;
+  }
+
+  /* User account styling */
+ /* Main container */
+.account-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #191414;
+  color: #FFFFFF;
+}
+
+.account-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #121212;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* Header section */
+.account-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background-color: #191414;
+  border-bottom: 1px solid #282828;
+}
+
+.account-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.logout-button {
+  background-color: transparent;
+  color: #B3B3B3;
+  border: 1px solid #B3B3B3;
+  border-radius: 500px;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+/* Content area */
+.account-content {
+  padding: 2rem;
+}
+
+/* User info section */
+.user-info {
+  margin-bottom: 2.5rem;
+}
+
+.user-info h2, 
+.account-activity h2, 
+.spotify-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.info-item {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.label {
+  font-weight: 700;
+  margin-right: 0.5rem;
+  min-width: 100px;
+  color: #B3B3B3;
+}
+
+.value {
+  color: #FFFFFF;
+}
+
+/* Activity section */
+.account-activity {
+  margin-bottom: 2.5rem;
+  background-color: #282828;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.favorites-section, 
+.reviews-section {
+  margin-top: 1.5rem;
+}
+
+.favorites-section h3, 
+.reviews-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: #FFFFFF;
+}
+
+.favorites-list, 
+.reviews-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.favorites-list li, 
+.reviews-list li {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  background-color: #121212;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.favorites-list li:hover, 
+.reviews-list li:hover {
+  background-color: #333333;
+}
+
+/* Spotify integration section */
+.spotify-section {
+  background-color: #282828;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.connect-button {
+  background-color: limegreen;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 500px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.connect-button:hover {
+  background-color: #1ED760;
+  transform: scale(1.05);
+}
+
+.disconnect-button {
+  background-color: transparent;
+  color: #FFFFFF;
+  border: 1px solid #B3B3B3;
+  border-radius: 500px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1rem;
+}
+
+.disconnect-button:hover {
+  border-color: #F15E6C;
+  color: #F15E6C;
+}
+
+/* Loading and error states */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.25rem;
+  color: #FFFFFF;
+  background-color: #191414;
+}
+
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+  background-color: #191414;
+}
+
+.error {
+  background-color: rgba(241, 94, 108, 0.1);
+  border: 1px solid #F15E6C;
+  color: #F15E6C;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  max-width: 500px;
+}
+
+.retry-button {
+  background-color: #FFFFFF;
+  color: #191414;
+  border: none;
+  border-radius: 500px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover {
+  transform: scale(1.05);
+  background-color: #e6e6e6;
+}
+
+/* Loading */
+.loading::after {
+  content: ".";
+  animation: loading-dots 1.5s infinite;
+  display: inline-block;
+  width: 20px;
+  text-align: left;
+}
+
+@keyframes loading-dots {
+  0% { content: "."; }
+  33% { content: ".."; }
+  66% { content: "..."; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .account-page {
+    padding: 1rem;
+  }
+  
+  .account-header {
+    padding: 1rem 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .account-content {
+    padding: 1.5rem;
+  }
+  
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .label {
+    margin-bottom: 0.25rem;
+  }
+}
