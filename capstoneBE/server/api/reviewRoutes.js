@@ -9,30 +9,35 @@ const {
   updateReview,
 } = require("../db/review.js");
 const { authenticate } = require("../db/user.js");
+const { authenticateToken } = require("./middlewares.js");
 
 // base route and return for the api for reviewss
 
 // /api/reviews
 
 // create a review for an album
-router.post("/album/:albumId/create", authenticate, async (req, res, next) => {
-  console.log("route logic");
-  try {
-    console.log(req.body);
-    const review = await createReview(
-      req.params.albumId,
-      req.user.id,
-      req.body.review,
-      req.body.headline,
-      req.body.rating,
-      req.body.favorite
-    );
+router.post(
+  "/album/:albumId/create",
+  authenticateToken,
+  async (req, res, next) => {
+    console.log("route logic");
+    try {
+      console.log(req.body);
+      const review = await createReview(
+        req.params.albumId,
+        req.user.id,
+        req.body.review,
+        req.body.headline,
+        req.body.rating,
+        req.body.favorite
+      );
 
-    res.status(201).send(review);
-  } catch (error) {
-    next(error);
+      res.status(201).send(review);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 // fetch all reviews
 
 router.get("/", async (req, res, next) => {

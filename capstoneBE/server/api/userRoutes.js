@@ -3,7 +3,14 @@ const express = require("express");
 const router = express.Router();
 const { client } = require("../db/index.js");
 
-const { createUser, authenticate, userExists, getAllUsers, getAllComments, getAllReviews } = require("../db/user.js");
+const {
+  createUser,
+  authenticate,
+  userExists,
+  getAllUsers,
+  getAllComments,
+  getAllReviews,
+} = require("../db/user.js");
 const { authenticateToken, adminAuth } = require("./middlewares");
 
 // Register
@@ -17,7 +24,7 @@ router.post("/register", async (req, res, next) => {
     console.log("role:", role);
 
     if (!username || !email || !password || !role) {
-      throw new Error('All fields are required');
+      throw new Error("All fields are required");
     }
 
     const response = await createUser(username, email, password, role);
@@ -58,16 +65,21 @@ router.get("/me", authenticateToken, async (req, res, next) => {
 });
 
 // Get all users, comments, and reviews (admin only)
-router.get("/admin/data", authenticateToken, adminAuth, async (req, res, next) => {
-  try {
-    const users = await getAllUsers();
-    const comments = await getAllComments();
-    const reviews = await getAllReviews();
-    res.json({ users, comments, reviews });
-  } catch (err) {
-    console.error("error fetching data", err.message);
-    res.status(500).send("unable to get data");
+router.get(
+  "/admin/data",
+  authenticateToken,
+  adminAuth,
+  async (req, res, next) => {
+    try {
+      const users = await getAllUsers();
+      const comments = await getAllComments();
+      const reviews = await getAllReviews();
+      res.json({ users, comments, reviews });
+    } catch (err) {
+      console.error("error fetching data", err.message);
+      res.status(500).send("unable to get data");
+    }
   }
-});
+);
 
 module.exports = router;
