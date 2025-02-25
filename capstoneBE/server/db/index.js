@@ -1,5 +1,12 @@
-const pg = require('pg');
-const client = new pg.Client();
+const { Client } = require('pg');
+
+const client = new Client({
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT,
+});
 
 const createTables = async () => {
   const SQL = `
@@ -47,7 +54,7 @@ const createTables = async () => {
     CREATE TABLE IF NOT EXISTS comments(
       id UUID PRIMARY KEY,
       user_id UUID REFERENCES users(id) NOT NULL,
-      review_id UUID REFERENCES reviews(id) NOT NULL,
+      review_id UUID REFERENCES reviews(id) ON DELETE CASCADE,
       comment TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

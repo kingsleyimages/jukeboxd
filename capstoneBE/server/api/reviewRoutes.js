@@ -1,3 +1,4 @@
+
 const express = require('express');
 const router = express.Router();
 const {
@@ -8,8 +9,9 @@ const {
   deleteReview,
   updateReview,
 } = require('../db/review.js');
+const { authenticateToken, adminAuth } = require('./middlewares.js');
 
-// base route and return for the api for reviewss
+// base route and return for the api for reviews
 
 // /api/reviews
 
@@ -32,8 +34,8 @@ router.post('/album/:albumId/create', async (req, res, next) => {
     next(error);
   }
 });
-// fetch all reviews
 
+// fetch all reviews
 router.get('/', async (req, res, next) => {
   try {
     const reviews = await fetchReviews();
@@ -42,6 +44,7 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
+
 // fetch all reviews for an album
 router.get('/album/:albumId/', async (req, res, next) => {
   try {
@@ -51,6 +54,7 @@ router.get('/album/:albumId/', async (req, res, next) => {
     next(error);
   }
 });
+
 // fetch all reviews by a user
 router.get('/user/:userId/', async (req, res, next) => {
   try {
@@ -61,16 +65,17 @@ router.get('/user/:userId/', async (req, res, next) => {
   }
 });
 
-// delete a review by id
-router.delete('/:id/delete', async (req, res, next) => {
+// delete a review by id (admin only)
+router.delete('/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const response = await deleteReview(req.params.id);
-    res.send(response);
+    res.status(200).json({ message: 'Review deleted successfully', review: response });
   } catch (error) {
     next(error);
   }
 });
 
+// update a review by id
 router.put('/:id/update', async (req, res, next) => {
   try {
     const response = await updateReview(req.params.id, req.body.review);

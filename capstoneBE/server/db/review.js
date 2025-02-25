@@ -79,19 +79,19 @@ const fetchReviewsByUserId = async (id) => {
   }
 };
 // delete a review by id
-const deleteReview = async (id) => {
+const deleteReview = async (reviewId) => {
   try {
-    const { rows } = await client.query(
-      `
-      DELETE FROM reviews
-      WHERE id = $1
-      RETURNING *;
-    `,
-      [id]
-    );
-    return rows[0];
+    // Delete related comments first
+    await client.query('DELETE FROM comments WHERE review_id = $1', [reviewId]);
+
+    // Then delete the review
+    const result = await client.query('DELETE FROM reviews WHERE id = $1 RETURNING *', [reviewId]);
+    if (result.rowCount === 0) {
+      throw new Error('Review not found');
+    }
+    return result.rows[0];
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

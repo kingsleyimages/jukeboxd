@@ -25,8 +25,36 @@ const createDummyData = async () => {
 
     // Create dummy albums
     const albums = [
-      { spotify_id: 'album1', name: 'Album 1', artist: 'Artist 1', image: 'image1.jpg', spotifyUrl: 'http://spotify.com/album1' },
-      { spotify_id: 'album2', name: 'Album 2', artist: 'Artist 2', image: 'image2.jpg', spotifyUrl: 'http://spotify.com/album2' },
+      {
+        spotify_id: 'album1',
+        artist: 'Artist 1',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      },
+      {
+        spotify_id: 'album2',
+        artist: 'Artist 2',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      },
+      {
+        spotify_id: 'album3',
+        artist: 'Artist 3',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      },
+      {
+        spotify_id: 'album4',
+        artist: 'Artist 4',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      },
+      {
+        spotify_id: 'album5',
+        artist: 'Artist 5',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      }
     ];
 
     const albumIds = [];
