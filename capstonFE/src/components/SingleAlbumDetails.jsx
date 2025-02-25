@@ -50,12 +50,13 @@ const AlbumDetails = ({ token }) => {
       if (response.ok) {
         const newReview = await response.json();
         setReviews((prevReviews) => [newReview, ...prevReviews]);
+        console.log(reviews);
         e.target.reset();
       } else {
         console.error("failed to create review");
       }
     } catch (err) {
-      console.error("error creating review:", error.message);
+      console.error("error creating review:");
     }
   };
 

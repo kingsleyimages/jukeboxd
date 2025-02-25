@@ -9,9 +9,7 @@ const {
   updateReview,
 } = require("../db/review.js");
 const { authenticate } = require("../db/user.js");
-const { authenticateToken } = require("./middlewares.js");
- = require('../db/review.js');
-const { adminAuth, authenticateToken } = require('./middlewares.js');
+const { adminAuth, authenticateToken } = require("./middlewares.js");
 
 // base route and return for the api for reviewss
 
