@@ -73,14 +73,15 @@ const fetchReviews = async () => {
 
 // Updated fetchReviewsByAlbumId function with JOIN to include usernames
 const fetchReviewsByAlbumId = async (id) => {
+  console.log(id);
   try {
     const { rows } = await client.query(
       `
-      SELECT users.username, review, rating, favorite, headline
-      FROM reviews
-      INNER JOIN users
-      ON reviews.user_id = users.id
-      WHERE album_id = $1
+        SELECT r.*, u.username
+      FROM reviews r
+      LEFT JOIN users u ON r.user_id = u.id
+      WHERE r.album_id = $1
+      ORDER BY r.created_at DESC;
     `,
       [id]
     );
