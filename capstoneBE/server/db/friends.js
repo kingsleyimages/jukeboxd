@@ -36,8 +36,6 @@ const fetchAllFriends = async () => {
 };
 
 // get all friends of a user
-
-// get all friends of a user
 const fetchFriendsById = async (userId) => {
   try {
     const { rows } = await client.query(
@@ -58,6 +56,30 @@ const fetchFriendsById = async (userId) => {
   }
 };
 
+// get all reviews by friends of a user
+
+const fetchReviewsByFriends = async (userId) => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT reviews.review, reviews.headline, reviews.rating, reviews.favorite, users.username
+FROM reviews
+INNER JOIN users ON reviews.user_id = users.id
+WHERE reviews.user_id IN (
+  SELECT friend_id FROM friends WHERE user_id = $1
+  UNION
+  SELECT user_id FROM friends WHERE friend_id = $1
+)
+      `,
+      [userId]
+    );
+    return rows;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 const deleteFriend = async (userId, friendId) => {
   try {
     const SQL = `DELETE FROM friends WHERE user_id = $1 OR friend_id = $1`;
@@ -72,4 +94,5 @@ module.exports = {
   fetchAllFriends,
   fetchFriendsById,
   deleteFriend,
+  fetchReviewsByFriends,
 };
