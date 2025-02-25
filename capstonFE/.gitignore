@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 .env
-.DS_Store
+** .DS_Store
