@@ -12,6 +12,14 @@ function Me() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
 
+	// Friends data states
+	const [friendsList, setFriendsList] = useState([]);
+	const [friendsReviews, setFriendsReviews] = useState([]);
+	const [friendsFavorites, setFriendsFavorites] = useState([]);
+	const [isFriendsLoading, setIsFriendsLoading] = useState(false);
+	const [friendsError, setFriendsError] = useState(null);
+	const [activeTab, setActiveTab] = useState('myActivity'); // 'myActivity' or 'friendsActivity'
+
 	//Spotify auth states
 	const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
 	const REDIRECT_URI = "http://localhost:5173/callback"; // change whenever we deploy
@@ -20,7 +28,7 @@ function Me() {
 	
 	const [accessToken, setAccessToken] = useState("");
 
-	// For debugging purposes
+	// For debugging
 	useEffect(() => {
 		console.log("Token in localStorage:", localStorage.getItem("token"));
 		console.log("User in localStorage:", localStorage.getItem("user"));
@@ -46,13 +54,12 @@ function Me() {
 				const userDataStr = localStorage.getItem("user");
 				console.log("User data in localStorage:", userDataStr ? "exists" : "missing");
 				
-				//if user data is in local storage, tries to parse it
 				if (userDataStr) {
 					try {
 						const parsedUserData = JSON.parse(userDataStr);
 						console.log("Parsed user data:", parsedUserData);
 						
-						// Checks to see if the parsed data contains a username
+						// Validate that we have the expected user data structure
 						if (parsedUserData && parsedUserData.username) {
 							setUserData(parsedUserData);
 							setIsLoading(false);
@@ -89,8 +96,10 @@ function Me() {
 				} catch (apiError) {
 					console.error("API fetch error:", apiError);
 					
-					// Error type checking
+					// Check for specific error types and provide better messages
 					if (apiError.response) {
+						// The request was made and the server responded with a status code
+						// that falls out of the range of 2xx
 						if (apiError.response.status === 401) {
 							// Token might be expired or invalid
 							localStorage.removeItem("token");
@@ -119,7 +128,57 @@ function Me() {
 		fetchUserData();
 	}, [navigate, API_BASE_URL]);
 
-	// handle sync account - redirect user to the spotify login to get callback code
+	// Fetch friends data when user data is loaded
+	useEffect(() => {
+		if (userData && userData.id) {
+			fetchFriendsData(userData.id);
+		}
+	}, [userData]);
+
+	// Function to fetch friends data
+	const fetchFriendsData = async (userId) => {
+		setIsFriendsLoading(true);
+		setFriendsError(null);
+		
+		try {
+			const token = localStorage.getItem("token");
+			
+			// Fetch friends list
+			const friendsResponse = await axios.get(`${API_BASE_URL}/api/friends/${userId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			});
+			console.log("Friends list:", friendsResponse.data);
+			setFriendsList(friendsResponse.data);
+			
+			// Fetch friends' reviews
+			const reviewsResponse = await axios.get(`${API_BASE_URL}/api/friends/reviews/${userId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			});
+			console.log("Friends reviews:", reviewsResponse.data);
+			setFriendsReviews(reviewsResponse.data);
+			
+			// Fetch friends' favorites
+			const favoritesResponse = await axios.get(`${API_BASE_URL}/api/favorites/friends/${userId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			});
+			console.log("Friends favorites:", favoritesResponse.data);
+			setFriendsFavorites(favoritesResponse.data);
+			
+		} catch (error) {
+			console.error("Error fetching friends data:", error);
+			setFriendsError("Failed to load friends' activity. Please try again later.");
+		} finally {
+			setIsFriendsLoading(false);
+		}
+	};
+
+	// handle "sync account" redirect user to the spotify login to get callback code
 	const handleSync = async () => {
 		const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(
 			REDIRECT_URI
@@ -232,38 +291,123 @@ function Me() {
 								</div>
 							)}
 							
-							<div className="account-activity">
-								<h2>Your Activity</h2>
-								{userData.favorites && userData.favorites.length > 0 ? (
-									<div className="favorites-section">
-										<h3>Favorite Albums</h3>
-										<ul className="favorites-list">
-											{userData.favorites.map((favorite) => (
-												<li key={favorite.id || favorite._id}>
-													{favorite.albumName || favorite.title || "Unknown Album"}
-												</li>
-											))}
-										</ul>
-									</div>
-								) : (
-									<p>No favorite albums yet.</p>
-								)}
-								
-								{userData.reviews && userData.reviews.length > 0 ? (
-									<div className="reviews-section">
-										<h3>Recent Reviews</h3>
-										<ul className="reviews-list">
-											{userData.reviews.map((review) => (
-												<li key={review.id || review._id}>
-													{review.albumName || review.title || "Unknown Album"} - Rating: {review.rating}/5
-												</li>
-											))}
-										</ul>
-									</div>
-								) : (
-									<p>No reviews yet.</p>
-								)}
+							{/* Activity tabs */}
+							<div className="activity-tabs">
+								<button 
+									className={`tab-button ${activeTab === 'myActivity' ? 'active' : ''}`}
+									onClick={() => setActiveTab('myActivity')}
+								>
+									My Activity
+								</button>
+								<button 
+									className={`tab-button ${activeTab === 'friendsActivity' ? 'active' : ''}`}
+									onClick={() => setActiveTab('friendsActivity')}
+								>
+									Friends' Activity
+								</button>
 							</div>
+							
+							{activeTab === 'myActivity' ? (
+								<div className="account-activity">
+									<h2>Your Activity</h2>
+									{userData.favorites && userData.favorites.length > 0 ? (
+										<div className="favorites-section">
+											<h3>Favorite Albums</h3>
+											<ul className="favorites-list">
+												{userData.favorites.map((favorite) => (
+													<li key={favorite.id || favorite._id}>
+														{favorite.albumName || favorite.title || "Unknown Album"}
+													</li>
+												))}
+											</ul>
+										</div>
+									) : (
+										<p>No favorite albums yet.</p>
+									)}
+									
+									{userData.reviews && userData.reviews.length > 0 ? (
+										<div className="reviews-section">
+											<h3>Recent Reviews</h3>
+											<ul className="reviews-list">
+												{userData.reviews.map((review) => (
+													<li key={review.id || review._id}>
+														{review.albumName || review.title || "Unknown Album"} - Rating: {review.rating}/5
+													</li>
+												))}
+											</ul>
+										</div>
+									) : (
+										<p>No reviews yet.</p>
+									)}
+								</div>
+							) : (
+								<div className="friends-activity">
+									<h2>Friends' Activity</h2>
+									
+									{isFriendsLoading ? (
+										<div className="loading-mini">Loading friends' activity...</div>
+									) : friendsError ? (
+										<div className="error-mini">{friendsError}</div>
+									) : (
+										<>
+											{friendsList && friendsList.length > 0 ? (
+												<>
+													<div className="friends-section">
+														<h3>Your Friends</h3>
+														<ul className="friends-list">
+															{friendsList.map((friend, index) => (
+																<li key={index} className="friend-item">
+																	{friend.username}
+																</li>
+															))}
+														</ul>
+													</div>
+													
+													{friendsFavorites && friendsFavorites.length > 0 ? (
+														<div className="friends-favorites-section">
+															<h3>Friends' Favorite Albums</h3>
+															<ul className="favorites-list">
+																{friendsFavorites.map((favorite, index) => (
+																	<li key={index} className="favorite-item">
+																		<span className="album-name">{favorite.name || "Unknown Album"}</span>
+																		<span className="friend-name">Liked by: {favorite.username}</span>
+																	</li>
+																))}
+															</ul>
+														</div>
+													) : (
+														<p>Your friends haven't favorited any albums yet.</p>
+													)}
+													
+													{friendsReviews && friendsReviews.length > 0 ? (
+														<div className="friends-reviews-section">
+															<h3>Friends' Recent Reviews</h3>
+															<ul className="reviews-list">
+																{friendsReviews.map((review, index) => (
+																	<li key={index} className="review-item">
+																		<div className="review-header">
+																			<span className="review-title">{review.headline || "Review"}</span>
+																			<span className="review-rating">Rating: {review.rating}/5</span>
+																		</div>
+																		<div className="review-content">{review.review}</div>
+																		<div className="review-by">By: {review.username}</div>
+																	</li>
+																))}
+															</ul>
+														</div>
+													) : (
+														<p>Your friends haven't reviewed any albums yet.</p>
+													)}
+												</>
+											) : (
+												<div className="no-friends">
+													<p>You don't have any friends yet. Connect with other users to see their activity!</p>
+												</div>
+											)}
+										</>
+									)}
+								</div>
+							)}
 						</div>
 					) : (
 						<p>No user data available.</p>
