@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Discover from "./components/Discover";
-import Navbar from "./components/Navbar";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Me from "./components/Me";
-import Home from "./components/Home";
-import Mixtapes from "./components/Mixtapes";
-import Search from "./components/Search";
-import Register from "./components/Register";
-import Login from "./components/Login";
-import Callback from "./components/Callback";
-import SingleAlbumDetails from "./components/SingleAlbumDetails";
-import Admin from "./components/Admin"; // Import the Admin component
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Discover from './components/Discover';
+import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
+import Me from './components/Me';
+import Home from './components/Home';
+import Mixtapes from './components/Mixtapes';
+import Search from './components/Search';
+import Register from './components/Register';
+import Login from './components/Login';
+import Callback from './components/Callback';
+import SingleAlbumDetails from './components/SingleAlbumDetails';
+// import Admin from './components/Admin'; // Import the Admin component
+import AdminDashboard from './components/home-components/AdminDashBoard'; // Import the AdminDashboard component
 
 function App() {
   const [token, setToken] = useState("");
@@ -29,8 +30,10 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/account" element={<Me />} />
-            <Route path="/admin" element={<Admin />} />{" "}
-            {/* Add the Admin route inside ProtectedRoute */}
+            {/* <Route path="/admin" element={<Admin />} />{" "}
+            Add the Admin route inside ProtectedRoute */}
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />{" "}
+            {/* Add the AdminDashboard route inside ProtectedRoute */}
           </Route>
           <Route path="/callback" element={<Callback />} />
           <Route path="/home" element={<Home />} />
