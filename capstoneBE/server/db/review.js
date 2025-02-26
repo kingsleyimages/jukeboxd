@@ -37,8 +37,8 @@ const createReview = async (
     console.log(error);
   }
 };
-//fetch all reviews
 
+// fetch all reviews
 const fetchReviews = async () => {
   try {
     const { rows } = await client.query(
@@ -109,14 +109,14 @@ const fetchReviewsByUserId = async (id) => {
     console.log(error);
   }
 };
-// delete a review by id
-const deleteReview = async (id) => {
+
+// fetch a review by id
+const getReviewById = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      DELETE FROM reviews
+      SELECT * FROM reviews
       WHERE id = $1
-      RETURNING *;
     `,
       [id]
     );
@@ -161,6 +161,23 @@ const getAlbumIdBySpotifyId = async (spotifyId) => {
   }
 };
 
+// delete a review by id
+const deleteReview = async (id) => {
+  try {
+    const { rows } = await client.query(
+      `
+      DELETE FROM reviews
+      WHERE id = $1
+      RETURNING *;
+    `,
+      [id]
+    );
+    return rows[0];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   createReview,
   fetchReviewsByAlbumId,
@@ -168,4 +185,5 @@ module.exports = {
   fetchReviews,
   deleteReview,
   updateReview,
+  getReviewById,
 };

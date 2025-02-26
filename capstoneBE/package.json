@@ -7,7 +7,8 @@
     "start": "node app.js",
     "start:dev": "nodemon app.js",
     "seed": "node server/db/seed.js",
-    "seed:dev": "nodemon server/db/seed.js"
+    "seed:dev": "nodemon server/db/seed.js",
+    "create-admin": "node server/scripts/createAdmin.js"
   },
   "keywords": [],
   "author": "",

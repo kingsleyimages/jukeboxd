@@ -56,21 +56,28 @@ const fetchCommentsByReviewId = async (id) => {
   }
 };
 
-// fetch comments by user id
 const fetchCommentsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT users.username, comments.comment
+      SELECT comments.id, comments.comment, comments.user_id, users.username
       FROM comments
       INNER JOIN users ON comments.user_id = users.id
       WHERE comments.user_id = $1
     `,
       [id]
     );
-    return rows[0];
+    return rows.map(row => ({
+      id: row.id,
+      comment: row.comment,
+      user: {
+        id: row.user_id,
+        username: row.username,
+      },
+    }));
   } catch (error) {
     console.log(error);
+    return [];
   }
 };
 

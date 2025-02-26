@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const { client } = require('./server/db/index.js');
 const express = require('express');
 const app = express();
@@ -9,7 +9,21 @@ const cors = require('cors');
 app.use(cors());
 app.use(express.json());
 app.use('/api', require('./server/api'));
-//error middleware
+app.use('/api/reviews', require('./server/api/reviewRoutes.js'));
+
+
+// Log environment variables to ensure they are being read correctly
+console.log('PGUSER:', process.env.PGUSER);
+console.log('PGHOST:', process.env.PGHOST);
+console.log('PGDATABASE:', process.env.PGDATABASE);
+console.log('PGPASSWORD:', process.env.PGPASSWORD);
+console.log('PGPORT:', process.env.PGPORT);
+
+if (!process.env.PGUSER || !process.env.PGHOST || !process.env.PGDATABASE || !process.env.PGPASSWORD || !process.env.PGPORT) {
+  console.error('One or more environment variables are missing.');
+  process.exit(1);
+}
+
 const init = async () => {
   try {
     await client.connect();
@@ -21,4 +35,5 @@ const init = async () => {
     console.error('connection error:', error);
   }
 };
+
 init();

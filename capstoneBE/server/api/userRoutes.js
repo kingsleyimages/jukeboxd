@@ -10,6 +10,8 @@ const {
   getAllUsers,
   getAllComments,
   getAllReviews,
+  deleteUser,
+  modifyUser,
 } = require("../db/user.js");
 const { authenticateToken, adminAuth } = require("./middlewares.js");
 
@@ -36,6 +38,7 @@ router.post("/register", async (req, res, next) => {
 
 // Login
 router.post("/login", async (req, res, next) => {
+  console.log("POST /login route hit");
   const { username, password } = req.body;
   console.log("login request received", req.body);
   try {
@@ -81,5 +84,28 @@ router.get(
     }
   }
 );
+
+// Modify user (admin only)
+router.put("/admin/users/:id", authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const { username, email, role } = req.body;
+    const response = await modifyUser(req.params.id, username, email, role);
+    res.status(200).send(response);
+  } catch (err) {
+    console.error('error modifying user', err.message);
+    res.status(500).send('unable to modify user');
+  }
+});
+
+// Delete user (admin only)
+router.delete('/admin/users/:id', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    await deleteUser(req.params.id);
+    res.status(200).send({ message: 'User deleted successfully' });
+  } catch (err) {
+    console.error('error deleting user', err.message);
+    res.status(500).send('unable to delete user');
+  }
+});
 
 module.exports = router;
