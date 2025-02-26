@@ -1,8 +1,23 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../../../.env' });
+const { Client } = require('pg');
+const bcrypt = require('bcrypt');
+const uuid = require('uuid');
 
-const { client, createTables } = require('./index.js');
-const { createUser } = require('./user.js');
-const { createReview } = require('./review.js');
+// Log environment variables to ensure they are being read correctly
+console.log('PGUSER:', process.env.PGUSER);
+console.log('PGHOST:', process.env.PGHOST);
+console.log('PGDATABASE:', process.env.PGDATABASE);
+console.log('PGPASSWORD:', process.env.PGPASSWORD);
+console.log('PGPORT:', process.env.PGPORT);
+
+if (!process.env.PGUSER || !process.env.PGHOST || !process.env.PGDATABASE || !process.env.PGPASSWORD || !process.env.PGPORT) {
+  console.error('One or more environment variables are missing.');
+  process.exit(1);
+}
+
+const client = new Client({
+  connectionString: `postgresql://${process.env.PGUSER}:${process.env.PGPASSWORD}@${process.env.PGHOST}:${process.env.PGPORT}/${process.env.PGDATABASE}`
+});
 
 const seed = async () => {
   try {
@@ -10,71 +25,101 @@ const seed = async () => {
     console.log('connected to database');
     // await createTables();
     console.log('tables created');
-    const [kingsley, hamrick, ben, nate, nick, god] = await Promise.all([
-      createUser('kingsley', 'sk@ki.com', 'password', 'admin'),
-      createUser('hamrick', 'kath@leen.com', 'password', 'user'),
-      createUser('ogben', 'ben@rangers.com', 'password', 'admin'),
-      createUser('nate', 'nate@florida.com', 'password', 'user'),
-      createUser('nick', 'nick@broomfield.co', 'password', 'user'),
-      createUser('god', 'god@god.com', 'password', 'user'),
-    ]);
-    console.log('Users created');
-    // const [review1, review2, review3, review4, review5, review6] =
-    //   await Promise.all([
-    //     createReview(
-    //       '03c33123-faed-4762-9d6a-f7d9c61138d3',
-    //       kingsley[0].id,
-    //       'Donec maximus dolor vel neque ultricies rutrum. Maecenas nec lacus ut orci condimentum tristique. Cras aliquam quis lectus a volutpat. Pellentesque sed mattis urna. Vestibulum eleifend luctus dictum. Donec in pulvinar nunc, quis volutpat lacus. Vivamus lobortis est risus, ut laoreet ligula convallis non. Duis eget urna nulla',
-    //       'Headline 6',
-    //       '5',
-    //       'true'
-    //     ),
-    //     createReview(
-    //       '8f5628aa-eac7-4b03-9474-0f8c8c419412',
-    //       hamrick[0].id,
-    //       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vehicula efficitur blandit. Morbi vulputate lorem eu sodales cursus. Suspendisse nec ligula et neque malesuada suscipit id nec nibh. Phasellus fermentum purus ut nibh fringilla scelerisque. Aliquam dignissim tincidunt magna sed facilisis.',
-    //       'Headline 1',
-    //       '3',
-    //       'false'
-    //     ),
-    //     createReview(
-    //       '46968cdb-898f-4cf3-bdeb-ab92ed4cf2f8',
-    //       ogben[0].id,
-    //       'Suspendisse egestas finibus enim, at vehicula neque posuere id. Vestibulum nibh dui, pretium at justo vel, tempus auctor arcu. Suspendisse ut ullamcorper nisl. Praesent neque augue, scelerisque ac malesuada at, pharetra nec est. Nulla sed faucibus purus.',
-    //       'Headline 2',
-    //       '4',
-    //       'true'
-    //     ),
-    //     createReview(
-    //       '019bb0af-e171-45e2-a205-0def16c9c496',
-    //       nate[0].id,
-    //       'Curabitur quis dui vel leo blandit luctus ac vitae purus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas eget mauris eget justo aliquam convallis. Duis finibus at enim ut tincidunt. Sed vel nunc tristique, hendrerit nisl non, feugiat urna.',
-    //       'Headline 3',
-    //       '5',
-    //       'true'
-    //     ),
-    //     createReview(
-    //       '019bb0af-e171-45e2-a205-0def16c9c496',
-    //       nick[0].id,
-    //       'Donec nunc orci, porta accumsan tempus in, gravida sed quam. Pellentesque et augue non diam sollicitudin tristique et sit amet mauris.',
-    //       'Headline 4',
-    //       '2',
-    //       'false'
-    //     ),
-    //     createReview(
-    //       'c3268dbd-56ac-45c7-befe-5eecca7e9b24',
-    //       god[0].id,
-    //       'Morbi posuere sodales maximus. Maecenas vestibulum et justo vel euismod. Integer sed augue ultrices, faucibus massa nec, bibendum tellus.',
-    //       'Headline 5',
-    //       '1',
-    //       'false'
-    //     ),
-    //   ]);
-    console.log('Reviews Created');
-    //seed your database here!
+
+    // Create dummy users
+    const users = [
+      { username: `user${uuid.v4().slice(0, 8)}`, email: `user${uuid.v4().slice(0, 8)}@example.com`, password: 'password11', role: 'user' },
+      { username: `user${uuid.v4().slice(0, 8)}`, email: `user${uuid.v4().slice(0, 8)}@example.com`, password: 'password22', role: 'user' },
+    ];
+
+    const userIds = [];
+    for (const user of users) {
+      const hashedPassword = await bcrypt.hash(user.password, 5);
+      const result = await client.query(
+        `INSERT INTO users(id, username, email, password, role) VALUES($1, $2, $3, $4, $5) RETURNING id`,
+        [uuid.v4(), user.username, user.email, hashedPassword, user.role]
+      );
+      userIds.push(result.rows[0].id);
+    }
+
+    // Create dummy albums
+    const albums = [
+      {
+        spotify_id: 'album1',
+        artist: 'Artist 1',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      },
+      {
+        spotify_id: 'album2',
+        artist: 'Artist 2',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      },
+      {
+        spotify_id: 'album3',
+        artist: 'Artist 3',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      },
+      {
+        spotify_id: 'album4',
+        artist: 'Artist 4',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      },
+      {
+        spotify_id: 'album5',
+        artist: 'Artist 5',
+        image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+        spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
+      }
+    ];
+
+    const albumIds = [];
+    for (const album of albums) {
+      const result = await client.query(
+        `INSERT INTO albums(id, spotify_id, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5) RETURNING id`,
+        [uuid.v4(), album.spotify_id, album.artist, album.image, album.spotifyUrl]
+      );
+      albumIds.push(result.rows[0].id);
+    }
+
+    // Create dummy reviews
+    const reviews = [
+      { user_id: userIds[0], album_id: albumIds[0], rating: 5, favorite: true, headline: 'Great Album', review: 'This is a great album!' },
+      { user_id: userIds[1], album_id: albumIds[1], rating: 4, favorite: false, headline: 'Good Album', review: 'This is a good album.' },
+    ];
+
+    const reviewIds = [];
+    for (const review of reviews) {
+      const result = await client.query(
+        `INSERT INTO reviews(id, user_id, album_id, rating, favorite, headline, review) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+        [uuid.v4(), review.user_id, review.album_id, review.rating, review.favorite, review.headline, review.review]
+      );
+      reviewIds.push(result.rows[0].id);
+    }
+
+    // Create dummy comments
+    const comments = [
+      { user_id: userIds[0], review_id: reviewIds[0], comment: 'I agree, this album is great!' },
+      { user_id: userIds[1], review_id: reviewIds[1], comment: 'I think it could be better.' },
+    ];
+
+    for (const comment of comments) {
+      await client.query(
+        `INSERT INTO comments(id, user_id, review_id, comment) VALUES($1, $2, $3, $4)`,
+        [uuid.v4(), comment.user_id, comment.review_id, comment.comment]
+      );
+    }
+
+    console.log('Dummy data created successfully');
   } catch (error) {
     console.error('error creating tables');
     throw error;
+  } finally {
+    await client.end();
   }
 };
+
 seed();

@@ -1,6 +1,5 @@
 const { client } = require('./index');
 const uuid = require('uuid');
-// const bcrypt = require('bcrypt');
 
 // create a review for an album
 const createReview = async (
@@ -32,8 +31,8 @@ const createReview = async (
     console.log(error);
   }
 };
-//fetch all reviews
 
+// fetch all reviews
 const fetchReviews = async () => {
   try {
     const { rows } = await client.query(
@@ -57,7 +56,7 @@ const fetchReviewsByAlbumId = async (id) => {
     `,
       [id]
     );
-    return rows[0];
+    return rows;
   } catch (error) {
     console.log(error);
   }
@@ -73,11 +72,28 @@ const fetchReviewsByUserId = async (id) => {
     `,
       [id]
     );
+    return rows;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// fetch a review by id
+const getReviewById = async (id) => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT * FROM reviews
+      WHERE id = $1
+    `,
+      [id]
+    );
     return rows[0];
   } catch (error) {
     console.log(error);
   }
 };
+
 // delete a review by id
 const deleteReview = async (reviewId) => {
   try {
@@ -95,8 +111,7 @@ const deleteReview = async (reviewId) => {
   }
 };
 
-//update a review by id
-
+// update a review by id
 const updateReview = async (id, review) => {
   try {
     const { rows } = await client.query(
@@ -114,6 +129,7 @@ const updateReview = async (id, review) => {
     console.log(error);
   }
 };
+
 module.exports = {
   createReview,
   fetchReviewsByAlbumId,
@@ -121,4 +137,5 @@ module.exports = {
   fetchReviews,
   deleteReview,
   updateReview,
+  getReviewById,
 };
