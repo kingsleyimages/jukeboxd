@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import ReviewCard from "./ReviewCard";
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import ReviewCard from './ReviewCard';
+import styles from '../css/AlbumDetails.module.css';
 
 const AlbumDetails = ({ token }) => {
   console.log(token);
@@ -17,7 +18,7 @@ const AlbumDetails = ({ token }) => {
         const data = await response.json();
         setAlbum(data);
       } catch (error) {
-        console.error("Error fetching album details:");
+        console.error('Error fetching album details:');
       }
     };
 
@@ -30,7 +31,7 @@ const AlbumDetails = ({ token }) => {
     const reviewData = Object.fromEntries(formData.entries());
 
     if (!token) {
-      alert("you need to be logged in to leave a review");
+      alert('you need to be logged in to leave a review');
       return;
     }
 
@@ -38,9 +39,9 @@ const AlbumDetails = ({ token }) => {
       const response = await fetch(
         `http://localhost:3000/api/reviews/album/${albumId}/create`,
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ ...reviewData }),
@@ -53,29 +54,33 @@ const AlbumDetails = ({ token }) => {
         console.log(reviews);
         e.target.reset();
       } else {
-        console.error("failed to create review");
+        console.error('failed to create review');
       }
     } catch (err) {
-      console.error("error creating review:");
+      console.error('error creating review:');
     }
   };
 
   if (!album) return <div>Loading...</div>;
-  console.log("Should show review form:", !!token);
+  console.log('Should show review form:', !!token);
 
   return (
     <div>
-      <h1>{album.name}</h1>
-      <p>Artist: {album.artist}</p>
-      <img src={album.image} alt={album.name} />
-      <h2>Reviews</h2>
-      {album.reviews.length > 0 ? (
-        album.reviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))
-      ) : (
-        <p>No Reviews for this album</p>
-      )}
+      <div className={styles.albumWrapper}>
+        <h1 className={styles.title}>{album.name}</h1>
+        <p className={styles.artist}> {album.artist}</p>
+        <img className={styles.img} src={album.image} alt={album.name} />
+      </div>
+      <h2 className={styles.reviewTitle}>Reviews:</h2>
+      <div className={styles.reviewWrapper}>
+        {album.reviews.length > 0 ? (
+          album.reviews.map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))
+        ) : (
+          <p>No Reviews for this album</p>
+        )}
+      </div>
       {token && (
         <form onSubmit={handleSubmitReview}>
           <h2>Leave a review</h2>
