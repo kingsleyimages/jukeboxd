@@ -77,17 +77,18 @@ function Discover() {
 		async function getTopAlbums() {
 			if (!accessToken) return;
 
-			try {
-				const response = await fetch(
-					"https://api.spotify.com/v1/browse/new-releases?limit=50",
-					{
-						method: "GET",
-						headers: {
-							Authorization: `Bearer ${accessToken}`,
-							"Content-Type": "application/json",
-						},
-					}
-				);
+      try {
+        const response = await fetch(
+          // "http://localhost:3000/api/albums",
+          'https://api.spotify.com/v1/browse/new-releases?limit=50',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
 
 				const data = await response.json();
 
@@ -110,70 +111,21 @@ function Discover() {
 				// save albums to database
 				//uncomment this block to save albums to database
 
-				// const formattedAlbums = data.albums.items.map(
-				//   async (album) =>
-				//     await sendAlbumsToDatabase({
-				//       spotify_id: album.id,
-				//       name: album.name,
-				//       artist: album.artists[0].name,
-				//       image: album.images[0].url,
-				//       spotifyUrl: album.external_urls.spotify,
-				//     })
-				// );
-				// await Promise.all(formattedAlbums);
-
-				const handleViewDetails = async (albumId) => {
-					try {
-						// Check if album exists in local database
-						const localResponse = await fetch(
-							`http://localhost:3000/albums/${albumId}`
-						);
-						const localResult = await localResponse.json();
-
-						// If album exists, navigate to that page
-						if (localResult.success) {
-							navigate(`/album/${albumId}`);
-							return;
-						}
-
-						// If album doesn't exist, fetch it from Spotify
-						const spotifyResponse = await fetch(
-							`https://api.spotify.com/v1/albums/${albumId}`,
-							{
-								method: "GET",
-								headers: {
-									Authorization: `Bearer YOUR_ACCESS_TOKEN`,
-									"Content-Type": "application/json",
-								},
-							}
-						);
-
-						// Check for Spotify API errors
-						if (!spotifyResponse.ok) {
-							throw new Error("Failed to fetch album from Spotify");
-						}
-
-						const spotifyResult = await spotifyResponse.json();
-
-						// Save the album to local database
-						await fetch(`http://localhost:3000/albums`, {
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify(spotifyResult),
-						});
-
-						// Navigate to the new album page
-						navigate(`/album/${albumId}`);
-					} catch (error) {
-						console.error("Error handling album details:", error);
-					}
-				};
-			} catch (error) {
-				console.error("Failed to fetch top albums!:", error);
-			}
-		}
+        // const formattedAlbums = data.albums.items.map(
+        //   async (album) =>
+        //     await sendAlbumsToDatabase({
+        //       spotify_id: album.id,
+        //       name: album.name,
+        //       artist: album.artists[0].name,
+        //       image: album.images[0].url,
+        //       spotifyUrl: album.external_urls.spotify,
+        //     })
+        // );
+        await Promise.all(formattedAlbums);
+      } catch (error) {
+        console.error('Failed to fetch top albums!:', error);
+      }
+    }
 
 		getTopAlbums();
 	}, [accessToken]);

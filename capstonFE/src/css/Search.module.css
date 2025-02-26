@@ -1,0 +1,56 @@
+.row {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.card {
+  width: 20%;
+  max-width: 250px;
+  margin: 10px;
+  padding: 2% 1%;
+  border: 1px solid rgba(222, 222, 222, 1);
+  border-radius: 5px;
+  box-shadow: 2px 2px 6px rgba(222, 222, 222, 0.4);
+}
+.title {
+  font-size: 1.2em;
+  font-weight: bold;
+
+  margin: 10px;
+  margin-bottom: 0;
+  text-align: center;
+  color: rgba(222, 222, 222, 1);
+}
+.release {
+  font-size: 0.9em;
+  color: rgba(222, 222, 222, 1);
+  text-align: center;
+  margin-top: 0;
+}
+img {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 185px;
+  border: 1px solid rgba(222, 222, 222, 1);
+}
+
+.button {
+  background-color: #8f8e8e;
+  color: rgb(224, 224, 224);
+  padding: 5px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 100%;
+  max-width: 130px;
+  margin: 0 auto;
+  display: block;
+  margin: 7px auto;
+  letter-spacing: 1px;
+  line-height: 1rem;
+}

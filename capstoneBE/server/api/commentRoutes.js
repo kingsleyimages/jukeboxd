@@ -8,12 +8,11 @@ const {
   deleteComment,
   updateComment,
 } = require('../db/comments.js');
-
+const { authenticateToken, adminAuth } = require('./middlewares.js');
 
 // base route and return for the api for comments
 
 // /api/comments
-
 
 // create a comment for a review
 router.post('/review/:reviewId/create', async (req, res, next) => {
@@ -33,7 +32,6 @@ router.post('/review/:reviewId/create', async (req, res, next) => {
 });
 
 // fetch all comments
-
 router.get('/', async (req, res, next) => {
   try {
     const comments = await fetchComments();
@@ -63,17 +61,49 @@ router.get('/user/:userId/', async (req, res, next) => {
   }
 });
 
-// delete a comment by id
-router.delete('/:id/delete', async (req, res, next) => {
+// delete a comment by id (non-admin)
+router.delete('/:id/delete', authenticateToken, async (req, res, next) => {
   try {
+    const comment = await deleteComment(req.params.id);
+    if(comment.user.id !== req.user.id){
+      res.status(401).send("You are not authorized to delete this comment")
+    }
     const response = await deleteComment(req.params.id);
     res.status(200).send(response);
   } catch (error) {
     next(error);
   }
 });
-// update a comment by id
-router.put('/:id/update', async (req, res, next) => {
+
+// delete a comment by id(admin only)
+router.delete('/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
+  try{
+    const response = await deleteComment(req.params.id);
+    res.status(200).send({message: 'Comment deleted successfully', comment: response});
+  }
+  catch(error){
+    next(error);
+  }
+}
+);
+
+// update a comment by id (non-admin)
+router.put('/:id/update', authenticateToken, async (req, res, next) => {
+  try {
+    const comments = await fetchCommentsByUserId(req.user.id);
+    const comment = comments.find(comment => comment.id === req.params.id);
+    if(!comment || comment.user.id !== req.user.id){
+      return res.status(401).send("You are not authorized to update this comment");
+    }
+    const response = await updateComment(req.params.id, req.body.comment);
+    res.status(200).send(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// update a comment by id (admin only)
+router.put('/admin/:id/update', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const response = await updateComment(req.params.id, req.body.comment);
     res.status(200).send(response);

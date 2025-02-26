@@ -8,7 +8,6 @@ const albumCovers = [
 	"https://via.placeholder.com/150/FF00FF",
 ];
 
-// test
 export default function AlbumCarousel() {
 	return (
 		<div className="overflow-hidden w-full bg-black py-4 relative flex justify-end">

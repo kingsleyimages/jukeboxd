@@ -1,0 +1,75 @@
+.albumWrapper {
+  width: 80%;
+  margin: 0 10%;
+  max-width: 1200px;
+  color: rgba(222, 222, 222, 1);
+}
+.title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 0;
+  line-height: 2rem;
+}
+.artist {
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
+}
+img {
+  width: 100%;
+  max-width: 350px;
+  margin: 0;
+  display: block;
+  border: 1px solid rgba(222, 222, 222, 1);
+}
+.reviewWrapper {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: #1d1d1d;
+  flex-wrap: wrap;
+}
+.reviewTitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 1% 0 0 10%;
+  line-height: 2rem;
+  color: rgba(222, 222, 222, 1);
+}
+.reviewWrapper > p {
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
+  color: rgba(222, 222, 222, 1);
+}
+.reviewCard {
+  width: 30%;
+  border: 1px solid rgba(222, 222, 222, 1);
+  border-radius: 5px;
+  margin: 1.5%;
+  padding: 1%;
+}
+
+.headline {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: rgba(222, 222, 222, 1);
+}
+.author,
+.favorite,
+.rating,
+.review {
+  font-size: 1rem;
+  font-weight: 400;
+
+  color: rgba(222, 222, 222, 1);
+}
+.author {
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+.rating {
+  margin-top: 15px;
+}

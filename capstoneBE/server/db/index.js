@@ -1,5 +1,12 @@
-const pg = require('pg');
-const client = new pg.Client();
+const { Client } = require("pg");
+
+const client = new Client({
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT,
+});
 
 const createTables = async () => {
   const SQL = `
@@ -13,7 +20,7 @@ const createTables = async () => {
 
     CREATE TABLE IF NOT EXISTS users(
       id UUID PRIMARY KEY,
-      username VARCHAR(20) NOT NULL UNIQUE,
+      username VARCHAR(50) NOT NULL UNIQUE,
       email VARCHAR(255) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
       role VARCHAR(20) NOT NULL,
@@ -24,7 +31,6 @@ const createTables = async () => {
     CREATE TABLE IF NOT EXISTS albums(
       id UUID PRIMARY KEY,
       spotify_id VARCHAR(100) NOT NULL UNIQUE,
-      name VARCHAR(255) NOT NULL,
       artist VARCHAR(255) NOT NULL,
       image VARCHAR(255) NOT NULL,
       spotifyUrl VARCHAR(255) NOT NULL,
@@ -37,7 +43,7 @@ const createTables = async () => {
       user_id UUID REFERENCES users(id) NOT NULL,
       album_id UUID REFERENCES albums(id) NOT NULL,
       rating INT NOT NULL DEFAULT 0,
-      favorite BOOLEAN NOT NULL DEFAULT false,
+      favorite BOOLEAN DEFAULT false,
       headline TEXT NOT NULL,
       review TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -48,7 +54,7 @@ const createTables = async () => {
     CREATE TABLE IF NOT EXISTS comments(
       id UUID PRIMARY KEY,
       user_id UUID REFERENCES users(id) NOT NULL,
-      review_id UUID REFERENCES reviews(id) NOT NULL,
+      review_id UUID REFERENCES reviews(id) ON DELETE CASCADE,
       comment TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -81,7 +87,7 @@ const createTables = async () => {
     );
   `;
   await client.query(SQL);
-  console.log('tables created');
+  console.log("tables created");
 };
 
 module.exports = {
