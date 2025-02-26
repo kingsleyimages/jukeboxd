@@ -161,6 +161,23 @@ const getAlbumIdBySpotifyId = async (spotifyId) => {
   }
 };
 
+// delete a review by id
+const deleteReview = async (id) => {
+  try {
+    const { rows } = await client.query(
+      `
+      DELETE FROM reviews
+      WHERE id = $1
+      RETURNING *;
+    `,
+      [id]
+    );
+    return rows[0];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   createReview,
   fetchReviewsByAlbumId,

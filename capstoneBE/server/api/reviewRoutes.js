@@ -10,7 +10,6 @@ const {
   getReviewById,
 } = require("../db/review.js");
 const { authenticate } = require("../db/user.js");
-const { adminAuth, authenticateToken } = require("./middlewares.js");
 const { authenticateToken, adminAuth } = require('./middlewares.js');
 
 // create a review for an album

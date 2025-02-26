@@ -42,35 +42,35 @@ const seed = async () => {
       userIds.push(result.rows[0].id);
     }
 
-    // Create dummy albums
+    // Create dummy albums with random spotify_id and artist
     const albums = [
       {
-        spotify_id: 'album1',
-        artist: 'Artist 1',
+        spotify_id: `album${uuid.v4().slice(0, 8)}`,
+        artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
       },
       {
-        spotify_id: 'album2',
-        artist: 'Artist 2',
+        spotify_id: `album${uuid.v4().slice(0, 8)}`,
+        artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
       },
       {
-        spotify_id: 'album3',
-        artist: 'Artist 3',
+        spotify_id: `album${uuid.v4().slice(0, 8)}`,
+        artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
       },
       {
-        spotify_id: 'album4',
-        artist: 'Artist 4',
+        spotify_id: `album${uuid.v4().slice(0, 8)}`,
+        artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
       },
       {
-        spotify_id: 'album5',
-        artist: 'Artist 5',
+        spotify_id: `album${uuid.v4().slice(0, 8)}`,
+        artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image: 'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl: 'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g'
       }

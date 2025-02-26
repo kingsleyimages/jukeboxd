@@ -16,8 +16,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"; 
-
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"; 
 
   // Determine initial mode based on current path
   const [isLoginMode, setIsLoginMode] = useState(
@@ -77,15 +76,29 @@ function Login() {
         }
       );
 
+      // Check if response.data contains the expected properties
+      if (!response.data.token || !response.data.username) {
+        throw new Error("Invalid response from server");
+      }
+
       // Store user data and token
       localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("user", JSON.stringify({ username: response.data.username }));
+
+      // Decode the token to get user role
+      const decodedToken = JSON.parse(atob(response.data.token.split('.')[1]));
+      const userRole = decodedToken.role;
 
       // Trigger storage event for Navbar to detect login
       window.dispatchEvent(new Event("storage"));
 
-      // Redirect to home page
-      navigate("/");
+      // Redirect to admin dashboard if user is admin
+      if (userRole === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        // Redirect to home page
+        navigate("/");
+      }
     } catch (err) {
       console.error("Login error:", err);
       
@@ -95,6 +108,8 @@ function Login() {
         errorMessage = err.response.data?.message || `Error: ${err.response.status}`;
       } else if (err.request) {
         errorMessage = "No response from server. Please check your connection.";
+      } else if (err.message) {
+        errorMessage = err.message;
       }
       
       setError(errorMessage);
