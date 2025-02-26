@@ -34,7 +34,7 @@ function App() {
             <Route path="admin/dashboard/users" element={<ViewAllUsers />}/>
           </Route>
           <Route path="/callback" element={<Callback />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/mixtapes" element={<Mixtapes />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/search" element={<Search />} />

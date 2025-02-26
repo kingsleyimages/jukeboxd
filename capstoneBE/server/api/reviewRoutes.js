@@ -14,7 +14,6 @@ const { authenticateToken, adminAuth } = require('./middlewares.js');
 
 // create a review for an album
 router.post(
-
   "/album/:albumId/create",
   authenticateToken,
   async (req, res, next) => {

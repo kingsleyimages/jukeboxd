@@ -22,7 +22,8 @@ function Me() {
 
 	//Spotify auth states
 	const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
-	const REDIRECT_URI = "http://localhost:5173/callback"; // change whenever we deploy
+	const CLIENT_SECRET = import.meta.env.VITE_CLIENT_SECRET;
+	const REDIRECT_URI = "http://localhost:5173/callback"; // Change when deploying
 	const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 	const RESPONSE_TYPE = "code";
 	
@@ -186,7 +187,18 @@ function Me() {
 		window.location.href = authUrl;
 	};
 
-	//exchange authorization code for access token
+	// Extract authorization code from URL
+	useEffect(() => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const code = urlParams.get("code");
+
+		if (code) {
+			localStorage.setItem("spotifyAuthCode", code);
+			window.history.pushState({}, null, "/"); // Clean URL
+		}
+	}, []);
+
+	// Exchange authorization code for access token
 	useEffect(() => {
 		const fetchAccessToken = async () => {
 			const code = localStorage.getItem("spotifyAuthCode");
@@ -200,15 +212,14 @@ function Me() {
 						headers: {
 							"Content-Type": "application/x-www-form-urlencoded",
 							Authorization:
-								"Basic " +
-								btoa(
-									`${CLIENT_ID}:${import.meta.env.VITE_CLIENT_SECRET}`
-								),
+								"Basic " + btoa(`${CLIENT_ID}:${CLIENT_SECRET}`),
 						},
 						body: new URLSearchParams({
 							grant_type: "authorization_code",
 							code: code,
 							redirect_uri: REDIRECT_URI,
+							client_id: CLIENT_ID,
+							client_secret: CLIENT_SECRET,
 						}),
 					}
 				);

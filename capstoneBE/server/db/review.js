@@ -1,5 +1,6 @@
 const { client } = require("./index");
 const uuid = require("uuid");
+
 // const bcrypt = require('bcrypt');
 
 // create a review for an album
@@ -145,6 +146,8 @@ const updateReview = async (id, review, headline, rating, favorite) => {
     console.log(error);
   }
 };
+
+//
 
 //get review by spotify id
 const getAlbumIdBySpotifyId = async (spotifyId) => {

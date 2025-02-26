@@ -1,6 +1,6 @@
-import React from 'react';
-import '../App.css';
-import styles from '../css/Search.module.css';
+import React from "react";
+import "../App.css";
+import styles from "../css/Search.module.css";
 import {
   FormControl,
   InputGroup,
@@ -8,31 +8,33 @@ import {
   Button,
   Card,
   Row,
-} from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+} from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const clientId = import.meta.env.VITE_CLIENT_ID;
 const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
 function App() {
-  const [searchInput, setSearchInput] = useState('');
-  const [accessToken, setAccessToken] = useState('');
+  const [searchInput, setSearchInput] = useState("");
+  const [accessToken, setAccessToken] = useState("");
   const [albums, setAlbums] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let authParams = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body:
-        'grant_type=client_credentials&client_id=' +
+        "grant_type=client_credentials&client_id=" +
         clientId +
-        '&client_secret=' +
+        "&client_secret=" +
         clientSecret,
     };
 
-    fetch('https://accounts.spotify.com/api/token', authParams)
+    fetch("https://accounts.spotify.com/api/token", authParams)
       .then((result) => result.json())
       .then((data) => {
         setAccessToken(data.access_token);
@@ -49,16 +51,16 @@ function App() {
 
   async function search() {
     let artistParams = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + accessToken,
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + accessToken,
       },
     };
 
     // Get Artist
     const artistID = await fetch(
-      'https://api.spotify.com/v1/search?q=' + searchInput + '&type=artist',
+      "https://api.spotify.com/v1/search?q=" + searchInput + "&type=artist",
       artistParams
     )
       .then((result) => result.json())
@@ -68,9 +70,20 @@ function App() {
 
     // Get Artist Albums
     await fetch(
-      'https://api.spotify.com/v1/artists/' +
+      "https://api.spotify.com/v1/artists/" +
         artistID +
-        '/albums?include_groups=album&market=US&limit=50',
+        "/albums?include_groups=album&market=US&limit=50",
+      artistParams
+    )
+      .then((result) => result.json())
+      .then((data) => {
+        setAlbums(data.items);
+      });
+    // Get Artist Albums
+    await fetch(
+      "https://api.spotify.com/v1/artists/" +
+        artistID +
+        "/albums?include_groups=album&market=US&limit=50",
       artistParams
     )
       .then((result) => result.json())
@@ -78,6 +91,101 @@ function App() {
         setAlbums(data.items);
       });
   }
+
+  const handleViewDetails = async (albumId) => {
+    try {
+      // Check if album exists in local database
+      const localResponse = await fetch(
+        `http://localhost:3000/api/albums/${albumId}`
+      );
+
+      if (!localResponse.ok) {
+        console.error(
+          "local album fetch failed with status",
+          localResponse.status
+        );
+      }
+
+      const localResult = await localResponse.json().catch(() => null);
+      console.log("local database result:", localResult);
+
+      // If album exists, navigate to that page
+      if (localResult?.id) {
+        navigate(`/album/${albumId}`);
+        return;
+      }
+
+      console.log("album not found locally, fetching from spotify");
+
+      // If album doesn't exist, fetch it from Spotify
+      const spotifyResponse = await fetch(
+        `https://api.spotify.com/v1/albums/${albumId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Check for Spotify API errors
+      if (!spotifyResponse.ok) {
+        console.error(
+          "spotify fetch failed with status",
+          spotifyResponse.status
+        );
+        return;
+      }
+
+      const spotifyResult = await spotifyResponse.json().catch(() => null);
+
+      if (!spotifyResult) {
+        console.error("failed to parse Spotify API response as JSON");
+        return;
+      }
+      console.log("spotify api result:", spotifyResult);
+
+      //prepare album data for local database
+      const albumData = {
+        name: spotifyResult.name,
+        artist: spotifyResult.artists[0]?.name || "unknown artist",
+        image: spotifyResult.images[0]?.url || "",
+        spotify_id: spotifyResult.id,
+        spotifyUrl: spotifyResult.external_urls?.spotify,
+      };
+
+      // Save the album to local database
+
+      // await fetch(`http://localhost:3000/albums`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(spotifyResult),
+      // });
+      const saveResponse = await fetch(
+        `http://localhost:3000/api/albums/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(albumData),
+        }
+      );
+
+      if (!saveResponse.ok) {
+        throw new Error("failed to save album to local db");
+      }
+      console.log("album saved to local db");
+
+      // Navigate to the new album page
+      navigate(`/album/${albumId}`);
+    } catch (error) {
+      console.error("Error handling album details:", error);
+    }
+  };
 
   return (
     <>
@@ -88,19 +196,19 @@ function App() {
             type="input"
             aria-label="Search for an Artist"
             onKeyDown={(event) => {
-              if (event.key === 'Enter') {
+              if (event.key === "Enter") {
                 search();
               }
             }}
             onChange={(event) => setSearchInput(event.target.value)}
             style={{
-              width: '300px',
-              height: '35px',
-              borderWidth: '0px',
-              borderStyle: 'solid',
-              borderRadius: '5px',
-              marginRight: '10px',
-              paddingLeft: '10px',
+              width: "300px",
+              height: "35px",
+              borderWidth: "0px",
+              borderStyle: "solid",
+              borderRadius: "5px",
+              marginRight: "10px",
+              paddingLeft: "10px",
             }}
           />
           <Button onClick={search}>Search</Button>
@@ -121,8 +229,12 @@ function App() {
                   </Card.Text>
                   <Button
                     href={album.external_urls.spotify}
-                    className={styles.button}>
+                    className={styles.button}
+                  >
                     Album Link
+                  </Button>
+                  <Button onClick={() => handleViewDetails(album.id)}>
+                    View Details
                   </Button>
                 </Card.Body>
               </Card>
