@@ -1,4 +1,4 @@
-const { Client } = require('pg');
+const { Client } = require("pg");
 
 const client = new Client({
   user: process.env.PGUSER,
@@ -43,7 +43,7 @@ const createTables = async () => {
       user_id UUID REFERENCES users(id) NOT NULL,
       album_id UUID REFERENCES albums(id) NOT NULL,
       rating INT NOT NULL DEFAULT 0,
-      favorite BOOLEAN NOT NULL DEFAULT false,
+      favorite BOOLEAN DEFAULT false,
       headline TEXT NOT NULL,
       review TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -87,7 +87,7 @@ const createTables = async () => {
     );
   `;
   await client.query(SQL);
-  console.log('tables created');
+  console.log("tables created");
 };
 
 module.exports = {

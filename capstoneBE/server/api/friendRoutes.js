@@ -4,6 +4,7 @@ const {
   createFriend,
   fetchAllFriends,
   fetchFriendsById,
+  fetchReviewsByFriends,
 } = require('../db/friends.js');
 
 // create a friend relationship between two users
@@ -33,6 +34,17 @@ router.get('/:userId', async (req, res) => {
     res.send(friends);
   } catch (error) {
     console.log(error);
+  }
+});
+
+router.get('/reviews/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const allFriends = await fetchReviewsByFriends(userId);
+    res.send(allFriends);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 

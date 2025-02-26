@@ -1,18 +1,24 @@
-const { client } = require('./index');
-const uuid = require('uuid');
+const { client } = require("./index");
+const uuid = require("uuid");
+// const bcrypt = require('bcrypt');
 
 // create a review for an album
 const createReview = async (
-  albumId,
+  spotifyAlbumId,
   userId,
   review,
   headline,
   rating,
   favorite
 ) => {
-  console.log('DB generation of review');
-  console.log(albumId, userId, review, headline, rating, favorite);
+  console.log("DB generation of review");
+  // console.log(albumId, userId, review, headline, rating, favorite);
   try {
+    const albumId = await getAlbumIdBySpotifyId(spotifyAlbumId);
+    if (!albumId) {
+      console.error("invalid spotify id or album not found");
+    }
+
     const SQL = `INSERT INTO reviews (id, album_id, user_id, rating, favorite, headline, review)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
@@ -37,7 +43,10 @@ const fetchReviews = async () => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
+      SELECT users.username, review, rating, favorite, headline
+      FROM reviews
+      INNER JOIN users
+      ON reviews.user_id = users.id
     `
     );
     return rows;
@@ -47,12 +56,32 @@ const fetchReviews = async () => {
 };
 
 // fetch all reviews for an album
+// const fetchReviewsByAlbumId = async (id) => {
+//   try {
+//     const { rows } = await client.query(
+//       `
+//       SELECT * FROM reviews
+//       WHERE album_id = $1
+//     `,
+//       [id]
+//     );
+//     return rows[0];
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// Updated fetchReviewsByAlbumId function with JOIN to include usernames
 const fetchReviewsByAlbumId = async (id) => {
+  console.log(id);
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
-      WHERE album_id = $1
+        SELECT r.*, u.username
+      FROM reviews r
+      LEFT JOIN users u ON r.user_id = u.id
+      WHERE r.album_id = $1
+      ORDER BY r.created_at DESC;
     `,
       [id]
     );
@@ -67,7 +96,10 @@ const fetchReviewsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT * FROM reviews
+      SELECT users.username, review, rating favorite, headline
+      FROM reviews
+      INNER JOIN users
+      ON reviews.user_id = users.id
       WHERE user_id = $1
     `,
       [id]
@@ -94,39 +126,38 @@ const getReviewById = async (id) => {
   }
 };
 
-// delete a review by id
-const deleteReview = async (reviewId) => {
-  try {
-    // Delete related comments first
-    await client.query('DELETE FROM comments WHERE review_id = $1', [reviewId]);
+//update a review by id
 
-    // Then delete the review
-    const result = await client.query('DELETE FROM reviews WHERE id = $1 RETURNING *', [reviewId]);
-    if (result.rowCount === 0) {
-      throw new Error('Review not found');
-    }
-    return result.rows[0];
-  } catch (error) {
-    throw error;
-  }
-};
-
-// update a review by id
-const updateReview = async (id, review) => {
+const updateReview = async (id, review, headline, rating, favorite) => {
   try {
     const { rows } = await client.query(
       `
       UPDATE reviews
-      SET review = $2,
+      SET review = $2, headline= $3, rating = $4, favorite = $5,
       updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
       RETURNING *;
     `,
-      [id, review]
+      [id, review, headline, rating, favorite]
     );
     return rows[0];
   } catch (error) {
     console.log(error);
+  }
+};
+
+//get review by spotify id
+const getAlbumIdBySpotifyId = async (spotifyId) => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT id FROM albums WHERE spotify_id = $1
+    `,
+      [spotifyId]
+    );
+    return rows[0]?.id;
+  } catch (error) {
+    console.error("Error fetching album UUID:", error.message);
   }
 };
 

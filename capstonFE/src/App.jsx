@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Discover from './components/Discover';
 import Navbar from './components/Navbar';
@@ -14,6 +14,14 @@ import SingleAlbumDetails from './components/SingleAlbumDetails';
 import Admin from './components/Admin'; // Import the Admin component
 
 function App() {
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setToken(token);
+    console.log("App loaded, userId:", token);
+  }, []);
+
   return (
     <>
       <BrowserRouter>
@@ -21,7 +29,8 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/account" element={<Me />} />
-            <Route path="/admin" element={<Admin />} adminOnly /> {/* Add the adminOnly prop */}
+            <Route path="/admin" element={<Admin />} />{" "}
+            {/* Add the Admin route inside ProtectedRoute */}
           </Route>
           <Route path="/callback" element={<Callback />} />
           <Route path="/home" element={<Home />} />
@@ -30,7 +39,10 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/album/:albumId" element={<SingleAlbumDetails />} />
+          <Route
+            path="/album/:albumId"
+            element={<SingleAlbumDetails token={token} />}
+          />
         </Routes>
       </BrowserRouter>
     </>

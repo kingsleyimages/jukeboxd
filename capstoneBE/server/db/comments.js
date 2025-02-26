@@ -1,6 +1,7 @@
 const { client } = require('./index');
 const uuid = require('uuid');
 
+// create a comment
 const createComment = async (reviewId, userId, comment) => {
   console.log('DB generation of Comments');
   console.log(userId, reviewId, comment);
@@ -21,6 +22,7 @@ const createComment = async (reviewId, userId, comment) => {
   }
 };
 
+// fetch all comments
 const fetchComments = async () => {
   try {
     const { rows } = await client.query(
@@ -35,6 +37,8 @@ const fetchComments = async () => {
     console.log(error);
   }
 };
+
+// fetch comments by review id
 const fetchCommentsByReviewId = async (id) => {
   try {
     const { rows } = await client.query(
@@ -51,6 +55,8 @@ const fetchCommentsByReviewId = async (id) => {
     console.log(error);
   }
 };
+
+// fetch comments by user id
 const fetchCommentsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
@@ -68,6 +74,7 @@ const fetchCommentsByUserId = async (id) => {
   }
 };
 
+// delete a comment
 const deleteComment = async (id) => {
   try {
     const { rows } = await client.query(
@@ -84,6 +91,7 @@ const deleteComment = async (id) => {
   }
 };
 
+// update a comment
 const updateComment = async (id, comment) => {
   try {
     const { rows } = await client.query(
