@@ -1,7 +1,6 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-
 import "../App.css";
+import styles from "../css/Search.module.css";
 import {
   FormControl,
   InputGroup,
@@ -115,63 +114,19 @@ function App() {
       </Container>
 
       <Container>
-        <Row
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "space-around",
-            alignContent: "center",
-          }}
-        >
+        <Row className={styles.row}>
           {albums.map((album) => {
             return (
-              <Card
-                key={album.id}
-                style={{
-                  backgroundColor: "white",
-                  margin: "10px",
-                  borderRadius: "5px",
-                  marginBottom: "30px",
-                }}
-              >
-                <Card.Img
-                  width={200}
-                  src={album.images[0].url}
-                  style={{
-                    borderRadius: "4%",
-                  }}
-                />
+              <Card key={album.id} className={styles.card}>
+                <Card.Img src={album.images[0].url} className={styles.img} />
                 <Card.Body>
-                  <Card.Title
-                    style={{
-                      whiteSpace: "wrap",
-                      fontWeight: "bold",
-                      maxWidth: "200px",
-                      fontSize: "18px",
-                      marginTop: "10px",
-                      color: "black",
-                    }}
-                  >
-                    {album.name}
-                  </Card.Title>
-                  <Card.Text
-                    style={{
-                      color: "black",
-                    }}
-                  >
+                  <Card.Title className={styles.title}>{album.name}</Card.Title>
+                  <Card.Text className={styles.release}>
                     Release Date: <br /> {album.release_date}
                   </Card.Text>
                   <Button
                     href={album.external_urls.spotify}
-                    style={{
-                      backgroundColor: "black",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "15px",
-                      borderRadius: "5px",
-                      padding: "10px",
-                    }}
+                    className={styles.button}
                   >
                     Album Link
                   </Button>
