@@ -1,6 +1,72 @@
+* {
+  color: #fff;
+}
+
+.topContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #1d1d1d;
+  color: #fff;
+  padding: 2%;
+}
+.formContainer {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  color: #1d1d1d;
+}
+
+.formContainer h2 {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.formContainer form {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(222, 222, 222, 1);
+  border-radius: 5px;
+  padding: 5%;
+}
+.formContainer form input,
+.formContainer form textarea {
+  color: rgba(222, 222, 222, 1);
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(222, 222, 222, 1);
+  width: 100%;
+  margin: 15px 0;
+}
+.formContainer form input::placeholder,
+.formContainer form textarea::placeholder {
+  color: rgba(222, 222, 222, 1);
+}
+.formContainer input[type='checkbox'] {
+  width: 20px;
+  margin-right: 10px;
+}
+.formContainer form textarea {
+  height: 100px;
+}
+
+.formContainer button {
+  background-color: rgba(222, 222, 222, 1);
+  color: #1d1d1d;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 15px;
+  margin: 15px 0;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  max-width: 200px;
+}
 .albumWrapper {
   width: 80%;
-  margin: 0 10%;
+  margin: 0 5% 0 10%;
   max-width: 1200px;
   color: rgba(222, 222, 222, 1);
 }
