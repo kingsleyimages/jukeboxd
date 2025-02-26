@@ -96,15 +96,26 @@ function App() {
     try {
       // Check if album exists in local database
       const localResponse = await fetch(
-        `http://localhost:3000/albums/${albumId}`
+        `http://localhost:3000/api/albums/${albumId}`
       );
-      const localResult = await localResponse.json();
+
+      if (!localResponse.ok) {
+        console.error(
+          "local album fetch failed with status",
+          localResponse.status
+        );
+      }
+
+      const localResult = await localResponse.json().catch(() => null);
+      console.log("local database result:", localResult);
 
       // If album exists, navigate to that page
-      if (localResult.success) {
+      if (localResult?.id) {
         navigate(`/album/${albumId}`);
         return;
       }
+
+      console.log("album not found locally, fetching from spotify");
 
       // If album doesn't exist, fetch it from Spotify
       const spotifyResponse = await fetch(
@@ -112,7 +123,7 @@ function App() {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer YOUR_ACCESS_TOKEN`,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
         }
@@ -120,19 +131,54 @@ function App() {
 
       // Check for Spotify API errors
       if (!spotifyResponse.ok) {
-        throw new Error("Failed to fetch album from Spotify");
+        console.error(
+          "spotify fetch failed with status",
+          spotifyResponse.status
+        );
+        return;
       }
 
-      const spotifyResult = await spotifyResponse.json();
+      const spotifyResult = await spotifyResponse.json().catch(() => null);
+
+      if (!spotifyResult) {
+        console.error("failed to parse Spotify API response as JSON");
+        return;
+      }
+      console.log("spotify api result:", spotifyResult);
+
+      //prepare album data for local database
+      const albumData = {
+        name: spotifyResult.name,
+        artist: spotifyResult.artists[0]?.name || "unknown artist",
+        image: spotifyResult.images[0]?.url || "",
+        spotify_id: spotifyResult.id,
+        spotifyUrl: spotifyResult.external_urls?.spotify,
+      };
 
       // Save the album to local database
-      await fetch(`http://localhost:3000/albums`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(spotifyResult),
-      });
+
+      // await fetch(`http://localhost:3000/albums`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(spotifyResult),
+      // });
+      const saveResponse = await fetch(
+        `http://localhost:3000/api/albums/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(albumData),
+        }
+      );
+
+      if (!saveResponse.ok) {
+        throw new Error("failed to save album to local db");
+      }
+      console.log("album saved to local db");
 
       // Navigate to the new album page
       navigate(`/album/${albumId}`);
