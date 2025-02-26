@@ -23,6 +23,11 @@ const createUser = async (username, email, password, role) => {
   return response.rows[0];
 };
 
+const deleteUser = async (id) => {
+  const SQL = `DELETE FROM users WHERE id = $1;`;
+  await client.query(SQL, [id]);
+};
+
 const authenticate = async ({ username, password }) => {
   console.log('authenticating user:', username);
   const SQL = `
@@ -73,6 +78,12 @@ const userExists = async (username) => {
   }
 };
 
+const modifyUser = async (id, username, email, role) => {
+  const SQL = `UPDATE users SET username = $1, email = $2, role = $3 WHERE id = $4 RETURNING *;`;
+  const response = await client.query(SQL, [username, email, role, id]);
+  return response.rows[0];
+}
+
 const getAllUsers = async () => {
   const SQL = `SELECT id, username, email, role FROM users;`;
   const response = await client.query(SQL);
@@ -93,6 +104,8 @@ const getAllReviews = async () => {
 
 module.exports = {
   createUser,
+  deleteUser,
+  modifyUser,
   authenticate,
   userExists,
   getAllUsers,
