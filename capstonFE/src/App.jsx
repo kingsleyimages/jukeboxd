@@ -36,7 +36,7 @@ function App() {
             {/* Add the AdminDashboard route inside ProtectedRoute */}
           </Route>
           <Route path="/callback" element={<Callback />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/mixtapes" element={<Mixtapes />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/search" element={<Search />} />
