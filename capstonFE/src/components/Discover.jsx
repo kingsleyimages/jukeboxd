@@ -154,7 +154,7 @@ function Discover() {
       const spotifyResult = await spotifyResponse.json();
 
       // Save the album to local database
-      await fetch(`http://localhost:3000/albums`, {
+      await fetch(`http://localhost:3000/api/albums`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

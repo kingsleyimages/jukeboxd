@@ -5,7 +5,7 @@ const { fetchReviewsByAlbumId } = require("./review");
 const createAlbum = async (spotify_id, name, artist, image, spotifyUrl) => {
   try {
     const SQL = `
-    INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5, $6) RETURNING *
+    INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5, $6) RETURNING *;
   `;
     const response = await client.query(SQL, [
       uuid.v4(),
@@ -15,6 +15,7 @@ const createAlbum = async (spotify_id, name, artist, image, spotifyUrl) => {
       image,
       spotifyUrl,
     ]);
+    console.log(response);
     return response.rows[0];
   } catch (error) {
     console.log(error);
