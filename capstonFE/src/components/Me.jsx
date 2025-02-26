@@ -28,7 +28,7 @@ function Me() {
 	
 	const [accessToken, setAccessToken] = useState("");
 
-	// For debugging purposes
+	// For debugging
 	useEffect(() => {
 		console.log("Token in localStorage:", localStorage.getItem("token"));
 		console.log("User in localStorage:", localStorage.getItem("user"));
