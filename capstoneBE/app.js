@@ -13,15 +13,13 @@ app.use('/api/reviews', require('./server/api/reviewRoutes.js'));
 app.use('/api/users', require('./server/api/userRoutes.js'));
 
 
-
-// Log environment variables to ensure they are being read correctly
-console.log('PGUSER:', process.env.PGUSER);
-console.log('PGHOST:', process.env.PGHOST);
-console.log('PGDATABASE:', process.env.PGDATABASE);
-console.log('PGPASSWORD:', process.env.PGPASSWORD);
-console.log('PGPORT:', process.env.PGPORT);
-
-if (!process.env.PGUSER || !process.env.PGHOST || !process.env.PGDATABASE || !process.env.PGPASSWORD || !process.env.PGPORT) {
+if (
+  !process.env.PGUSER ||
+  !process.env.PGHOST ||
+  !process.env.PGDATABASE ||
+  !process.env.PGPASSWORD ||
+  !process.env.PGPORT
+) {
   console.error('One or more environment variables are missing.');
   process.exit(1);
 }
