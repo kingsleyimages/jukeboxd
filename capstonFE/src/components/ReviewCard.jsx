@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../css/AlbumDetails.module.css";
 
-const ReviewCard = ({ review, userId, onEditClick }) => (
+const ReviewCard = ({ review, userId, onEditClick, onDeleteClick }) => (
   <div className={styles.reviewCard}>
     <h3 className={styles.headline}>{review.headline}</h3>
     <p className={styles.author}>By: {review.username}</p>
@@ -9,9 +9,15 @@ const ReviewCard = ({ review, userId, onEditClick }) => (
     <p className={styles.rating}>Rating: {review.rating} / 5</p>
     <p className={styles.favorite}>{review.favorite ? "Favorite: ❤️" : ""}</p>
     {userId === review.user_id && (
-      <button className={styles.editButton} onClick={() => onEditClick(review)}>
-        Edit Review
-      </button>
+      <div>
+        <button
+          className={styles.editButton}
+          onClick={() => onEditClick(review)}
+        >
+          Edit Review
+        </button>
+        <button onClick={() => onDeleteClick(review)}>Delete Review</button>
+      </div>
     )}
   </div>
 );
