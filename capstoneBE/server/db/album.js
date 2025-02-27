@@ -63,13 +63,42 @@ const fetchAlbumById = async (spotifyId) => {
 const fetchAlbumsWithReviews = async () => {
   try {
     const SQL = `
-    SELECT * FROM albums
-    INNER JOIN reviews ON albums.id = reviews.album_id
+    SELECT albums.*, reviews.id AS review_id, reviews.rating, reviews.favorite, reviews.headline, reviews.review, reviews.created_at AS review_created_at, reviews.updated_at AS review_updated_at
+    FROM albums
+    LEFT JOIN reviews ON albums.id = reviews.album_id
     `;
     const response = await client.query(SQL);
-    return response.rows;
+    console.log("Fetched albums with reviews:", response.rows); // Add logging
+
+    // Group reviews by album
+    const albumsMap = new Map();
+    response.rows.forEach(row => {
+      if (!albumsMap.has(row.id)) {
+        albumsMap.set(row.id, {
+          ...row,
+          reviews: []
+        });
+      }
+      if (row.review_id) {
+        albumsMap.get(row.id).reviews.push({
+          review_id: row.review_id,
+          rating: row.rating,
+          favorite: row.favorite,
+          headline: row.headline,
+          review: row.review,
+          review_created_at: row.review_created_at,
+          review_updated_at: row.review_updated_at
+        });
+      }
+    });
+
+    // Convert the map to an array and filter out albums with no reviews
+    const albums = Array.from(albumsMap.values()).filter(album => album.reviews.length > 0);
+    console.log("Processed albums with reviews:", albums); // Add logging
+    return albums;
   } catch (error) {
-    console.log(error);
+    console.log("Error fetching albums with reviews:", error);
+    throw error;
   }
 };
 

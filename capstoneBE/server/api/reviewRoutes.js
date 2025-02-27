@@ -107,6 +107,22 @@ router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
   }
 });
 
+// delete review by id (admin only)
+router.delete(
+  "/admin/:id/delete",
+  authenticateToken,
+  adminAuth,
+  async (req, res, next) => {
+    try {
+      const response = await deleteReview(req.params.id);
+      res.status(200).json({ message: "Review deleted successfully", review: response });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+
 // update a review by id (admin only)
 router.put(
   "/admin/:id/update",

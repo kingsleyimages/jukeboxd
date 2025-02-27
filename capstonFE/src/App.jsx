@@ -17,6 +17,7 @@ import AdminDashboard from './components/home-components/AdminDashBoard';
 import ViewAllComments from './components/admin-components/ViewAllComments';
 import ViewAllReviews from './components/admin-components/ViewAllReviews';
 import ViewAllUsers from './components/admin-components/ViewAllUsers';
+import ReviewedAlbums from './components/admin-components/ReviewedAlbums';
 
 function App() {
   const [token, setToken] = useState('');
@@ -38,6 +39,7 @@ function App() {
             <Route path="/admin/dashboard/comments" element={<ViewAllComments />} />
             <Route path="/admin/dashboard/reviews" element={<ViewAllReviews />} />
             <Route path="/admin/dashboard/users" element={<ViewAllUsers />} />
+            <Route path="/admin/dashboard/reviewed-albums" element={<ReviewedAlbums />} />
           </Route>
           <Route path="/callback" element={<Callback />} />
           <Route path="/" element={<Home />} />
