@@ -1,3 +1,4 @@
+const { get } = require('../api/userRoutes');
 const { client } = require('./index');
 const uuid = require('uuid');
 
@@ -117,6 +118,21 @@ const updateComment = async (id, comment) => {
   }
 };
 
+
+// Get all comments (admin only)
+const getAllComments = async () => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT * FROM comments;
+    `
+    );
+    return rows;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   createComment,
   fetchCommentsByReviewId,
@@ -124,4 +140,5 @@ module.exports = {
   deleteComment,
   updateComment,
   fetchComments,
+  getAllComments,
 };

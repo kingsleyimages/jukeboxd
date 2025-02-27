@@ -97,7 +97,7 @@ const fetchReviewsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT users.username, review, rating favorite, headline
+      SELECT users.username, review, rating, favorite, headline
       FROM reviews
       INNER JOIN users
       ON reviews.user_id = users.id
@@ -164,6 +164,18 @@ const getAlbumIdBySpotifyId = async (spotifyId) => {
   }
 };
 
+// get all reviews
+const getAllReviews = async () => {
+  try {
+    const { rows } = await client.query(`
+      SELECT * FROM reviews
+    `);
+    return rows;
+  } catch (error) {
+    console.error("Error fetching reviews:", error.message);
+  }
+};
+
 // delete a review by id
 const deleteReview = async (id) => {
   try {
@@ -181,6 +193,7 @@ const deleteReview = async (id) => {
   }
 };
 
+
 module.exports = {
   createReview,
   fetchReviewsByAlbumId,
@@ -189,4 +202,5 @@ module.exports = {
   deleteReview,
   updateReview,
   getReviewById,
+  getAllReviews
 };

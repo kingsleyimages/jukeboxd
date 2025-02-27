@@ -8,6 +8,7 @@ const {
   deleteReview,
   updateReview,
   getReviewById,
+  getAllReviews,
 } = require("../db/review.js");
 const { authenticate } = require("../db/user.js");
 const { authenticateToken, adminAuth } = require('./middlewares.js');
@@ -66,8 +67,9 @@ router.get("/user/:userId/", async (req, res, next) => {
   }
 });
 
-// delete a review by id
-router.delete("/:id/delete", async (req, res, next) => {
+
+// delete a review by id (admin only)
+router.delete("/:id/delete", authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const response = await deleteReview(req.params.id);
     res.status(200).json({ message: 'Review deleted successfully', review: response });
@@ -75,6 +77,7 @@ router.delete("/:id/delete", async (req, res, next) => {
     next(error);
   }
 });
+
 
 // delete a review by id (non-admin)
 router.delete('/:id/delete', authenticateToken, async (req, res, next) => {
@@ -100,8 +103,13 @@ router.put('/admin/:id/update', authenticateToken, adminAuth, async (req, res, n
   }
 });
 
-router.put("/:id/update", async (req, res, next) => {
+// update a review by id (non-admin)
+router.put("/:id/update", authenticateToken, async (req, res, next) => {
   try {
+    const review = await getReviewById(req.params.id);
+    if (review.user_id !== req.user.id) {
+      return res.status(403).json({ message: 'You are not authorized to update this review' });
+    }
     const response = await updateReview(
       req.params.id,
       req.body.review,
@@ -110,6 +118,16 @@ router.put("/:id/update", async (req, res, next) => {
       req.body.favorite
     );
     res.send(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Get all reviews (admin only)
+router.get("/admin/reviews", authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const reviews = await getAllReviews();
+    res.json(reviews);
   } catch (error) {
     next(error);
   }

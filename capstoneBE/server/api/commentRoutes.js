@@ -7,6 +7,7 @@ const {
   fetchComments,
   deleteComment,
   updateComment,
+  getAllComments,
 } = require('../db/comments.js');
 const { authenticateToken, adminAuth } = require('./middlewares.js');
 
@@ -109,6 +110,17 @@ router.put('/admin/:id/update', authenticateToken, adminAuth, async (req, res, n
     res.status(200).send(response);
   } catch (error) {
     next(error);
+  }
+});
+
+// Get all comments (admin only)
+router.get("/", authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const comments = await getAllComments();
+    res.json(comments);
+  } catch (err) {
+    console.error("error fetching comments", err.message);
+    res.status(500).send("unable to get comments");
   }
 });
 

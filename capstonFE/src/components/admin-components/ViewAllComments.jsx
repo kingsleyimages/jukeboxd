@@ -16,7 +16,7 @@ function ViewAllComments() {
 
     // Use the useEffect hook to fetch the comments from the API
     useEffect(() => {
-        fetch(`${API_BASE_URL}/api/comments`)
+        fetch('http://localhost:3000:/api/comments')
             .then((response) => response.json())
             .then((data) => {
                 setComments(data)
@@ -28,7 +28,15 @@ function ViewAllComments() {
             })
     }, [])
   return (
-    <div>ViewAllCOmments</div>
+    <>  
+     <div>ViewAllComments</div>
+     <ul>
+          {comments.map((comment) => (
+          <li key={comment.id}>{comment.comment}</li>
+          ))}
+     </ul>
+    </>
+   
   )
 }
 

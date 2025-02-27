@@ -12,8 +12,11 @@ import Login from './components/Login';
 import Callback from './components/Callback';
 import SingleAlbumDetails from './components/SingleAlbumDetails';
 import Friends from './components/Friends';
-// import Admin from './components/Admin'; // Import the Admin component
-import AdminDashboard from './components/home-components/AdminDashBoard'; // Import the AdminDashboard component
+import AdminDashboard from './components/home-components/AdminDashBoard';
+
+import ViewAllComments from './components/admin-components/ViewAllComments';
+import ViewAllReviews from './components/admin-components/ViewAllReviews';
+import ViewAllUsers from './components/admin-components/ViewAllUsers';
 
 function App() {
   const [token, setToken] = useState('');
@@ -31,10 +34,10 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/account" element={<Me />} />
-            {/* <Route path="/admin" element={<Admin />} />{" "}
-            Add the Admin route inside ProtectedRoute */}
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />{' '}
-            {/* Add the AdminDashboard route inside ProtectedRoute */}
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/dashboard/comments" element={<ViewAllComments />} />
+            <Route path="/admin/dashboard/reviews" element={<ViewAllReviews />} />
+            <Route path="/admin/dashboard/users" element={<ViewAllUsers />} />
           </Route>
           <Route path="/callback" element={<Callback />} />
           <Route path="/" element={<Home />} />
