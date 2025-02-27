@@ -61,7 +61,7 @@ const fetchCommentsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT comments.id, comments.comment, comments.user_id, users.username
+      SELECT comments.id, comments.comment, comments.user_id, comments.review_id, comments.created_at, comments.updated_at, users.username
       FROM comments
       INNER JOIN users ON comments.user_id = users.id
       WHERE comments.user_id = $1
@@ -71,6 +71,10 @@ const fetchCommentsByUserId = async (id) => {
     return rows.map(row => ({
       id: row.id,
       comment: row.comment,
+      user_id: row.user_id,
+      review_id: row.review_id,
+      created_at: row.created_at,
+      updated_at: row.updated_at,
       user: {
         id: row.user_id,
         username: row.username,

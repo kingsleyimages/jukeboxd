@@ -68,13 +68,18 @@ router.get("/user/:userId/", async (req, res, next) => {
 });
 
 
-// delete a review by id (admin only)
-router.delete("/:id/delete", authenticateToken, adminAuth, async (req, res, next) => {
+router.delete('/admin/users/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
-    const response = await deleteReview(req.params.id);
-    res.status(200).json({ message: 'Review deleted successfully', review: response });
-  } catch (error) {
-    next(error);
+    console.log(`Deleting user with ID: ${req.params.id}`);
+    const user = await deleteUser(req.params.id);
+    if (user) {
+      res.status(200).send({ message: 'User deleted successfully' });
+    } else {
+      res.status(404).send({ message: 'User not found' });
+    }
+  } catch (err) {
+    console.error('error deleting user', err.message);
+    res.status(500).send('unable to delete user');
   }
 });
 

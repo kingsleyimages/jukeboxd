@@ -87,6 +87,31 @@ function ViewAllUsers() {
       });
   };
 
+const handleDeleteUser = (userId) => {
+  const token = localStorage.getItem('token');
+  console.log(`Deleting user ${userId}...`);
+  fetch(`http://localhost:3000/api/users/admin/users/${userId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log('Deleted user:', data);
+      setUsers(users.filter(user => user.id !== userId));
+    })
+    .catch((error) => {
+      console.error('Error deleting user:', error);
+      setErrorMessage("An error occurred while deleting the user");
+    });
+};
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -104,6 +129,7 @@ function ViewAllUsers() {
             {user.username}
             <button onClick={() => handleViewReviews(user.id)}>View Reviews</button>
             <button onClick={() => handleViewComments(user.id)}>View Comments</button>
+            <button onClick={() => handleDeleteUser(user.id)}>Delete User</button>
           </li>
         ))}
       </ul>
