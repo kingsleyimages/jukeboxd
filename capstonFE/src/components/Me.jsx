@@ -35,7 +35,15 @@ const userUpdate = async () => {
 
     const reviewsResponse = await axios.get(`${API_BASE_URL}/api/reviews/user/${response.data.id}`);
     console.log("API response (User Reviews):", reviewsResponse.data);
-    updatedUserData.reviews = reviewsResponse.data;
+    
+    const reviews = reviewsResponse.data || [];
+    
+    const enhancedReviews = reviews.map(review => ({
+        ...review,
+        albumName: review.headline 
+    }));
+    
+    updatedUserData.reviews = enhancedReviews;
 
     const favoritesResponse = await axios.get(`${API_BASE_URL}/api/favorites/${response.data.id}`);
     console.log("API response (User Favorites):", favoritesResponse.data);
@@ -173,7 +181,7 @@ const userUpdate = async () => {
         <ul className="reviews-list">
         {userData.reviews.map((review, index) => (
         <li key={index}>
-        <strong>{review.headline || "Review"}</strong> - 
+        <strong>{review.albumName || review.album?.name || "Unknown Album"} </strong> - 
         <span> Rating: {review.favorite}/5</span>
         <p>{review.review || "No review text provided."}</p>
         <small>By: {review.username}</small>
