@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+const { Pool } = require("pg");
 
 const client = new Pool({
   user: process.env.PGUSER,
@@ -15,6 +15,7 @@ const createTables = async () => {
     DROP TABLE IF EXISTS mixtapes;
     DROP TABLE IF EXISTS songs;
     DROP TABLE IF EXISTS reviews;
+    DROP TABLE IF EXISTS tracks;
     DROP TABLE IF EXISTS albums;
     DROP TABLE IF EXISTS users;
 
@@ -36,6 +37,14 @@ const createTables = async () => {
       spotifyUrl VARCHAR(255) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS tracks(
+    id UUID PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    spotify_id VARCHAR(255) UNIQUE NOT NULL,
+    album_id UUID REFERENCES albums(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS reviews(
@@ -87,7 +96,7 @@ const createTables = async () => {
     );
   `;
   await client.query(SQL);
-  console.log('tables created');
+  console.log("tables created");
 };
 
 module.exports = {

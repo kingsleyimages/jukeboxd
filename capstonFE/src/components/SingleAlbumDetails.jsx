@@ -154,6 +154,15 @@ const AlbumDetails = ({ token }) => {
           <p className={styles.artist}>{album.artist}</p>
           <img className={styles.img} src={album.image} alt={album.name} />
           {averageRating && <p>Average Rating: {averageRating} /5</p>}
+          {album?.tracks?.length > 0 ? (
+            album.tracks.map((track) => (
+              <p key={track.id}>
+                {track.track_number}. {track.title}
+              </p>
+            ))
+          ) : (
+            <p>No tracks for this album</p>
+          )}
         </div>
         <div className={styles.formContainer}>
           {token && (
