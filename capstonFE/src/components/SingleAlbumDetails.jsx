@@ -109,77 +109,120 @@ const AlbumDetails = ({ token }) => {
 
   if (!album) return <div>Loading...</div>;
 
+  const handleDeleteClick = async (review) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this review?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/reviews/${review.id}/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("Review deleted successfully!");
+      } else {
+        alert("Failed to delete the review. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      alert("An error occurred while deleting the review.");
+    }
+  };
+
+  const averageRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((acc, review) => acc + review.rating, 0) /
+          reviews.length
+        ).toFixed(1)
+      : null;
+
   return (
     <div>
-      <div className={styles.albumWrapper}>
-        <h1 className={styles.title}>{album.name}</h1>
-        <p className={styles.artist}>{album.artist}</p>
-        <img className={styles.img} src={album.image} alt={album.name} />
-      </div>
-
-      <h2 className={styles.reviewTitle}>Reviews:</h2>
-      <div className={styles.reviewWrapper}>
-        {reviews.length > 0 ? (
-          reviews.map((review) => (
-            <ReviewCard
-              key={review.id}
-              review={review}
-              userId={userId}
-              onEditClick={handleEditClick}
-            />
-          ))
-        ) : (
-          <p>No Reviews for this album</p>
-        )}
-      </div>
-
-      {token && (
-        <form onSubmit={handleSubmitReview}>
-          <h2>{editingReview ? "Edit Review" : "Leave a Review"}</h2>
-          <input
-            type="text"
-            name="headline"
-            placeholder="Headline"
-            value={formData.headline}
-            onChange={handleInputChange}
-            required
-          />
-          <textarea
-            name="review"
-            placeholder="Write your review..."
-            value={formData.review}
-            onChange={handleInputChange}
-            required
-          />
-          <input
-            name="rating"
-            type="number"
-            min="1"
-            max="5"
-            placeholder="Rating (1-5)"
-            value={formData.rating}
-            onChange={handleInputChange}
-            required
-          />
-          <label>
-            <input
-              name="favorite"
-              type="checkbox"
-              checked={formData.favorite}
-              onChange={handleInputChange}
-            />
-            Mark as Favorite
-          </label>
-          <button type="submit">
-            {editingReview ? "Update Review" : "Submit Review"}
-          </button>
-          {editingReview && (
-            <button type="button" onClick={handleCancelEdit}>
-              Cancel
-            </button>
+      <div className={styles.topContainer}>
+        <div className={styles.albumWrapper}>
+          <h1 className={styles.title}>{album.name}</h1>
+          <p className={styles.artist}>{album.artist}</p>
+          <img className={styles.img} src={album.image} alt={album.name} />
+          {averageRating && <p>Average Rating: {averageRating} /5</p>}
+        </div>
+        <div className={styles.formContainer}>
+          {token && (
+            <form onSubmit={handleSubmitReview}>
+              <h2>{editingReview ? "Edit Review" : "Leave a Review"}</h2>
+              <input
+                type="text"
+                name="headline"
+                placeholder="Headline"
+                value={formData.headline}
+                onChange={handleInputChange}
+                required
+              />
+              <textarea
+                name="review"
+                placeholder="Write your review..."
+                value={formData.review}
+                onChange={handleInputChange}
+                required
+              />
+              <input
+                name="rating"
+                type="number"
+                min="1"
+                max="5"
+                placeholder="Rating (1-5)"
+                value={formData.rating}
+                onChange={handleInputChange}
+                required
+              />
+              <label>
+                <input
+                  name="favorite"
+                  type="checkbox"
+                  checked={formData.favorite}
+                  onChange={handleInputChange}
+                />
+                Mark as Favorite
+              </label>
+              <button type="submit">
+                {editingReview ? "Update Review" : "Submit Review"}
+              </button>
+              {editingReview && (
+                <button type="button" onClick={handleCancelEdit}>
+                  Cancel
+                </button>
+              )}
+            </form>
           )}
-        </form>
-      )}
+        </div>
+      </div>
+      <div className={styles.reviewContainer}>
+        <h2 className={styles.reviewTitle}>Reviews:</h2>
+        <div className={styles.reviewWrapper}>
+          {reviews.length > 0 ? (
+            reviews.map((review) => (
+              <ReviewCard
+                key={review.id}
+                review={review}
+                userId={userId}
+                onEditClick={handleEditClick}
+                onDeleteClick={handleDeleteClick}
+              />
+            ))
+          ) : (
+            <p>No Reviews for this album</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

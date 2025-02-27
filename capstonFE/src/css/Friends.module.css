@@ -1,0 +1,42 @@
+.friendsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: top;
+  margin: 10px;
+  flex-direction: row;
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.column {
+  width: 45%;
+  border: 1px solid rgba(222, 222, 222, 1);
+  padding: 2%;
+  border-radius: 5px;
+  margin: 2%;
+}
+button {
+  background-color: rgba(222, 222, 222, 1);
+  color: rgba(0, 0, 0, 1);
+  border: none;
+  border-radius: 5px;
+  padding: 2px 15px;
+  margin: 5px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.title {
+  font-size: 1.25rem;
+  margin: 10px;
+  color: rgba(222, 222, 222, 1);
+  font-weight: 500;
+  text-decoration: underline;
+}
+.friends {
+  color: rgba(222, 222, 222, 1);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
