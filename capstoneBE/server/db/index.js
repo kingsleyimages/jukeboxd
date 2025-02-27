@@ -1,4 +1,4 @@
-const { Pool } = require("pg");
+const { Pool } = require('pg');
 
 const client = new Pool({
   user: process.env.PGUSER,
@@ -87,7 +87,7 @@ const createTables = async () => {
     );
   `;
   await client.query(SQL);
-  console.log("tables created");
+  console.log('tables created');
 };
 
 module.exports = {

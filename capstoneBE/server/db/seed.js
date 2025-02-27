@@ -17,7 +17,7 @@ if (
   !process.env.PGPASSWORD ||
   !process.env.PGPORT
 ) {
-  console.error("One or more environment variables are missing.");
+  console.error('One or more environment variables are missing.');
   process.exit(1);
 }
 
@@ -35,14 +35,14 @@ const seed = async () => {
       {
         username: `user${uuid.v4().slice(0, 8)}`,
         email: `user${uuid.v4().slice(0, 8)}@example.com`,
-        password: "password11",
-        role: "user",
+        password: 'password11',
+        role: 'user',
       },
       {
         username: `user${uuid.v4().slice(0, 8)}`,
         email: `user${uuid.v4().slice(0, 8)}@example.com`,
-        password: "password22",
-        role: "user",
+        password: 'password22',
+        role: 'user',
       },
     ];
 
@@ -62,41 +62,41 @@ const seed = async () => {
         spotify_id: `album${uuid.v4().slice(0, 8)}`,
         artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image:
-          "https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg",
+          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl:
-          "https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g",
+          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
       },
       {
         spotify_id: `album${uuid.v4().slice(0, 8)}`,
         artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image:
-          "https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg",
+          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl:
-          "https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g",
+          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
       },
       {
         spotify_id: `album${uuid.v4().slice(0, 8)}`,
         artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image:
-          "https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg",
+          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl:
-          "https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g",
+          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
       },
       {
         spotify_id: `album${uuid.v4().slice(0, 8)}`,
         artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image:
-          "https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg",
+          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl:
-          "https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g",
+          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
       },
       {
         spotify_id: `album${uuid.v4().slice(0, 8)}`,
         artist: `Artist ${uuid.v4().slice(0, 8)}`,
         image:
-          "https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg",
+          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
         spotifyUrl:
-          "https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g",
+          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
       },
     ];
 
@@ -166,9 +166,9 @@ const seed = async () => {
       );
     }
 
-    console.log("Dummy data created successfully");
+    console.log('Dummy data created successfully');
   } catch (error) {
-    console.error("error creating tables");
+    console.error('error creating tables');
     throw error;
   } finally {
     await client.end();

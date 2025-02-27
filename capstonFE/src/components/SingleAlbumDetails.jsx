@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import ReviewCard from './ReviewCard';
-import styles from '../css/AlbumDetails.module.css';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import ReviewCard from "./ReviewCard";
+import styles from "../css/AlbumDetails.module.css";
 
 const AlbumDetails = ({ token }) => {
   const { albumId } = useParams();
@@ -10,8 +10,8 @@ const AlbumDetails = ({ token }) => {
   const [userId, setUserId] = useState(null);
   const [editingReview, setEditingReview] = useState(null);
   const [formData, setFormData] = useState({
-    headline: '',
-    review: '',
+    headline: "",
+    review: "",
     rating: 1,
     favorite: false,
   });
@@ -26,7 +26,7 @@ const AlbumDetails = ({ token }) => {
         setAlbum(data);
         setReviews(data.reviews || []);
       } catch (error) {
-        console.error('Error fetching album details:', error.message);
+        console.error("Error fetching album details:", error.message);
       }
     };
 
@@ -34,10 +34,10 @@ const AlbumDetails = ({ token }) => {
 
     if (token) {
       try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        const payload = JSON.parse(atob(token.split(".")[1]));
         setUserId(payload.id);
       } catch (error) {
-        console.error('Invalid token format', error.message);
+        console.error("Invalid token format", error.message);
       }
     }
   }, [albumId, token]);
@@ -46,7 +46,7 @@ const AlbumDetails = ({ token }) => {
     e.preventDefault();
 
     if (!token) {
-      alert('You need to be logged in to leave a review');
+      alert("You need to be logged in to leave a review");
       return;
     }
 
@@ -55,12 +55,12 @@ const AlbumDetails = ({ token }) => {
         ? `http://localhost:3000/api/reviews/${editingReview.id}/update`
         : `http://localhost:3000/api/reviews/album/${albumId}/create`;
 
-      const method = editingReview ? 'PUT' : 'POST';
+      const method = editingReview ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
@@ -74,12 +74,12 @@ const AlbumDetails = ({ token }) => {
           )
         );
         setEditingReview(null);
-        setFormData({ headline: '', review: '', rating: 1, favorite: false });
+        setFormData({ headline: "", review: "", rating: 1, favorite: false });
       } else {
-        console.error('Failed to save review');
+        console.error("Failed to save review");
       }
     } catch (err) {
-      console.error('Error saving review:', err.message);
+      console.error("Error saving review:", err.message);
     }
   };
 
@@ -87,13 +87,13 @@ const AlbumDetails = ({ token }) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleCancelEdit = () => {
     setEditingReview(null);
-    setFormData({ headline: '', review: '', rating: 1, favorite: false });
+    setFormData({ headline: "", review: "", rating: 1, favorite: false });
   };
 
   const handleEditClick = (review) => {
@@ -104,10 +104,39 @@ const AlbumDetails = ({ token }) => {
       rating: review.rating,
       favorite: review.favorite,
     });
-    console.log('Edit review:', review);
+    console.log("Edit review:", review);
   };
 
   if (!album) return <div>Loading...</div>;
+
+  const handleDeleteClick = async (review) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this review?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/reviews/${review.id}/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        alert("Review deleted successfully!");
+      } else {
+        alert("Failed to delete the review. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      alert("An error occurred while deleting the review.");
+    }
+  };
 
   return (
     <div>
@@ -120,7 +149,7 @@ const AlbumDetails = ({ token }) => {
         <div className={styles.formContainer}>
           {token && (
             <form onSubmit={handleSubmitReview}>
-              <h2>{editingReview ? 'Edit Review' : 'Leave a Review'}</h2>
+              <h2>{editingReview ? "Edit Review" : "Leave a Review"}</h2>
               <input
                 type="text"
                 name="headline"
@@ -156,7 +185,7 @@ const AlbumDetails = ({ token }) => {
                 Mark as Favorite
               </label>
               <button type="submit">
-                {editingReview ? 'Update Review' : 'Submit Review'}
+                {editingReview ? "Update Review" : "Submit Review"}
               </button>
               {editingReview && (
                 <button type="button" onClick={handleCancelEdit}>
@@ -177,6 +206,7 @@ const AlbumDetails = ({ token }) => {
                 review={review}
                 userId={userId}
                 onEditClick={handleEditClick}
+                onDeleteClick={handleDeleteClick}
               />
             ))
           ) : (
