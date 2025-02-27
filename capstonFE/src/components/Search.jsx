@@ -194,8 +194,8 @@ function App() {
 
   return (
     <>
-      <Container>
-        <InputGroup>
+      <Container className={styles.searchContainer}>
+        <InputGroup className={styles.inner}>
           <FormControl
             placeholder="Search For Artist"
             type="input"
@@ -206,18 +206,14 @@ function App() {
               }
             }}
             onChange={(event) => setSearchInput(event.target.value)}
-            style={{
-              width: '300px',
-              height: '35px',
-              borderWidth: '0px',
-              borderStyle: 'solid',
-              borderRadius: '5px',
-              marginRight: '10px',
-              paddingLeft: '10px',
-            }}
+            className={styles.search}
           />
-          <Button onClick={search}>Search</Button>
-          <Button onClick={addReview}>Add a Review</Button>
+          <Button className={styles.button} onClick={search}>
+            Search
+          </Button>
+          {/* <Button className={styles.button} onClick={addReview}>
+            Add a Review
+          </Button> */}
         </InputGroup>
       </Container>
 
@@ -233,11 +229,14 @@ function App() {
                     Release Date: <br /> {album.release_date}
                   </Card.Text>
                   <Button
+                    target="_blank"
                     href={album.external_urls.spotify}
                     className={styles.button}>
                     Album Link
                   </Button>
-                  <Button onClick={() => handleViewDetails(album.id)}>
+                  <Button
+                    className={styles.button}
+                    onClick={() => handleViewDetails(album.id)}>
                     View Details
                   </Button>
                 </Card.Body>
