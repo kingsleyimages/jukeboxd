@@ -5,6 +5,8 @@ const {
   fetchAllFriends,
   fetchFriendsById,
   fetchReviewsByFriends,
+  fetchAvailableFriends,
+  deleteFriend,
 } = require('../db/friends.js');
 
 // create a friend relationship between two users
@@ -22,6 +24,15 @@ router.get('/all', async (req, res) => {
   try {
     const allFriends = await fetchAllFriends();
     res.send(allFriends);
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.get('/available/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const available = await fetchAvailableFriends(userId);
+    res.send(available);
   } catch (error) {
     console.log(error);
   }
@@ -48,13 +59,16 @@ router.get('/reviews/:userId', async (req, res) => {
   }
 });
 
-router.delete('/delete/:id', async (req, res) => {
+router.delete('/delete', async (req, res) => {
   try {
-    const { id } = req.params;
-    const deletedFriend = await deleteFriend(id);
+    console.log(req.body);
+    const userId = req.body.userId;
+    const friendId = req.body.friendId;
+    const deletedFriend = await deleteFriend(userId, friendId);
     res.send(deletedFriend);
   } catch (error) {
     console.log(error);
+    res.status(500).send('An error occurred while deleting the friend.');
   }
 });
 

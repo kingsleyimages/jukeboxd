@@ -11,16 +11,17 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Callback from './components/Callback';
 import SingleAlbumDetails from './components/SingleAlbumDetails';
-import AdminDashboard from './components/home-components/AdminDashBoard'; 
-import ViewAllUsers from './components/admin-components/ViewAllUsers';
+import Friends from './components/Friends';
+// import Admin from './components/Admin'; // Import the Admin component
+import AdminDashboard from './components/home-components/AdminDashBoard'; // Import the AdminDashboard component
 
 function App() {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState('');
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     setToken(token);
-    console.log("App loaded, userId:", token);
+    console.log('App loaded, userId:', token);
   }, []);
 
   return (
@@ -30,8 +31,10 @@ function App() {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/account" element={<Me />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="admin/dashboard/users" element={<ViewAllUsers />}/>
+            {/* <Route path="/admin" element={<Admin />} />{" "}
+            Add the Admin route inside ProtectedRoute */}
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />{' '}
+            {/* Add the AdminDashboard route inside ProtectedRoute */}
           </Route>
           <Route path="/callback" element={<Callback />} />
           <Route path="/" element={<Home />} />
@@ -40,6 +43,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/friends" element={<Friends />} />
           <Route
             path="/album/:albumId"
             element={<SingleAlbumDetails token={token} />}

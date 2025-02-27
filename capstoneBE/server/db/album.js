@@ -15,7 +15,6 @@ const createAlbum = async (spotify_id, name, artist, image, spotifyUrl) => {
       image,
       spotifyUrl,
     ]);
-    console.log(response);
     return response.rows[0];
   } catch (error) {
     console.log(error);
