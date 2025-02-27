@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "frontend": "../capstoneFE && npm run dev",
-    "backend": "node app.js",
+    "frontend": "cd capstonFE && npm run dev",
+    "backend": "cd capstoneBE && node app.js",
     "start": "concurrently \"npm run backend\" \"npm run frontend\"",
     "start:dev": "nodemon app.js",
     "seed": "node server/db/seed.js",
