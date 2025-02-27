@@ -152,6 +152,7 @@ function Discover() {
       }
 
       const spotifyResult = await spotifyResponse.json();
+      console.log("spotify result", spotifyResult);
 
       // Save the album to local database
       await fetch(`http://localhost:3000/api/albums`, {

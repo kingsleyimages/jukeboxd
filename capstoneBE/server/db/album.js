@@ -21,6 +21,22 @@ const createAlbum = async (spotify_id, name, artist, image, spotifyUrl) => {
   }
 };
 
+const createTracks = async (albumId, track) => {
+  try {
+    const SQL = `
+    INSERT INTO tracks(id, title, spotify_id, album_id) VALUES($1, $2, $3, $4) RETURNING *;`;
+    const response = await client.query(SQL, [
+      uuid.v4(),
+      track.title,
+      track.spotify_id,
+      albumId,
+    ]);
+    return response.rows;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const fetchAlbums = async () => {
   try {
     const SQL = `
@@ -40,6 +56,7 @@ const fetchAlbumById = async (spotifyId) => {
       SELECT * 
       FROM albums 
       WHERE spotify_id = $1
+
     `;
     const { rows } = await client.query(SQL, [spotifyId]);
 
@@ -49,7 +66,9 @@ const fetchAlbumById = async (spotifyId) => {
     }
     const album = rows[0];
     const albumReviews = await fetchReviewsByAlbumId(album.id);
+    const albumTracks = await fetchTracksByAlbumId(album.id);
     album.reviews = albumReviews;
+    album.tracks = albumTracks;
     console.log("Album with all reviews:", album);
 
     return album;
@@ -59,4 +78,25 @@ const fetchAlbumById = async (spotifyId) => {
   }
 };
 
-module.exports = { createAlbum, fetchAlbums, fetchAlbumById };
+//fetch tracks by album id
+const fetchTracksByAlbumId = async (album_id) => {
+  try {
+    const { rows } = await client.query(
+      `
+       SELECT * FROM tracks WHERE album_id=$1;
+    `,
+      [album_id]
+    );
+    return rows;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  createAlbum,
+  fetchAlbums,
+  fetchAlbumById,
+  createTracks,
+  fetchTracksByAlbumId,
+};

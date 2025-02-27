@@ -153,6 +153,11 @@ function App() {
         image: spotifyResult.images[0]?.url || "",
         spotify_id: spotifyResult.id,
         spotifyUrl: spotifyResult.external_urls?.spotify,
+        tracks: spotifyResult.tracks.items.map((track) => ({
+          title: track.name,
+          spotify_id: track.id,
+          track_number: track.track_number,
+        })),
       };
 
       // Save the album to local database
