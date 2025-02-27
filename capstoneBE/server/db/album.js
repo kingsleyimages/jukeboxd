@@ -59,4 +59,18 @@ const fetchAlbumById = async (spotifyId) => {
   }
 };
 
-module.exports = { createAlbum, fetchAlbums, fetchAlbumById };
+//This function will fetch all albums that have a review attached to them
+const fetchAlbumsWithReviews = async () => {
+  try {
+    const SQL = `
+    SELECT * FROM albums
+    INNER JOIN reviews ON albums.id = reviews.album_id
+    `;
+    const response = await client.query(SQL);
+    return response.rows;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { createAlbum, fetchAlbums, fetchAlbumById, fetchAlbumsWithReviews };
