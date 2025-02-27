@@ -10,15 +10,19 @@ const API_BASE_URL = "http://localhost:3000";
 const [userData, setUserData] = useState(null);
 const [isLoading, setIsLoading] = useState(true);
 const [error, setError] = useState(null);
-
 const [activeTab, setActiveTab] = useState("myActivity"); 
+const [friendsActivity, setFriendsActivity] = useState({
+    reviews: [],
+    favorites: []
+});
+const [isLoadingFriendsActivity, setIsLoadingFriendsActivity] = useState(false);
 
 const token = localStorage.getItem("token") || null;
 
 useEffect(() => {
     console.log("Token in localStorage:", localStorage.getItem("token"));
     console.log("User in localStorage:", localStorage.getItem("user"));
-    }, []);
+}, []);
 
 const userUpdate = async () => {
     try {
@@ -51,7 +55,7 @@ const userUpdate = async () => {
 
     setUserData(updatedUserData);
     localStorage.setItem("user", JSON.stringify(updatedUserData));
-	console.log("Updated userData:", updatedUserData);
+    console.log("Updated userData:", updatedUserData);
         } else {
             console.error("User data is missing or invalid.");
         }
@@ -76,6 +80,26 @@ const userUpdate = async () => {
         }
     };
 
+    const fetchFriendsActivity = async (userId) => {
+        setIsLoadingFriendsActivity(true);
+        try {
+            const friendsReviewsResponse = await axios.get(`${API_BASE_URL}/api/friends/reviews/${userId}`);
+            console.log("Friends' Reviews:", friendsReviewsResponse.data);
+            
+            const friendsFavoritesResponse = await axios.get(`${API_BASE_URL}/api/favorites/friends/${userId}`);
+            console.log("Friends' Favorites:", friendsFavoritesResponse.data);
+            
+            setFriendsActivity({
+                reviews: friendsReviewsResponse.data || [],
+                favorites: friendsFavoritesResponse.data || []
+            });
+        } catch (error) {
+            console.error("Error fetching friends' activity:", error);
+        } finally {
+            setIsLoadingFriendsActivity(false);
+        }
+    };
+
     useEffect(() => {
         if (!token) {
             navigate("/login");
@@ -84,6 +108,11 @@ const userUpdate = async () => {
         userUpdate();
     }, []);
 
+    useEffect(() => {
+        if (activeTab === "friendsActivity" && userData && userData.id) {
+            fetchFriendsActivity(userData.id);
+        }
+    }, [activeTab, userData]);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -196,7 +225,56 @@ const userUpdate = async () => {
         ) : (
     <div className="friends-activity">
         <h2>Friends' Activity</h2>
-        <p>Feature under development...</p>
+        
+        {isLoadingFriendsActivity ? (
+            <div className="loading">Loading friends' activity...</div>
+        ) : (
+            <>
+    {/* Friends' Favorite Albums */}
+    {friendsActivity.favorites && friendsActivity.favorites.length > 0 ? (
+    <div className="favorites-section">
+        <h3>Friends' Favorite Albums</h3>
+        <ul className="favorites-list">
+        {friendsActivity.favorites.map((favorite, index) => (
+        <li key={index}>
+        <strong>{favorite.name || "Unknown Album"}</strong>
+        <p>Artist: {favorite.artist || "Unknown Artist"}</p>
+        <small>Liked by: {favorite.username}</small>
+        {favorite.image && (
+        <img
+        src={favorite.image}
+        alt={favorite.name || "Album Cover"}
+        style={{ width: "100px", borderRadius: "8px", marginTop: "5px" }}
+        />
+        )}
+        </li>
+        ))}
+        </ul>
+    </div>
+    ) : (
+        <p>No favorite albums from friends yet.</p>
+        )}
+
+    {/* Friends' Reviews */}
+    {friendsActivity.reviews && friendsActivity.reviews.length > 0 ? (
+    <div className="reviews-section">
+        <h3>Friends' Recent Reviews</h3>
+        <ul className="reviews-list">
+        {friendsActivity.reviews.map((review, index) => (
+        <li key={index}>
+        <strong>{review.headline || "Unknown Album"}</strong> - 
+        <span> Rating: {review.favorite || review.rating}/5</span>
+        <p>{review.review || "No review text provided."}</p>
+        <small>By: {review.username}</small>
+        </li>
+        ))}
+        </ul>
+    </div>
+        ) : (
+        <p>No reviews from friends yet.</p>
+        )}
+            </>
+        )}
         </div>
         )}
     </div>
