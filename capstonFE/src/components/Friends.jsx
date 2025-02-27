@@ -4,7 +4,7 @@ import axios from 'axios';
 import styles from '../css/Friends.module.css';
 
 function Friends() {
-  const API_BASE_URL = 'http://localhost:3000';
+  const API_BASE_URL = 'https://jukeboxd-znlr.onrender.com';
 
   const navigate = useNavigate();
   const [friendsList, setFriendsList] = useState([]);
