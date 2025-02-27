@@ -138,6 +138,14 @@ const AlbumDetails = ({ token }) => {
     }
   };
 
+  const averageRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((acc, review) => acc + review.rating, 0) /
+          reviews.length
+        ).toFixed(1)
+      : null;
+
   return (
     <div>
       <div className={styles.topContainer}>
@@ -145,6 +153,7 @@ const AlbumDetails = ({ token }) => {
           <h1 className={styles.title}>{album.name}</h1>
           <p className={styles.artist}>{album.artist}</p>
           <img className={styles.img} src={album.image} alt={album.name} />
+          {averageRating && <p>Average Rating: {averageRating} /5</p>}
         </div>
         <div className={styles.formContainer}>
           {token && (
