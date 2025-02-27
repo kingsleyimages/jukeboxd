@@ -771,29 +771,30 @@ nav a.active::after {
   justify-content: space-between;
   align-items: center;
   padding: 24px 32px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #eee !important;
 }
 
 .account-header h1 {
   margin: 0;
   font-size: 28px;
-  color: #333;
+  font-family: arial;
+  color: #b3b155;
 }
 
 .logout-button {
   background-color: transparent;
   color: #777;
-  border: 1px solid #ccc;
+  border: 2px solid #ccc;
   border-radius: 4px;
   padding: 8px 16px;
-  font-size: 14px;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .logout-button:hover {
-  background-color: #f4f4f4;
-  color: #333;
+  background-color: #b3b155;
+  color: black !important;
 }
 
 .account-tabs {

@@ -169,7 +169,7 @@ function Discover() {
       console.error("Error handling album details:", error);
     }
   };
-
+  console.log(albums);
   return (
     <>
       <h1 className={styles.pageHeader}>
