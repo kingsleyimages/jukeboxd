@@ -15,13 +15,14 @@ const AlbumDetails = ({ token }) => {
     rating: 1,
     favorite: false,
   });
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   useEffect(() => {
     const fetchAlbumDetails = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/api/albums/${albumId}`
-        );
+        const response = await fetch(`${API_BASE_URL}/api/albums/${albumId}`);
         const data = await response.json();
         setAlbum(data);
         setReviews(data.reviews || []);
@@ -52,8 +53,8 @@ const AlbumDetails = ({ token }) => {
 
     try {
       const url = editingReview
-        ? `http://localhost:3000/api/reviews/${editingReview.id}/update`
-        : `http://localhost:3000/api/reviews/album/${albumId}/create`;
+        ? `${API_BASE_URL}/api/reviews/${editingReview.id}/update`
+        : `${API_BASE_URL}/api/reviews/album/${albumId}/create`;
 
       const method = editingReview ? "PUT" : "POST";
 
@@ -117,7 +118,7 @@ const AlbumDetails = ({ token }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/reviews/${review.id}/delete`,
+        `${API_BASE_URL}/api/reviews/${review.id}/delete`,
         {
           method: "DELETE",
           headers: {

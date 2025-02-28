@@ -20,6 +20,9 @@ function App() {
   const [accessToken, setAccessToken] = useState("");
   const [albums, setAlbums] = useState([]);
   const navigate = useNavigate();
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   useEffect(() => {
     let authParams = {
@@ -96,7 +99,7 @@ function App() {
     try {
       // Check if album exists in local database
       const localResponse = await fetch(
-        `http://localhost:3000/api/albums/${albumId}`
+        `${API_BASE_URL}/api/albums/${albumId}`
       );
 
       if (!localResponse.ok) {
@@ -162,23 +165,20 @@ function App() {
 
       // Save the album to local database
 
-      // await fetch(`http://localhost:3000/albums`, {
+      // await fetch(`https://jukeboxd-znlr.onrender.com/albums`, {
       //   method: "POST",
       //   headers: {
       //     "Content-Type": "application/json",
       //   },
       //   body: JSON.stringify(spotifyResult),
       // });
-      const saveResponse = await fetch(
-        `http://localhost:3000/api/albums/create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(albumData),
-        }
-      );
+      const saveResponse = await fetch(`${API_BASE_URL}/api/albums/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(albumData),
+      });
 
       if (!saveResponse.ok) {
         throw new Error("failed to save album to local db");
@@ -194,8 +194,8 @@ function App() {
 
   return (
     <>
-      <Container>
-        <InputGroup>
+      <Container className={styles.searchContainer}>
+        <InputGroup className={styles.inner}>
           <FormControl
             placeholder="Search For Artist"
             type="input"
@@ -206,18 +206,14 @@ function App() {
               }
             }}
             onChange={(event) => setSearchInput(event.target.value)}
-            style={{
-              width: "300px",
-              height: "35px",
-              borderWidth: "0px",
-              borderStyle: "solid",
-              borderRadius: "5px",
-              marginRight: "10px",
-              paddingLeft: "10px",
-            }}
+            className={styles.search}
           />
-          <Button onClick={search}>Search</Button>
-          <Button onClick={addReview}>Add a Review</Button>
+          <Button className={styles.button} onClick={search}>
+            Search
+          </Button>
+          {/* <Button className={styles.button} onClick={addReview}>
+            Add a Review
+          </Button> */}
         </InputGroup>
       </Container>
 
@@ -233,12 +229,16 @@ function App() {
                     Release Date: <br /> {album.release_date}
                   </Card.Text>
                   <Button
+                    target="_blank"
                     href={album.external_urls.spotify}
                     className={styles.button}
                   >
                     Album Link
                   </Button>
-                  <Button onClick={() => handleViewDetails(album.id)}>
+                  <Button
+                    className={styles.button}
+                    onClick={() => handleViewDetails(album.id)}
+                  >
                     View Details
                   </Button>
                 </Card.Body>

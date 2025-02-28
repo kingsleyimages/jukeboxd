@@ -6,6 +6,9 @@ function Discover() {
   const [albums, setAlbums] = useState([]);
   const [accessToken, setAccessToken] = useState("");
   const navigate = useNavigate();
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   useEffect(() => {
     async function fetchAccessToken() {
@@ -49,16 +52,13 @@ function Discover() {
   useEffect(() => {
     async function sendAlbumsToDatabase(albums) {
       try {
-        const response = await fetch(
-          "http://localhost:3000/api/albums/create",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(albums),
-          }
-        );
+        const response = await fetch(`${API_BASE_URL}/api/albums/create`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(albums),
+        });
         if (!response) {
           throw new Error("Failed to save albums to database");
         }
@@ -73,7 +73,7 @@ function Discover() {
 
       try {
         const response = await fetch(
-          // "http://localhost:3000/api/albums",
+          // "https://jukeboxd-znlr.onrender.com/api/albums",
           "https://api.spotify.com/v1/browse/new-releases?limit=50",
           {
             method: "GET",
@@ -99,7 +99,7 @@ function Discover() {
         setAlbums(data.albums.items);
 
         // save albums to database
-        //uncomment this block to save albums to database
+        // uncomment this block to save albums to database
 
         // const formattedAlbums = data.albums.items.map(
         //   async (album) =>
@@ -124,12 +124,12 @@ function Discover() {
     try {
       // Check if album exists in local database
       const localResponse = await fetch(
-        `http://localhost:3000/api/albums/${albumId}`
+        `${API_BASE_URL}/api/albums/${albumId}`
       );
-      const localResult = await localResponse.json();
+      const localResult = await localResponse.json().catch(() => null);
       console.log(localResult);
       // If album exists, navigate to that page
-      if (localResult.id) {
+      if (localResult?.id) {
         navigate(`/album/${albumId}`);
         return;
       }
@@ -140,7 +140,7 @@ function Discover() {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer YOUR_ACCESS_TOKEN`,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
         }
@@ -151,17 +151,36 @@ function Discover() {
         throw new Error("Failed to fetch album from Spotify");
       }
 
-      const spotifyResult = await spotifyResponse.json();
+      const spotifyResult = await spotifyResponse.json().catch(() => null);
       console.log("spotify result", spotifyResult);
 
+      //prepare album data for local database
+      const albumData = {
+        name: spotifyResult.name,
+        artist: spotifyResult.artists[0]?.name || "unknown artist",
+        image: spotifyResult.images[0]?.url || "",
+        spotify_id: spotifyResult.id,
+        spotifyUrl: spotifyResult.external_urls?.spotify,
+        tracks: spotifyResult.tracks.items.map((track) => ({
+          title: track.name,
+          spotify_id: track.id,
+          track_number: track.track_number,
+        })),
+      };
+
       // Save the album to local database
-      await fetch(`http://localhost:3000/api/albums`, {
+      const saveResponse = await fetch(`${API_BASE_URL}/api/albums/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(spotifyResult),
+        body: JSON.stringify(albumData),
       });
+
+      if (!saveResponse.ok) {
+        throw new Error("failed to save album to local db");
+      }
+      console.log("album saved to local db");
 
       // Navigate to the new album page
       navigate(`/album/${albumId}`);

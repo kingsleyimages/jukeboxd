@@ -5,7 +5,9 @@ import "../App.css";
 
 function Me() {
   const navigate = useNavigate();
-  const API_BASE_URL = "http://localhost:3000";
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,9 +15,10 @@ function Me() {
   const [activeTab, setActiveTab] = useState("myActivity");
   const [friendsActivity, setFriendsActivity] = useState({
     reviews: [],
-    favorites: []
+    favorites: [],
   });
-  const [isLoadingFriendsActivity, setIsLoadingFriendsActivity] = useState(false);
+  const [isLoadingFriendsActivity, setIsLoadingFriendsActivity] =
+    useState(false);
 
   const token = localStorage.getItem("token") || null;
 
@@ -37,30 +40,29 @@ function Me() {
       if (response.data && response.data.id) {
         let updatedUserData = { ...response.data };
 
-        const reviewsResponse = await axios.get(`${API_BASE_URL}/api/reviews/user/${response.data.id}`);
+        const reviewsResponse = await axios.get(
+          `${API_BASE_URL}/api/reviews/user/${response.data.id}`
+        );
         console.log("API response (User Reviews):", reviewsResponse.data);
 
         const reviews = reviewsResponse.data || [];
 
-        const enhancedReviews = reviews.map(review => ({
+        const enhancedReviews = reviews.map((review) => ({
           ...review,
-          albumName: review.headline
+          albumName: review.headline,
         }));
 
         updatedUserData.reviews = enhancedReviews;
 
-        const favoritesResponse = await axios.get(`${API_BASE_URL}/api/favorites/${response.data.id}`);
+        const favoritesResponse = await axios.get(
+          `${API_BASE_URL}/api/favorites/${response.data.id}`
+        );
         console.log("API response (User Favorites):", favoritesResponse.data);
         updatedUserData.favorites = favoritesResponse.data;
 
         setUserData(updatedUserData);
         localStorage.setItem("user", JSON.stringify(updatedUserData));
         console.log("Updated userData:", updatedUserData);
-
-        // Set up auto logout if the user's role is admin
-        if (updatedUserData.role === 'admin') {
-          setupAutoLogout();
-        }
       } else {
         console.error("User data is missing or invalid.");
       }
@@ -70,12 +72,20 @@ function Me() {
         if (apiError.response.status === 401) {
           localStorage.removeItem("token");
           localStorage.removeItem("user");
-          navigate("/login", { state: { message: "Your session expired. Please log in again." } });
+          navigate("/login", {
+            state: { message: "Your session expired. Please log in again." },
+          });
           return;
         }
-        setError(`Server error: ${apiError.response.data?.message || apiError.response.statusText}`);
+        setError(
+          `Server error: ${
+            apiError.response.data?.message || apiError.response.statusText
+          }`
+        );
       } else if (apiError.request) {
-        setError("Cannot connect to server. Please check your internet connection.");
+        setError(
+          "Cannot connect to server. Please check your internet connection."
+        );
       } else {
         setError("Failed to load account information. Please try again later.");
       }
@@ -88,15 +98,19 @@ function Me() {
   const fetchFriendsActivity = async (userId) => {
     setIsLoadingFriendsActivity(true);
     try {
-      const friendsReviewsResponse = await axios.get(`${API_BASE_URL}/api/friends/reviews/${userId}`);
+      const friendsReviewsResponse = await axios.get(
+        `${API_BASE_URL}/api/friends/reviews/${userId}`
+      );
       console.log("Friends' Reviews:", friendsReviewsResponse.data);
 
-      const friendsFavoritesResponse = await axios.get(`${API_BASE_URL}/api/favorites/friends/${userId}`);
+      const friendsFavoritesResponse = await axios.get(
+        `${API_BASE_URL}/api/favorites/friends/${userId}`
+      );
       console.log("Friends' Favorites:", friendsFavoritesResponse.data);
 
       setFriendsActivity({
         reviews: friendsReviewsResponse.data || [],
-        favorites: friendsFavoritesResponse.data || []
+        favorites: friendsFavoritesResponse.data || [],
       });
     } catch (error) {
       console.error("Error fetching friends' activity:", error);
@@ -125,50 +139,6 @@ function Me() {
     navigate("/login");
   };
 
-  const handleListenedChange = async (albumId, listened) => {
-    try {
-      const response = await axios.put(`${API_BASE_URL}/api/albums/${albumId}/listened`, { listened }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setUserData((prevData) => ({
-        ...prevData,
-        favorites: prevData.favorites.map((album) =>
-          album.id === albumId ? { ...album, listened } : album
-        )
-      }));
-    } catch (error) {
-      console.error("Error updating album listened status:", error);
-    }
-  };
-
-  const setupAutoLogout = () => {
-    let logoutTimer;
-
-    const resetLogoutTimer = () => {
-      if (logoutTimer) {
-        clearTimeout(logoutTimer);
-      }
-      logoutTimer = setTimeout(handleLogout, 5 * 60 * 1000); // 5 minutes
-    };
-
-    const activityEvents = ['mousemove', 'keydown', 'click', 'scroll'];
-
-    activityEvents.forEach(event => {
-      window.addEventListener(event, resetLogoutTimer);
-    });
-
-    resetLogoutTimer();
-
-    return () => {
-      if (logoutTimer) {
-        clearTimeout(logoutTimer);
-      }
-      activityEvents.forEach(event => {
-        window.removeEventListener(event, resetLogoutTimer);
-      });
-    };
-  };
-
   if (isLoading) {
     return <div className="loading">Loading account information...</div>;
   }
@@ -177,7 +147,10 @@ function Me() {
     return (
       <div className="error-container">
         <div className="error">{error}</div>
-        <button className="retry-button" onClick={() => window.location.reload()}>
+        <button
+          className="retry-button"
+          onClick={() => window.location.reload()}
+        >
           Try Again
         </button>
       </div>
@@ -200,7 +173,9 @@ function Me() {
               <h2>Account Information</h2>
               <div className="info-item">
                 <span className="label">Username:</span>
-                <span className="value">{userData.username || "Not available"}</span>
+                <span className="value">
+                  {userData.username || "Not available"}
+                </span>
               </div>
               {userData.email && (
                 <div className="info-item">
@@ -211,13 +186,17 @@ function Me() {
 
               <div className="activity-tabs">
                 <button
-                  className={`tab-button ${activeTab === "myActivity" ? "active" : ""}`}
+                  className={`tab-button ${
+                    activeTab === "myActivity" ? "active" : ""
+                  }`}
                   onClick={() => setActiveTab("myActivity")}
                 >
                   My Activity
                 </button>
                 <button
-                  className={`tab-button ${activeTab === "friendsActivity" ? "active" : ""}`}
+                  className={`tab-button ${
+                    activeTab === "friendsActivity" ? "active" : ""
+                  }`}
                   onClick={() => setActiveTab("friendsActivity")}
                 >
                   Friends' Activity
@@ -229,7 +208,9 @@ function Me() {
                   <h2>Your Activity</h2>
 
                   {/* Favorite Albums */}
-                  {userData.favorites && Array.isArray(userData.favorites) && userData.favorites.length > 0 ? (
+                  {userData.favorites &&
+                  Array.isArray(userData.favorites) &&
+                  userData.favorites.length > 0 ? (
                     <div className="favorites-section">
                       <h3>Favorite Albums</h3>
                       <ul className="favorites-list">
@@ -241,17 +222,13 @@ function Me() {
                               <img
                                 src={album.image}
                                 alt={album.name || "Album Cover"}
-                                style={{ width: "100px", borderRadius: "8px", marginTop: "5px" }}
+                                style={{
+                                  width: "100px",
+                                  borderRadius: "8px",
+                                  marginTop: "5px",
+                                }}
                               />
                             )}
-                            <label>
-                              <input
-                                type="checkbox"
-                                checked={album.listened}
-                                onChange={(e) => handleListenedChange(album.id, e.target.checked)}
-                              />
-                              Listened
-                            </label>
                           </li>
                         ))}
                       </ul>
@@ -261,14 +238,20 @@ function Me() {
                   )}
 
                   {/* User Reviews */}
-                  {userData.reviews && Array.isArray(userData.reviews) && userData.reviews.length > 0 ? (
+                  {userData.reviews &&
+                  Array.isArray(userData.reviews) &&
+                  userData.reviews.length > 0 ? (
                     <div className="reviews-section">
                       <h3>Recent Reviews</h3>
                       <ul className="reviews-list">
                         {userData.reviews.map((review, index) => (
                           <li key={index}>
-                            <strong>{review.albumName || review.album?.name || "Unknown Album"} </strong> -
-                            <span> Rating: {review.favorite}/5</span>
+                            <strong>
+                              {review.albumName ||
+                                review.album?.name ||
+                                "Unknown Album"}{" "}
+                            </strong>{" "}
+                            -<span> Rating: {review.favorite}/5</span>
                             <p>{review.review || "No review text provided."}</p>
                             <small>By: {review.username}</small>
                           </li>
@@ -288,24 +271,36 @@ function Me() {
                   ) : (
                     <>
                       {/* Friends' Favorite Albums */}
-                      {friendsActivity.favorites && friendsActivity.favorites.length > 0 ? (
+                      {friendsActivity.favorites &&
+                      friendsActivity.favorites.length > 0 ? (
                         <div className="favorites-section">
                           <h3>Friends' Favorite Albums</h3>
                           <ul className="favorites-list">
-                            {friendsActivity.favorites.map((favorite, index) => (
-                              <li key={index}>
-                                <strong>{favorite.name || "Unknown Album"}</strong>
-                                <p>Artist: {favorite.artist || "Unknown Artist"}</p>
-                                <small>Liked by: {favorite.username}</small>
-                                {favorite.image && (
-                                  <img
-                                    src={favorite.image}
-                                    alt={favorite.name || "Album Cover"}
-                                    style={{ width: "100px", borderRadius: "8px", marginTop: "5px" }}
-                                  />
-                                )}
-                              </li>
-                            ))}
+                            {friendsActivity.favorites.map(
+                              (favorite, index) => (
+                                <li key={index}>
+                                  <strong>
+                                    {favorite.name || "Unknown Album"}
+                                  </strong>
+                                  <p>
+                                    Artist:{" "}
+                                    {favorite.artist || "Unknown Artist"}
+                                  </p>
+                                  <small>Liked by: {favorite.username}</small>
+                                  {favorite.image && (
+                                    <img
+                                      src={favorite.image}
+                                      alt={favorite.name || "Album Cover"}
+                                      style={{
+                                        width: "100px",
+                                        borderRadius: "8px",
+                                        marginTop: "5px",
+                                      }}
+                                    />
+                                  )}
+                                </li>
+                              )
+                            )}
                           </ul>
                         </div>
                       ) : (
@@ -313,15 +308,20 @@ function Me() {
                       )}
 
                       {/* Friends' Reviews */}
-                      {friendsActivity.reviews && friendsActivity.reviews.length > 0 ? (
+                      {friendsActivity.reviews &&
+                      friendsActivity.reviews.length > 0 ? (
                         <div className="reviews-section">
                           <h3>Friends' Recent Reviews</h3>
                           <ul className="reviews-list">
                             {friendsActivity.reviews.map((review, index) => (
                               <li key={index}>
-                                <strong>{review.headline || "Unknown Album"}</strong> -
-                                <span> Rating: {review.favorite || review.rating}/5</span>
-                                <p>{review.review || "No review text provided."}</p>
+                                <strong>
+                                  {review.headline || "Unknown Album"}
+                                </strong>{" "}
+                                -<span> Rating: {review.rating}/5</span>
+                                <p>
+                                  {review.review || "No review text provided."}
+                                </p>
                                 <small>By: {review.username}</small>
                               </li>
                             ))}
