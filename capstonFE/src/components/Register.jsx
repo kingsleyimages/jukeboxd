@@ -24,7 +24,7 @@ const Register = () => {
     e.preventDefault();
     setError(null);
     try {
-      await axios.post(`${API_BASE_URL}api/users/register`, formData, {
+      await axios.post(`${API_BASE_URL}/api/users/register`, formData, {
         headers: { "Content-Type": "application/json" },
       });
       console.log("registration success");
