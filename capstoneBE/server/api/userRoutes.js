@@ -77,6 +77,7 @@ router.get('/users', authenticateToken, async (req, res, next) => {
     res.status(500).send('unable to get users');
   }
 });
+
 // Get all users, comments, and reviews (admin only)
 router.get(
   '/admin/data',
