@@ -1,14 +1,14 @@
 require('dotenv').config({ path: '../../.env' });
-const { Client } = require("pg");
-const bcrypt = require("bcrypt");
-const uuid = require("uuid");
+const { Client } = require('pg');
+const bcrypt = require('bcrypt');
+const uuid = require('uuid');
 
-console.log("Environment Variables:");
-console.log("PGUSER:", process.env.PGUSER);
-console.log("PGHOST:", process.env.PGHOST);
-console.log("PGDATABASE:", process.env.PGDATABASE);
-console.log("PGPASSWORD:", process.env.PGPASSWORD ? "******" : "Not Set");
-console.log("PGPORT:", process.env.PGPORT);
+console.log('Environment Variables:');
+console.log('PGUSER:', process.env.PGUSER);
+console.log('PGHOST:', process.env.PGHOST);
+console.log('PGDATABASE:', process.env.PGDATABASE);
+console.log('PGPASSWORD:', process.env.PGPASSWORD ? '******' : 'Not Set');
+console.log('PGPORT:', process.env.PGPORT);
 
 if (
   !process.env.PGUSER ||
@@ -28,7 +28,7 @@ const client = new Client({
 const seed = async () => {
   try {
     await client.connect();
-    console.log("connected to database");
+    console.log('connected to database');
 
     // Create dummy users
     const users = [
@@ -57,63 +57,63 @@ const seed = async () => {
     }
 
     // Create dummy albums with random spotify_id and artist
-    const albums = [
-      {
-        spotify_id: `album${uuid.v4().slice(0, 8)}`,
-        artist: `Artist ${uuid.v4().slice(0, 8)}`,
-        image:
-          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
-        spotifyUrl:
-          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
-      },
-      {
-        spotify_id: `album${uuid.v4().slice(0, 8)}`,
-        artist: `Artist ${uuid.v4().slice(0, 8)}`,
-        image:
-          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
-        spotifyUrl:
-          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
-      },
-      {
-        spotify_id: `album${uuid.v4().slice(0, 8)}`,
-        artist: `Artist ${uuid.v4().slice(0, 8)}`,
-        image:
-          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
-        spotifyUrl:
-          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
-      },
-      {
-        spotify_id: `album${uuid.v4().slice(0, 8)}`,
-        artist: `Artist ${uuid.v4().slice(0, 8)}`,
-        image:
-          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
-        spotifyUrl:
-          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
-      },
-      {
-        spotify_id: `album${uuid.v4().slice(0, 8)}`,
-        artist: `Artist ${uuid.v4().slice(0, 8)}`,
-        image:
-          'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
-        spotifyUrl:
-          'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
-      },
-    ];
+    // const albums = [
+    //   {
+    //     spotify_id: `album${uuid.v4().slice(0, 8)}`,
+    //     artist: `Artist ${uuid.v4().slice(0, 8)}`,
+    //     image:
+    //       'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+    //     spotifyUrl:
+    //       'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
+    //   },
+    //   {
+    //     spotify_id: `album${uuid.v4().slice(0, 8)}`,
+    //     artist: `Artist ${uuid.v4().slice(0, 8)}`,
+    //     image:
+    //       'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+    //     spotifyUrl:
+    //       'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
+    //   },
+    //   {
+    //     spotify_id: `album${uuid.v4().slice(0, 8)}`,
+    //     artist: `Artist ${uuid.v4().slice(0, 8)}`,
+    //     image:
+    //       'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+    //     spotifyUrl:
+    //       'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
+    //   },
+    //   {
+    //     spotify_id: `album${uuid.v4().slice(0, 8)}`,
+    //     artist: `Artist ${uuid.v4().slice(0, 8)}`,
+    //     image:
+    //       'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+    //     spotifyUrl:
+    //       'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
+    //   },
+    //   {
+    //     spotify_id: `album${uuid.v4().slice(0, 8)}`,
+    //     artist: `Artist ${uuid.v4().slice(0, 8)}`,
+    //     image:
+    //       'https://media.newyorker.com/photos/63923da2d0ec9d802329ed2b/master/w_2240,c_limit/ra1091.jpg',
+    //     spotifyUrl:
+    //       'https://www.shopelvis.com/?srsltid=AfmBOorFMHyEoUuPE5e0ukHeXNJfrg3xlf5pOUVBpBXj-1JS5jv_QN7g',
+    //   },
+    // ];
 
-    const albumIds = [];
-    for (const album of albums) {
-      const result = await client.query(
-        `INSERT INTO albums(id, spotify_id, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5) RETURNING id`,
-        [
-          uuid.v4(),
-          album.spotify_id,
-          album.artist,
-          album.image,
-          album.spotifyUrl,
-        ]
-      );
-      albumIds.push(result.rows[0].id);
-    }
+    // const albumIds = [];
+    // for (const album of albums) {
+    //   const result = await client.query(
+    //     `INSERT INTO albums(id, spotify_id, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5) RETURNING id`,
+    //     [
+    //       uuid.v4(),
+    //       album.spotify_id,
+    //       album.artist,
+    //       album.image,
+    //       album.spotifyUrl,
+    //     ]
+    //   );
+    //   albumIds.push(result.rows[0].id);
+    // }
 
     // Create dummy reviews
     const reviews = [];
