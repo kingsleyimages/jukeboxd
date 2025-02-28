@@ -58,7 +58,7 @@ function App() {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`, // Attach token for authentication
+						Authorization: `Bearer ${accessToken}`,
 					},
 					body: JSON.stringify({ album_id: albumId }),
 				}
