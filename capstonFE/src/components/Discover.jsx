@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from '../css/Discover.module.css';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styles from "../css/Discover.module.css";
 
 function Discover() {
   const [albums, setAlbums] = useState([]);
-  const [accessToken, setAccessToken] = useState('');
+  const [accessToken, setAccessToken] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,18 +13,18 @@ function Discover() {
       const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 
       if (!clientId || !clientSecret) {
-        console.error('Missing Spotify API credentials. Check your .env file.');
+        console.error("Missing Spotify API credentials. Check your .env file.");
         return;
       }
 
       try {
-        const response = await fetch('https://accounts.spotify.com/api/token', {
-          method: 'POST',
+        const response = await fetch("https://accounts.spotify.com/api/token", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: 'Basic ' + btoa(`${clientId}:${clientSecret}`),
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: "Basic " + btoa(`${clientId}:${clientSecret}`),
           },
-          body: 'grant_type=client_credentials',
+          body: "grant_type=client_credentials",
         });
 
         const data = await response.json();
@@ -32,14 +32,14 @@ function Discover() {
         if (!response.ok) {
           throw new Error(
             `Error fetching access token: ${
-              data.error_description || 'Unknown error'
+              data.error_description || "Unknown error"
             }`
           );
         }
 
         setAccessToken(data.access_token);
       } catch (error) {
-        console.error('Failed to fetch access token:', error);
+        console.error("Failed to fetch access token:", error);
       }
     }
 
@@ -50,21 +50,21 @@ function Discover() {
     async function sendAlbumsToDatabase(albums) {
       try {
         const response = await fetch(
-          'https://jukeboxd-znlr.onrender.com/api/albums/create',
+          "https://jukeboxd-znlr.onrender.com/api/albums/create",
           {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(albums),
           }
         );
         if (!response) {
-          throw new Error('Failed to save albums to database');
+          throw new Error("Failed to save albums to database");
         }
-        console.log('Saved albums to database');
+        console.log("Saved albums to database");
       } catch (error) {
-        console.error('Error sending albums to database: ', error);
+        console.error("Error sending albums to database: ", error);
       }
     }
 
@@ -74,12 +74,12 @@ function Discover() {
       try {
         const response = await fetch(
           // "https://jukeboxd-znlr.onrender.com/api/albums",
-          'https://api.spotify.com/v1/browse/new-releases?limit=50',
+          "https://api.spotify.com/v1/browse/new-releases?limit=50",
           {
-            method: 'GET',
+            method: "GET",
             headers: {
               Authorization: `Bearer ${accessToken}`,
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
           }
         );
@@ -88,12 +88,12 @@ function Discover() {
 
         if (!response.ok) {
           throw new Error(
-            `Error fetching albums: ${data.error?.message || 'Unknown error'}`
+            `Error fetching albums: ${data.error?.message || "Unknown error"}`
           );
         }
 
         if (!data.albums || !data.albums.items) {
-          throw new Error('Invalid data format received from Spotify API');
+          throw new Error("Invalid data format received from Spotify API");
         }
 
         setAlbums(data.albums.items);
@@ -113,7 +113,7 @@ function Discover() {
         );
         await Promise.all(formattedAlbums);
       } catch (error) {
-        console.error('Failed to fetch top albums!:', error);
+        console.error("Failed to fetch top albums!:", error);
       }
     }
 
@@ -138,27 +138,27 @@ function Discover() {
       const spotifyResponse = await fetch(
         `https://api.spotify.com/v1/albums/${albumId}`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
             Authorization: `Bearer YOUR_ACCESS_TOKEN`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
 
       // Check for Spotify API errors
       if (!spotifyResponse.ok) {
-        throw new Error('Failed to fetch album from Spotify');
+        throw new Error("Failed to fetch album from Spotify");
       }
 
       const spotifyResult = await spotifyResponse.json();
-      console.log('spotify result', spotifyResult);
+      console.log("spotify result", spotifyResult);
 
       // Save the album to local database
       await fetch(`https://jukeboxd-znlr.onrender.com/api/albums`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(spotifyResult),
       });
@@ -166,7 +166,7 @@ function Discover() {
       // Navigate to the new album page
       navigate(`/album/${albumId}`);
     } catch (error) {
-      console.error('Error handling album details:', error);
+      console.error("Error handling album details:", error);
     }
   };
   console.log(albums);
@@ -197,14 +197,16 @@ function Discover() {
               <div>
                 <button
                   className={styles.button}
-                  onClick={() => handleViewDetails(album.id)}>
+                  onClick={() => handleViewDetails(album.id)}
+                >
                   View Details
                 </button>
                 <a
                   href={album.external_urls.spotify}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={styles.link}>
+                  className={styles.link}
+                >
                   Listen on Spotify
                 </a>
               </div>
