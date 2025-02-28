@@ -126,10 +126,10 @@ function Discover() {
       const localResponse = await fetch(
         `${API_BASE_URL}/api/albums/${albumId}`
       );
-      const localResult = await localResponse.json();
+      const localResult = await localResponse.json().catch(() => null);
       console.log(localResult);
       // If album exists, navigate to that page
-      if (localResult.id) {
+      if (localResult?.id) {
         navigate(`/album/${albumId}`);
         return;
       }
@@ -140,7 +140,7 @@ function Discover() {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer YOUR_ACCESS_TOKEN`,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
         }
@@ -151,17 +151,36 @@ function Discover() {
         throw new Error("Failed to fetch album from Spotify");
       }
 
-      const spotifyResult = await spotifyResponse.json();
+      const spotifyResult = await spotifyResponse.json().catch(() => null);
       console.log("spotify result", spotifyResult);
 
+      //prepare album data for local database
+      const albumData = {
+        name: spotifyResult.name,
+        artist: spotifyResult.artists[0]?.name || "unknown artist",
+        image: spotifyResult.images[0]?.url || "",
+        spotify_id: spotifyResult.id,
+        spotifyUrl: spotifyResult.external_urls?.spotify,
+        tracks: spotifyResult.tracks.items.map((track) => ({
+          title: track.name,
+          spotify_id: track.id,
+          track_number: track.track_number,
+        })),
+      };
+
       // Save the album to local database
-      await fetch(`${API_BASE_URL}/api/albums`, {
+      const saveResponse = await fetch(`${API_BASE_URL}/api/albums/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(spotifyResult),
+        body: JSON.stringify(albumData),
       });
+
+      if (!saveResponse.ok) {
+        throw new Error("failed to save album to local db");
+      }
+      console.log("album saved to local db");
 
       // Navigate to the new album page
       navigate(`/album/${albumId}`);
