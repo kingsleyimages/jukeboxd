@@ -68,7 +68,7 @@ router.get('/me', authenticateToken, async (req, res, next) => {
 });
 
 // Get all users
-router.get('/users', authenticateToken, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const users = await getAllUsers();
     res.json(users);
