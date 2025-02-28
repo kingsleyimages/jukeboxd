@@ -18,11 +18,7 @@ function Login() {
 
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
-<<<<<<< HEAD
     import.meta.env.VITE_API_BASE_URL_DEV; 
-=======
-    import.meta.env.VITE_API_BASE_URL_DEV;
->>>>>>> main
 
   // Determine initial mode based on current path
   const [isLoginMode, setIsLoginMode] = useState(

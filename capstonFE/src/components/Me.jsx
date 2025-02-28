@@ -5,14 +5,8 @@ import "../App.css";
 
 function Me() {
   const navigate = useNavigate();
-<<<<<<< HEAD
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_PROD ||
   import.meta.env.VITE_API_BASE_URL_DEV; 
-=======
-  const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL_PROD ||
-    import.meta.env.VITE_API_BASE_URL_DEV;
->>>>>>> main
 
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
