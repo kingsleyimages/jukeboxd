@@ -99,19 +99,19 @@ function Discover() {
         setAlbums(data.albums.items);
 
         // save albums to database
-        //uncomment this block to save albums to database
+        // uncomment this block to save albums to database
 
-        const formattedAlbums = data.albums.items.map(
-          async (album) =>
-            await sendAlbumsToDatabase({
-              spotify_id: album.id,
-              name: album.name,
-              artist: album.artists[0].name,
-              image: album.images[0].url,
-              spotifyUrl: album.external_urls.spotify,
-            })
-        );
-        await Promise.all(formattedAlbums);
+        // const formattedAlbums = data.albums.items.map(
+        //   async (album) =>
+        //     await sendAlbumsToDatabase({
+        //       spotify_id: album.id,
+        //       name: album.name,
+        //       artist: album.artists[0].name,
+        //       image: album.images[0].url,
+        //       spotifyUrl: album.external_urls.spotify,
+        //     })
+        // );
+        // await Promise.all(formattedAlbums);
       } catch (error) {
         console.error("Failed to fetch top albums!:", error);
       }
