@@ -5,7 +5,8 @@ import '../App.css';
 
 function Me() {
   const navigate = useNavigate();
-  const API_BASE_URL = 'https://jukeboxd-znlr.onrender.com';
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_PROD ||
+  import.meta.env.VITE_API_BASE_URL_DEV; 
 
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

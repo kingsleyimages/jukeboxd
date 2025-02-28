@@ -22,7 +22,7 @@ const Register = () => {
     setError(null);
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/users/register`,
+        `${import.meta.env.VITE_API_BASE_URL_PROD || VITE_API_BASE_URL_DEV}/api/users/register`,
         formData,
         {
           headers: { "Content-Type": "application/json" },
