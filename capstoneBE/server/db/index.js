@@ -1,15 +1,16 @@
 const { Pool } = require("pg");
 
 const client = new Pool({
-  user: process.env.PGUSER,
-  host: process.env.PGHOST,
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
+	user: process.env.PGUSER,
+	host: process.env.PGHOST,
+	database: process.env.PGDATABASE,
+	password: process.env.PGPASSWORD,
+	port: process.env.PGPORT,
 });
 
 const createTables = async () => {
-  const SQL = `
+	const SQL = `
+    DROP TABLE IF EXISTS listenedto;
     DROP TABLE IF EXISTS comments;
     DROP TABLE IF EXISTS friends;
     DROP TABLE IF EXISTS mixtapes;
@@ -32,7 +33,6 @@ const createTables = async () => {
     CREATE TABLE IF NOT EXISTS albums(
       id UUID PRIMARY KEY,
       spotify_id VARCHAR(100) NOT NULL UNIQUE,
-      name VARCHAR(255) NOT NULL,
       artist VARCHAR(255) NOT NULL,
       image VARCHAR(255) NOT NULL,
       spotifyUrl VARCHAR(255) NOT NULL,
@@ -94,13 +94,20 @@ const createTables = async () => {
       album_id UUID REFERENCES albums(id) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-  `;
-  await client.query(SQL);
-  console.log("tables created");
+
+CREATE TABLE IF NOT EXISTS listenedto(
+	id UUID PRIMARY KEY,
+	user_id UUID REFERENCES users(id) NOT NULL, 
+	album_id UUID REFERENCES albums(id) NOT NULL,
+	is_listened BOOLEAN DEFAULT false NOT NULL, 
+	created_at TIMESTAMP DEFAULT now(),
+	updated_at TIMESTAMP DEFAULT now()
+  );`;
+	await client.query(SQL);
+	console.log("tables created");
 };
 
 module.exports = {
-  client,
-  createTables,
+	client,
+	createTables,
 };
