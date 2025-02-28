@@ -32,6 +32,7 @@ const createTables = async () => {
     CREATE TABLE IF NOT EXISTS albums(
       id UUID PRIMARY KEY,
       spotify_id VARCHAR(100) NOT NULL UNIQUE,
+      name VARCHAR(255) NOT NULL,
       artist VARCHAR(255) NOT NULL,
       image VARCHAR(255) NOT NULL,
       spotifyUrl VARCHAR(255) NOT NULL,
