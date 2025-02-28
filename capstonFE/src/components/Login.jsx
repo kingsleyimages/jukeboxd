@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
-import { decode } from 'jwt-decode'; // Correct the import statement
+import { jwtDecode } from 'jwt-decode'; // Correct the import statement
 
 export const handleLogout = (navigate) => {
   // Remove token and user data from localStorage
@@ -82,7 +82,7 @@ function Login() {
       }
 
       // Decode the token to get user role
-      const decodedToken = decode(response.data.token);
+      const decodedToken = jwtDecode(response.data.token);
       const userRole = decodedToken.role;
 
       // Store user data and token
