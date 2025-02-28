@@ -78,6 +78,28 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+//Fetch user by id (admin only)
+router.get("/:id", authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const user = await fetchUserById(req.params.id);
+    res.json(user);
+  } catch (err) {
+    console.error('error fetching user', err.message);
+    res.status(500).send('unable to get info');
+  }
+});
+
+// Get all users
+router.get('/', async (req, res, next) => {
+  try {
+    const users = await getAllUsers();
+    res.json(users);
+  } catch (err) {
+    console.error('error fetching users', err.message);
+    res.status(500).send('unable to get users');
+  }
+});
+
 // Get all users, comments, and reviews (admin only)
 router.get(
   '/admin/data',

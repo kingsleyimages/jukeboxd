@@ -10,6 +10,9 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', require('./server/api'));
 app.use('/api/reviews', require('./server/api/reviewRoutes.js'));
+app.use('/api/users', require('./server/api/userRoutes.js'));
+app.use('api/comments', require('./server/api/commentRoutes.js'));
+
 
 if (
   !process.env.PGUSER ||

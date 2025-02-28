@@ -1,8 +1,14 @@
-require('dotenv').config();
-const { Client } = require('pg');
-const { createTables } = require('./index');
-const bcrypt = require('bcrypt');
-const uuid = require('uuid');
+require('dotenv').config({ path: '../../.env' });
+const { Client } = require("pg");
+const bcrypt = require("bcrypt");
+const uuid = require("uuid");
+
+console.log("Environment Variables:");
+console.log("PGUSER:", process.env.PGUSER);
+console.log("PGHOST:", process.env.PGHOST);
+console.log("PGDATABASE:", process.env.PGDATABASE);
+console.log("PGPASSWORD:", process.env.PGPASSWORD ? "******" : "Not Set");
+console.log("PGPORT:", process.env.PGPORT);
 
 if (
   !process.env.PGUSER ||
@@ -22,9 +28,7 @@ const client = new Client({
 const seed = async () => {
   try {
     await client.connect();
-    console.log('connected to database');
-    await createTables();
-    console.log('tables created');
+    console.log("connected to database");
 
     // Create dummy users
     const users = [
@@ -112,24 +116,19 @@ const seed = async () => {
     }
 
     // Create dummy reviews
-    const reviews = [
-      {
-        user_id: userIds[0],
-        album_id: albumIds[0],
-        rating: 5,
-        favorite: true,
-        headline: 'Great Album',
-        review: 'This is a great album!',
-      },
-      {
-        user_id: userIds[1],
-        album_id: albumIds[1],
-        rating: 4,
-        favorite: false,
-        headline: 'Good Album',
-        review: 'This is a good album.',
-      },
-    ];
+    const reviews = [];
+    for (const userId of userIds) {
+      for (const albumId of albumIds) {
+        reviews.push({
+          user_id: userId,
+          album_id: albumId,
+          rating: Math.floor(Math.random() * 5) + 1, // Random rating between 1 and 5
+          favorite: Math.random() < 0.5, // Random boolean for favorite
+          headline: `Review for album ${albumId}`,
+          review: `This is a review for album ${albumId} by user ${userId}.`,
+        });
+      }
+    }
 
     const reviewIds = [];
     for (const review of reviews) {
@@ -149,18 +148,16 @@ const seed = async () => {
     }
 
     // Create dummy comments
-    const comments = [
-      {
-        user_id: userIds[0],
-        review_id: reviewIds[0],
-        comment: 'I agree, this album is great!',
-      },
-      {
-        user_id: userIds[1],
-        review_id: reviewIds[1],
-        comment: 'I think it could be better.',
-      },
-    ];
+    const comments = [];
+    for (const reviewId of reviewIds) {
+      for (const userId of userIds) {
+        comments.push({
+          user_id: userId,
+          review_id: reviewId,
+          comment: `This is a comment on review ${reviewId} by user ${userId}.`,
+        });
+      }
+    }
 
     for (const comment of comments) {
       await client.query(

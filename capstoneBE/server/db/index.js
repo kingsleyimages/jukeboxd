@@ -36,6 +36,7 @@ const createTables = async () => {
       artist VARCHAR(255) NOT NULL,
       image VARCHAR(255) NOT NULL,
       spotifyUrl VARCHAR(255) NOT NULL,
+      listened BOOLEAN DEFAULT false,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -50,7 +51,7 @@ const createTables = async () => {
 
     CREATE TABLE IF NOT EXISTS reviews(
       id UUID PRIMARY KEY,
-      user_id UUID REFERENCES users(id) NOT NULL,
+      user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
       album_id UUID REFERENCES albums(id) NOT NULL,
       rating INT NOT NULL DEFAULT 0,
       favorite BOOLEAN DEFAULT false,

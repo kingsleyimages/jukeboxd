@@ -6,13 +6,17 @@ import jukeboxdLogo from '../images/jukeboxdLogoTransparent.png';
 function Navbar() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Check if user is logged in when component mounts and when auth state changes
+ // Check if user is logged in and if they are an admin when component mounts and when auth state changes
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
       setIsLoggedIn(!!token); // Convert to boolean
+      setIsAdmin(user?.role === 'admin'); // Check if user is an admin
       console.log('Auth check - Token exists:', !!token); // Debug log
+      console.log('Auth check - User is admin:', user?.role === 'admin'); // Debug log
     };
 
     // Initial check
@@ -46,12 +50,13 @@ function Navbar() {
       <nav>
         <img src={jukeboxdLogo} alt="Jukeboxd logo" style={{ width: '70px' }} />
         {isLoggedIn ? (
-          <>
+         <>
             {/* Navigation for logged-in users */}
             <Link to="/">Home</Link>
             <Link to="/discover">Discover</Link>
             <Link to="/search">Search</Link>
             <Link to="/account">Account</Link>
+            {isAdmin && <Link to="/admin/dashboard">Admin Dashboard</Link>} {/* Admin link */}
             <button onClick={onLogout} className="logout-button">
               Log out
             </button>
