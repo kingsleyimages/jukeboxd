@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import '../App.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import "../App.css";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    role: 'user',
+    username: "",
+    email: "",
+    password: "",
+    role: "user",
   });
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,18 +24,14 @@ const Register = () => {
     e.preventDefault();
     setError(null);
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}api/users/register`,
-        formData,
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-      console.log('registration success');
-      navigate('/login');
+      await axios.post(`${API_BASE_URL}api/users/register`, formData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log("registration success");
+      navigate("/login");
     } catch (err) {
       setError(
-        err.response?.data?.message || 'Registration failed. Please try again.'
+        err.response?.data?.message || "Registration failed. Please try again."
       );
     }
   };
