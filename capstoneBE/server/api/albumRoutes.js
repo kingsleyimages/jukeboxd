@@ -1,8 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const {
-	authenticateUser,
-} = require("../scripts/authenticateUser.js");
 
 const {
 	createAlbum,
@@ -12,6 +9,8 @@ const {
 	fetchTracksByAlbumId,
 	markAlbumAsListened,
 } = require("../db/album.js");
+
+const authenticateUser = require("../scripts/authenticateUser.js");
 
 // base route and return for the api for albums
 
