@@ -12,6 +12,7 @@ const createTables = async () => {
 	const SQL = `
   DROP TABLE IF EXISTS comments;
   DROP TABLE IF EXISTS friends;
+  DROP TABLE IF EXISTS listenedto;
   DROP TABLE IF EXISTS mixtapes;
   DROP TABLE IF EXISTS songs;
   DROP TABLE IF EXISTS reviews;
@@ -77,23 +78,7 @@ CREATE TABLE IF NOT EXISTS friends(
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT unique_user_id_friend_id UNIQUE (user_id, friend_id)
-);
-
-CREATE TABLE IF NOT EXISTS songs(
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  spotify_id VARCHAR(100) NOT NULL UNIQUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS mixtapes(
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-  song_id UUID REFERENCES songs(id) ON DELETE CASCADE NOT NULL,
-  album_id UUID REFERENCES albums(id) ON DELETE CASCADE NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+)
 
 CREATE TABLE IF NOT EXISTS listenedto(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
