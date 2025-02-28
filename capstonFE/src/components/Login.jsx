@@ -18,7 +18,11 @@ function Login() {
 
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
+<<<<<<< HEAD
     import.meta.env.VITE_API_BASE_URL_DEV; 
+=======
+    import.meta.env.VITE_API_BASE_URL_DEV;
+>>>>>>> main
 
   // Determine initial mode based on current path
   const [isLoginMode, setIsLoginMode] = useState(
@@ -108,7 +112,7 @@ function Login() {
 
       if (err.response) {
         errorMessage =
-          err.response.data?.message || `Error: ${err.response.status}`;
+          err.response.data?.message || `Error: ${err.response.data}`;
       } else if (err.request) {
         errorMessage = 'No response from server. Please check your connection.';
       } else if (err.message) {

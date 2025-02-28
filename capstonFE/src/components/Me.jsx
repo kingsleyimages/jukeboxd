@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import '../App.css';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "../App.css";
 
 function Me() {
   const navigate = useNavigate();
+<<<<<<< HEAD
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_PROD ||
   import.meta.env.VITE_API_BASE_URL_DEV; 
+=======
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
+>>>>>>> main
 
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('myActivity');
+  const [activeTab, setActiveTab] = useState("myActivity");
   const [friendsActivity, setFriendsActivity] = useState({
     reviews: [],
     favorites: [],
@@ -19,22 +25,22 @@ function Me() {
   const [isLoadingFriendsActivity, setIsLoadingFriendsActivity] =
     useState(false);
 
-  const token = localStorage.getItem('token') || null;
+  const token = localStorage.getItem("token") || null;
 
   useEffect(() => {
-    console.log('Token in localStorage:', localStorage.getItem('token'));
-    console.log('User in localStorage:', localStorage.getItem('user'));
+    console.log("Token in localStorage:", localStorage.getItem("token"));
+    console.log("User in localStorage:", localStorage.getItem("user"));
   }, []);
 
   const userUpdate = async () => {
     try {
-      console.log('Starting userUpdate...');
+      console.log("Starting userUpdate...");
 
       const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log('API response (User Data):', response.data);
+      console.log("API response (User Data):", response.data);
 
       if (response.data && response.data.id) {
         let updatedUserData = { ...response.data };
@@ -42,7 +48,7 @@ function Me() {
         const reviewsResponse = await axios.get(
           `${API_BASE_URL}/api/reviews/user/${response.data.id}`
         );
-        console.log('API response (User Reviews):', reviewsResponse.data);
+        console.log("API response (User Reviews):", reviewsResponse.data);
 
         const reviews = reviewsResponse.data || [];
 
@@ -56,23 +62,23 @@ function Me() {
         const favoritesResponse = await axios.get(
           `${API_BASE_URL}/api/favorites/${response.data.id}`
         );
-        console.log('API response (User Favorites):', favoritesResponse.data);
+        console.log("API response (User Favorites):", favoritesResponse.data);
         updatedUserData.favorites = favoritesResponse.data;
 
         setUserData(updatedUserData);
-        localStorage.setItem('user', JSON.stringify(updatedUserData));
-        console.log('Updated userData:', updatedUserData);
+        localStorage.setItem("user", JSON.stringify(updatedUserData));
+        console.log("Updated userData:", updatedUserData);
       } else {
-        console.error('User data is missing or invalid.');
+        console.error("User data is missing or invalid.");
       }
     } catch (apiError) {
-      console.error('API fetch error:', apiError);
+      console.error("API fetch error:", apiError);
       if (apiError.response) {
         if (apiError.response.status === 401) {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          navigate('/login', {
-            state: { message: 'Your session expired. Please log in again.' },
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          navigate("/login", {
+            state: { message: "Your session expired. Please log in again." },
           });
           return;
         }
@@ -83,13 +89,13 @@ function Me() {
         );
       } else if (apiError.request) {
         setError(
-          'Cannot connect to server. Please check your internet connection.'
+          "Cannot connect to server. Please check your internet connection."
         );
       } else {
-        setError('Failed to load account information. Please try again later.');
+        setError("Failed to load account information. Please try again later.");
       }
     } finally {
-      console.log('Setting loading to false...');
+      console.log("Setting loading to false...");
       setIsLoading(false);
     }
   };
@@ -120,22 +126,22 @@ function Me() {
 
   useEffect(() => {
     if (!token) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
     userUpdate();
   }, []);
 
   useEffect(() => {
-    if (activeTab === 'friendsActivity' && userData && userData.id) {
+    if (activeTab === "friendsActivity" && userData && userData.id) {
       fetchFriendsActivity(userData.id);
     }
   }, [activeTab, userData]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   if (isLoading) {
@@ -148,7 +154,8 @@ function Me() {
         <div className="error">{error}</div>
         <button
           className="retry-button"
-          onClick={() => window.location.reload()}>
+          onClick={() => window.location.reload()}
+        >
           Try Again
         </button>
       </div>
@@ -172,7 +179,7 @@ function Me() {
               <div className="info-item">
                 <span className="label">Username:</span>
                 <span className="value">
-                  {userData.username || 'Not available'}
+                  {userData.username || "Not available"}
                 </span>
               </div>
               {userData.email && (
@@ -185,21 +192,23 @@ function Me() {
               <div className="activity-tabs">
                 <button
                   className={`tab-button ${
-                    activeTab === 'myActivity' ? 'active' : ''
+                    activeTab === "myActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab('myActivity')}>
+                  onClick={() => setActiveTab("myActivity")}
+                >
                   My Activity
                 </button>
                 <button
                   className={`tab-button ${
-                    activeTab === 'friendsActivity' ? 'active' : ''
+                    activeTab === "friendsActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab('friendsActivity')}>
+                  onClick={() => setActiveTab("friendsActivity")}
+                >
                   Friends' Activity
                 </button>
               </div>
 
-              {activeTab === 'myActivity' ? (
+              {activeTab === "myActivity" ? (
                 <div className="account-activity">
                   <h2>Your Activity</h2>
 
@@ -212,16 +221,16 @@ function Me() {
                       <ul className="favorites-list">
                         {userData.favorites.map((album, index) => (
                           <li key={index}>
-                            <strong>{album.name || 'Unknown Album'}</strong>
-                            <p>Artist: {album.artist || 'Unknown Artist'}</p>
+                            <strong>{album.name || "Unknown Album"}</strong>
+                            <p>Artist: {album.artist || "Unknown Artist"}</p>
                             {album.image && (
                               <img
                                 src={album.image}
-                                alt={album.name || 'Album Cover'}
+                                alt={album.name || "Album Cover"}
                                 style={{
-                                  width: '100px',
-                                  borderRadius: '8px',
-                                  marginTop: '5px',
+                                  width: "100px",
+                                  borderRadius: "8px",
+                                  marginTop: "5px",
                                 }}
                               />
                             )}
@@ -245,10 +254,10 @@ function Me() {
                             <strong>
                               {review.albumName ||
                                 review.album?.name ||
-                                'Unknown Album'}{' '}
-                            </strong>{' '}
+                                "Unknown Album"}{" "}
+                            </strong>{" "}
                             -<span> Rating: {review.favorite}/5</span>
-                            <p>{review.review || 'No review text provided.'}</p>
+                            <p>{review.review || "No review text provided."}</p>
                             <small>By: {review.username}</small>
                           </li>
                         ))}
@@ -276,21 +285,21 @@ function Me() {
                               (favorite, index) => (
                                 <li key={index}>
                                   <strong>
-                                    {favorite.name || 'Unknown Album'}
+                                    {favorite.name || "Unknown Album"}
                                   </strong>
                                   <p>
-                                    Artist:{' '}
-                                    {favorite.artist || 'Unknown Artist'}
+                                    Artist:{" "}
+                                    {favorite.artist || "Unknown Artist"}
                                   </p>
                                   <small>Liked by: {favorite.username}</small>
                                   {favorite.image && (
                                     <img
                                       src={favorite.image}
-                                      alt={favorite.name || 'Album Cover'}
+                                      alt={favorite.name || "Album Cover"}
                                       style={{
-                                        width: '100px',
-                                        borderRadius: '8px',
-                                        marginTop: '5px',
+                                        width: "100px",
+                                        borderRadius: "8px",
+                                        marginTop: "5px",
                                       }}
                                     />
                                   )}
@@ -312,15 +321,15 @@ function Me() {
                             {friendsActivity.reviews.map((review, index) => (
                               <li key={index}>
                                 <strong>
-                                  {review.headline || 'Unknown Album'}
-                                </strong>{' '}
+                                  {review.headline || "Unknown Album"}
+                                </strong>{" "}
                                 -
                                 <span>
-                                  {' '}
+                                  {" "}
                                   Rating: {review.favorite || review.rating}/5
                                 </span>
                                 <p>
-                                  {review.review || 'No review text provided.'}
+                                  {review.review || "No review text provided."}
                                 </p>
                                 <small>By: {review.username}</small>
                               </li>

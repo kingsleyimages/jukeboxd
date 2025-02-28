@@ -6,6 +6,9 @@ function Discover() {
   const [albums, setAlbums] = useState([]);
   const [accessToken, setAccessToken] = useState("");
   const navigate = useNavigate();
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   useEffect(() => {
     async function fetchAccessToken() {
@@ -49,16 +52,13 @@ function Discover() {
   useEffect(() => {
     async function sendAlbumsToDatabase(albums) {
       try {
-        const response = await fetch(
-          "https://jukeboxd-znlr.onrender.com/api/albums/create",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(albums),
-          }
-        );
+        const response = await fetch(`${API_BASE_URL}/api/albums/create`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(albums),
+        });
         if (!response) {
           throw new Error("Failed to save albums to database");
         }
@@ -99,19 +99,19 @@ function Discover() {
         setAlbums(data.albums.items);
 
         // save albums to database
-        //uncomment this block to save albums to database
+        // uncomment this block to save albums to database
 
-        const formattedAlbums = data.albums.items.map(
-          async (album) =>
-            await sendAlbumsToDatabase({
-              spotify_id: album.id,
-              name: album.name,
-              artist: album.artists[0].name,
-              image: album.images[0].url,
-              spotifyUrl: album.external_urls.spotify,
-            })
-        );
-        await Promise.all(formattedAlbums);
+        // const formattedAlbums = data.albums.items.map(
+        //   async (album) =>
+        //     await sendAlbumsToDatabase({
+        //       spotify_id: album.id,
+        //       name: album.name,
+        //       artist: album.artists[0].name,
+        //       image: album.images[0].url,
+        //       spotifyUrl: album.external_urls.spotify,
+        //     })
+        // );
+        // await Promise.all(formattedAlbums);
       } catch (error) {
         console.error("Failed to fetch top albums!:", error);
       }
@@ -124,7 +124,7 @@ function Discover() {
     try {
       // Check if album exists in local database
       const localResponse = await fetch(
-        `https://jukeboxd-znlr.onrender.com/api/albums/${albumId}`
+        `${API_BASE_URL}/api/albums/${albumId}`
       );
       const localResult = await localResponse.json();
       console.log(localResult);
@@ -155,7 +155,7 @@ function Discover() {
       console.log("spotify result", spotifyResult);
 
       // Save the album to local database
-      await fetch(`https://jukeboxd-znlr.onrender.com/api/albums`, {
+      await fetch(`${API_BASE_URL}/api/albums`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
