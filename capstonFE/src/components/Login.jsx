@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
+import { decode } from 'jwt-decode'; // Correct the import statement
 
 export const handleLogout = (navigate) => {
   // Remove token and user data from localStorage
@@ -81,7 +82,7 @@ function Login() {
       }
 
       // Decode the token to get user role
-      const decodedToken = jwtDecode(response.data.token);
+      const decodedToken = decode(response.data.token);
       const userRole = decodedToken.role;
 
       // Store user data and token
@@ -90,10 +91,6 @@ function Login() {
         'user',
         JSON.stringify({ username: response.data.username })
       );
-
-      // Decode the token to get user role
-      const decodedToken = JSON.parse(atob(response.data.token.split('.')[1]));
-      const userRole = decodedToken.role;
 
       // Trigger storage event for Navbar to detect login
       window.dispatchEvent(new Event('storage'));
