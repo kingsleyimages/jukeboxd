@@ -13,11 +13,16 @@ import Callback from './components/Callback';
 import SingleAlbumDetails from './components/SingleAlbumDetails';
 import Friends from './components/Friends';
 import AdminDashboard from './components/home-components/AdminDashBoard';
-
+import UserDetails from './components/admin-components/UserDetails';
 import ViewAllComments from './components/admin-components/ViewAllComments';
 import ViewAllReviews from './components/admin-components/ViewAllReviews';
 import ViewAllUsers from './components/admin-components/ViewAllUsers';
 import ReviewedAlbums from './components/admin-components/ReviewedAlbums';
+import UserReviewsPage from './components/admin-components/UserReviewsPage';
+import UserCommentsPage from './components/admin-components/UserCommentsPage';
+import UserModify from './components/admin-components/modify-components/UsersModify';
+import ModifyReview from './components/admin-components/modify-components/ModifyReview';
+import ModifyComment from './components/admin-components/modify-components/ModifyComment';
 
 function App() {
   const [token, setToken] = useState('');
@@ -40,6 +45,12 @@ function App() {
             <Route path="/admin/dashboard/reviews" element={<ViewAllReviews />} />
             <Route path="/admin/dashboard/users" element={<ViewAllUsers />} />
             <Route path="/admin/dashboard/reviewed-albums" element={<ReviewedAlbums />} />
+            <Route path="/admin/users/:userId" element={<UserDetails />} />
+            <Route path="/admin/user/:userId/reviews" element={<UserReviewsPage />} />
+            <Route path="/admin/user/:userId/comments" element={<UserCommentsPage />} />
+            <Route path="/admin/user/:userId/modify" element={<UserModify />} />
+            <Route path="/admin/review/:reviewId/modify" element={<ModifyReview />} /> {/* Ensure this route is correct */}
+            <Route path="/admin/comment/:commentId/modify" element={<ModifyComment />} /> {/* Ensure this route is correct */}
           </Route>
           <Route path="/callback" element={<Callback />} />
           <Route path="/" element={<Home />} />

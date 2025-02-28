@@ -1,42 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
-// This component will be used to view all reviews
-function ViewAllReviews() {
-  // Set the initial state of the reviews
-  const [reviews, setReviews] = useState([]);
-  // Set the initial state of the error message
+function UserReviewsPage() {
+  const { userId } = useParams();
+  const [userReviews, setUserReviews] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-  // Set the initial state of the loading message
   const [isLoading, setIsLoading] = useState(true);
 
-  // Use the useEffect hook to fetch the reviews from the API
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log('Fetching reviews...');
-    fetch('http://localhost:3000/api/reviews', {
+    console.log(`Fetching reviews for user ${userId}...`);
+
+    fetch(`http://localhost:3000/api/reviews/user/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        console.log('Response:', response); // Log the response
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
       .then((data) => {
-        console.log('Fetched reviews:', data); // Log the fetched data
-        setReviews(data);
+        console.log('Fetched reviews:', data);
+        setUserReviews(data);
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching reviews:', error); // Log the error
-        setErrorMessage("An error occurred while fetching reviews");
+        console.error('Error fetching user reviews:', error);
+        setErrorMessage("An error occurred while fetching user reviews");
         setIsLoading(false);
       });
-  }, []);
+  }, [userId]);
 
   const handleDeleteReview = (reviewId) => {
     console.log(`Deleting review with ID: ${reviewId}`);
@@ -55,7 +51,7 @@ function ViewAllReviews() {
       })
       .then((data) => {
         console.log('Review deleted:', data);
-        setReviews(reviews.filter(review => review.id !== reviewId));
+        setUserReviews(userReviews.filter(review => review.id !== reviewId));
       })
       .catch((error) => {
         console.error('Error deleting review:', error);
@@ -72,12 +68,15 @@ function ViewAllReviews() {
   }
 
   return (
-    <>
-      <div>ViewAllReviews</div>
+    <div>
+      <h2>User Reviews</h2>
       <ul>
-        {reviews.map((review) => (
+        {userReviews.map((review) => (
           <li key={review.id}>
-            <p>{review.review}</p>
+            <p><strong>Headline:</strong> {review.headline}</p>
+            <p><strong>Review:</strong> {review.review}</p>
+            <p><strong>Rating:</strong> {review.rating}</p>
+            <p><strong>Favorite:</strong> {review.favorite ? 'Yes' : 'No'}</p>
             <button onClick={() => handleDeleteReview(review.id)}>Delete Review</button>
             <Link to={`/admin/review/${review.id}/modify`}>
               <button>Modify Review</button>
@@ -85,8 +84,8 @@ function ViewAllReviews() {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 
-export default ViewAllReviews;
+export default UserReviewsPage;

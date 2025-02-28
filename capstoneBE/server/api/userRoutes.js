@@ -12,6 +12,7 @@ const {
   getAllReviews,
   deleteUser,
   modifyUser,
+  fetchUserById,
 } = require("../db/user.js");
 const { authenticateToken, adminAuth } = require("./middlewares.js");
 
@@ -64,6 +65,17 @@ router.get("/me", authenticateToken, async (req, res, next) => {
   } catch (err) {
     console.error("error fetching user", err.message);
     res.status(500).send("unable to get info");
+  }
+});
+
+//Fetch user by id (admin only)
+router.get("/:id", authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const user = await fetchUserById(req.params.id);
+    res.json(user);
+  } catch (err) {
+    console.error("error fetching user", err.message);
+    res.status(500).send("unable to get user");
   }
 });
 

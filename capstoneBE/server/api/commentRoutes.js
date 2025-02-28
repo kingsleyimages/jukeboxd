@@ -76,17 +76,15 @@ router.delete('/:id/delete', authenticateToken, async (req, res, next) => {
   }
 });
 
-// delete a comment by id(admin only)
-router.delete('/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
-  try{
+// delete a comment by id (admin only)
+router.delete('/admin/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
     const response = await deleteComment(req.params.id);
-    res.status(200).send({message: 'Comment deleted successfully', comment: response});
-  }
-  catch(error){
+    res.status(200).send({ message: 'Comment deleted successfully', comment: response });
+  } catch (error) {
     next(error);
   }
-}
-);
+});
 
 // update a comment by id (non-admin)
 router.put('/:id/update', authenticateToken, async (req, res, next) => {

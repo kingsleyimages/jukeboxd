@@ -85,6 +85,13 @@ const modifyUser = async (id, username, email, role) => {
   return response.rows[0];
 }
 
+//Fetch user by id
+const fetchUserById = async (id) => {
+  const SQL = `SELECT * FROM users WHERE id = $1;`;
+  const response = await client.query(SQL, [id]);
+  return response.rows[0];
+};
+
 const getAllUsers = async () => {
   const SQL = `SELECT id, username, email, role FROM users;`;
   const response = await client.query(SQL);
@@ -112,4 +119,5 @@ module.exports = {
   getAllUsers,
   getAllComments,
   getAllReviews,
+  fetchUserById,
 };

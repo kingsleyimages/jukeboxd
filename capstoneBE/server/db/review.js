@@ -97,7 +97,7 @@ const fetchReviewsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT users.username, review, rating, favorite, headline
+      SELECT reviews.id, users.username, review, rating, favorite, headline
       FROM reviews
       INNER JOIN users
       ON reviews.user_id = users.id
@@ -110,7 +110,6 @@ const fetchReviewsByUserId = async (id) => {
     console.log(error);
   }
 };
-
 // fetch a review by id
 const getReviewById = async (id) => {
   try {
@@ -146,7 +145,6 @@ const updateReview = async (id, review, headline, rating, favorite) => {
     console.log(error);
   }
 };
-
 //
 
 //get review by spotify id

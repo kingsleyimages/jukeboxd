@@ -108,29 +108,25 @@ router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
 });
 
 // delete review by id (admin only)
-router.delete(
-  "/admin/:id/delete",
-  authenticateToken,
-  adminAuth,
-  async (req, res, next) => {
-    try {
-      const response = await deleteReview(req.params.id);
-      res.status(200).json({ message: "Review deleted successfully", review: response });
-    } catch (error) {
-      next(error);
-    }
+router.delete('/admin/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const response = await deleteReview(req.params.id);
+    res.status(200).json({ message: 'Review deleted successfully', review: response });
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 
 // update a review by id (admin only)
 router.put(
-  "/admin/:id/update",
+  "/admin/reviews/:id/update",
   authenticateToken,
   adminAuth,
   async (req, res, next) => {
     try {
-      const response = await updateReview(req.params.id, req.body.review);
+      const { review, headline, rating, favorite } = req.body;
+      const response = await updateReview(req.params.id, review, headline, rating, favorite);
       res.send(response);
     } catch (error) {
       next(error);

@@ -7,6 +7,7 @@ const {
   fetchAlbumById,
   createTracks,
   fetchTracksByAlbumId,
+  fetchAlbumsWithReviews
 } = require("../db/album.js");
 
 // base route and return for the api for albums
