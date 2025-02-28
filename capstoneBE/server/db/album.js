@@ -1,11 +1,17 @@
-const { client } = require("./index");
-const uuid = require("uuid");
-const { fetchReviewsByAlbumId } = require("./review");
+const { client } = require('./index');
+const uuid = require('uuid');
+const { fetchReviewsByAlbumId } = require('./review');
 
-const createAlbum = async (spotify_id, name, artist, image, spotifyUrl, listened = false) => {
+const createAlbum = async (
+  spotify_id,
+  name,
+  artist,
+  image,
+  spotifyUrl = false
+) => {
   try {
     const SQL = `
-    INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl, listened) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *;
+    INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl, ) VALUES($1, $2, $3, $4, $5, $6, ) RETURNING *;
   `;
     const response = await client.query(SQL, [
       uuid.v4(),
@@ -14,7 +20,6 @@ const createAlbum = async (spotify_id, name, artist, image, spotifyUrl, listened
       artist,
       image,
       spotifyUrl,
-      listened
     ]);
     return response.rows[0];
   } catch (error) {
@@ -62,7 +67,7 @@ const fetchAlbumById = async (spotifyId) => {
     const { rows } = await client.query(SQL, [spotifyId]);
 
     if (rows.length === 0) {
-      console.error("No album found with Spotify ID:", spotifyId);
+      console.error('No album found with Spotify ID:', spotifyId);
       return null;
     }
     const album = rows[0];
@@ -70,11 +75,11 @@ const fetchAlbumById = async (spotifyId) => {
     const albumTracks = await fetchTracksByAlbumId(album.id);
     album.reviews = albumReviews;
     album.tracks = albumTracks;
-    console.log("Album with all reviews:", album);
+    console.log('Album with all reviews:', album);
 
     return album;
   } catch (error) {
-    console.error("Error fetching album and reviews:", error.message);
+    console.error('Error fetching album and reviews:', error.message);
     throw error;
   }
 };
@@ -103,15 +108,15 @@ const fetchAlbumsWithReviews = async () => {
     LEFT JOIN reviews ON albums.id = reviews.album_id
     `;
     const response = await client.query(SQL);
-    console.log("Fetched albums with reviews:", response.rows); // Add logging
+    console.log('Fetched albums with reviews:', response.rows); // Add logging
 
     // Group reviews by album
     const albumsMap = new Map();
-    response.rows.forEach(row => {
+    response.rows.forEach((row) => {
       if (!albumsMap.has(row.id)) {
         albumsMap.set(row.id, {
           ...row,
-          reviews: []
+          reviews: [],
         });
       }
       if (row.review_id) {
@@ -122,17 +127,19 @@ const fetchAlbumsWithReviews = async () => {
           headline: row.headline,
           review: row.review,
           review_created_at: row.review_created_at,
-          review_updated_at: row.review_updated_at
+          review_updated_at: row.review_updated_at,
         });
       }
     });
 
     // Convert the map to an array and filter out albums with no reviews
-    const albums = Array.from(albumsMap.values()).filter(album => album.reviews.length > 0);
-    console.log("Processed albums with reviews:", albums); // Add logging
+    const albums = Array.from(albumsMap.values()).filter(
+      (album) => album.reviews.length > 0
+    );
+    console.log('Processed albums with reviews:', albums); // Add logging
     return albums;
   } catch (error) {
-    console.log("Error fetching albums with reviews:", error);
+    console.log('Error fetching albums with reviews:', error);
     throw error;
   }
 };
