@@ -317,11 +317,7 @@ function Me() {
                                 <strong>
                                   {review.headline || "Unknown Album"}
                                 </strong>{" "}
-                                -
-                                <span>
-                                  {" "}
-                                  Rating: {review.favorite || review.rating}/5
-                                </span>
+                                -<span> Rating: {review.rating}/5</span>
                                 <p>
                                   {review.review || "No review text provided."}
                                 </p>

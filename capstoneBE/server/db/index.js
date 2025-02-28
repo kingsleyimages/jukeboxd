@@ -80,21 +80,6 @@ const createTables = async () => {
       CONSTRAINT unique_user_id_friend_id UNIQUE (user_id, friend_id)
     );
 
-    CREATE TABLE IF NOT EXISTS songs(
-      id UUID PRIMARY KEY,
-      spotify_id VARCHAR(100) NOT NULL UNIQUE,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-
-    CREATE TABLE IF NOT EXISTS mixtapes(
-      id UUID PRIMARY KEY,
-      user_id UUID REFERENCES users(id) NOT NULL,
-      song_id UUID REFERENCES songs(id) NOT NULL,
-      album_id UUID REFERENCES albums(id) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
   `;
   await client.query(SQL);
   console.log("tables created");
