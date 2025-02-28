@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// This component will be used to view all reviews
 function ViewAllReviews() {
-  // Set the initial state of the reviews
   const [reviews, setReviews] = useState([]);
-  // Set the initial state of the error message
   const [errorMessage, setErrorMessage] = useState("");
-  // Set the initial state of the loading message
   const [isLoading, setIsLoading] = useState(true);
 
-  // Use the useEffect hook to fetch the reviews from the API
   useEffect(() => {
     const token = localStorage.getItem('token');
     console.log('Fetching reviews...');
@@ -54,6 +49,10 @@ function ViewAllReviews() {
         return response.json();
       })
       .then((data) => {
+  console.log('Fetched reviews data:', data); // Debugging log
+  setReviews(data);
+})
+      .then((data) => {
         console.log('Review deleted:', data);
         setReviews(reviews.filter(review => review.id !== reviewId));
       })
@@ -75,15 +74,19 @@ function ViewAllReviews() {
     <>
       <div>ViewAllReviews</div>
       <ul>
-        {reviews.map((review) => (
-          <li key={review.id}>
-            <p>{review.review}</p>
-            <button onClick={() => handleDeleteReview(review.id)}>Delete Review</button>
-            <Link to={`/admin/review/${review.id}/modify`}>
-              <button>Modify Review</button>
-            </Link>
-          </li>
-        ))}
+{reviews.map((review) => {
+  console.log('Review ID:', review.id); // Debugging log
+  return (
+    <li key={review.id}>
+      <p>{review.review}</p>
+      <button onClick={() => handleDeleteReview(review.id)}>Delete Review</button>
+      <Link to={`/admin/review/${review.id}/modify`}>
+        <button>Modify Review</button>
+      </Link>
+    </li>
+  );
+})}
+
       </ul>
     </>
   );

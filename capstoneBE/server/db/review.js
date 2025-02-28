@@ -110,9 +110,9 @@ const fetchReviewsByUserId = async (id) => {
     console.log(error);
   }
 };
-// fetch a review by id
 const getReviewById = async (id) => {
   try {
+    console.log('Executing query to fetch review with ID:', id); // Debugging log
     const { rows } = await client.query(
       `
       SELECT * FROM reviews
@@ -122,8 +122,14 @@ const getReviewById = async (id) => {
     );
     return rows[0];
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching review by ID:', error);
+    throw error;
   }
+};
+
+module.exports = {
+  getReviewById,
+  // other functions
 };
 
 //update a review by id

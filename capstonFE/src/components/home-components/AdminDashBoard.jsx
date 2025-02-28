@@ -9,8 +9,7 @@ const AdminDashboard = () => {
     </div>
     <div>
       <Link to="/admin/dashboard/users">View All Users</Link>
-      <Link to="/admin/dashboard/comments">View All Comments</Link>
-      <Link to="/admin/dashboard/reviews">View All Reviews</Link>
+      <br />
       <Link to="/admin/dashboard/reviewed-albums">View All Reviewed Albums</Link>
     </div>
     </>

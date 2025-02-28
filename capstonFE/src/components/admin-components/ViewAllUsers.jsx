@@ -44,10 +44,12 @@ function ViewAllUsers() {
   return (
     <div>
       <h2>View All Users</h2>
+      
       <ul>
         {users.map((user) => (
           <li key={user.id}>
             {user.username}
+            <br />
             <Link to={`/admin/users/${user.id}`}>See Details</Link>
           </li>
         ))}

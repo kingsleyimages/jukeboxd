@@ -35,6 +35,7 @@ const createTables = async () => {
       artist VARCHAR(255) NOT NULL,
       image VARCHAR(255) NOT NULL,
       spotifyUrl VARCHAR(255) NOT NULL,
+      listened BOOLEAN DEFAULT false,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );

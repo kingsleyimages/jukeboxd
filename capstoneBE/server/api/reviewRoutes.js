@@ -67,6 +67,21 @@ router.get("/user/:userId/", async (req, res, next) => {
   }
 });
 
+// fetch review by id
+router.get("/:id", async (req, res, next) => {
+  try {
+    console.log('Fetching review with ID:', req.params.id); // Debugging log
+    const review = await getReviewById(req.params.id);
+    if (!review) {
+      return res.status(404).json({ message: "Review not found" });
+    }
+    res.status(200).json(review);
+  } catch (error) {
+    console.error('Error fetching review by ID:', error);
+    next(error);
+  }
+});
+
 // delete a review by id
 router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
   try {

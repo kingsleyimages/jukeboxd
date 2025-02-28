@@ -23,6 +23,22 @@ const createComment = async (reviewId, userId, comment) => {
   }
 };
 
+//fetch comment by id
+const fetchCommentById = async (id) => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT * FROM comments
+      WHERE id = $1
+    `,
+      [id]
+    );
+    return rows[0];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // fetch all comments
 const fetchComments = async () => {
   try {
@@ -139,6 +155,7 @@ const getAllComments = async () => {
 
 module.exports = {
   createComment,
+  fetchCommentById,
   fetchCommentsByReviewId,
   fetchCommentsByUserId,
   deleteComment,

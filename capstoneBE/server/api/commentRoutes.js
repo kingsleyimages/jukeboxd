@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {
   createComment,
+  fetchCommentById,
   fetchCommentsByReviewId,
   fetchCommentsByUserId,
   fetchComments,
@@ -27,6 +28,16 @@ router.post('/review/:reviewId/create', async (req, res, next) => {
     );
 
     res.status(201).send(comment);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// fetch comment by id
+router.get('/:id/', async (req, res, next) => {
+  try {
+    const comment = await fetchCommentById(req.params.id);
+    res.send(comment);
   } catch (error) {
     next(error);
   }

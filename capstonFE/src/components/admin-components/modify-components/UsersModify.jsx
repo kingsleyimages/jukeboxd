@@ -37,7 +37,7 @@ function UserModify() {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/users/${userId}`, {
+      const response = await fetch(`http://localhost:3000/api/users/admin/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

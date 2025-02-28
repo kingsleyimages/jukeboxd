@@ -2,10 +2,10 @@ const { client } = require("./index");
 const uuid = require("uuid");
 const { fetchReviewsByAlbumId } = require("./review");
 
-const createAlbum = async (spotify_id, name, artist, image, spotifyUrl) => {
+const createAlbum = async (spotify_id, name, artist, image, spotifyUrl, listened = false) => {
   try {
     const SQL = `
-    INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5, $6) RETURNING *;
+    INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl, listened) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *;
   `;
     const response = await client.query(SQL, [
       uuid.v4(),
@@ -14,6 +14,7 @@ const createAlbum = async (spotify_id, name, artist, image, spotifyUrl) => {
       artist,
       image,
       spotifyUrl,
+      listened
     ]);
     return response.rows[0];
   } catch (error) {
@@ -136,10 +137,24 @@ const fetchAlbumsWithReviews = async () => {
   }
 };
 
+const updateAlbumListenedStatus = async (albumId, listened) => {
+  try {
+    const SQL = `
+    UPDATE albums SET listened = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *;
+  `;
+    const response = await client.query(SQL, [listened, albumId]);
+    return response.rows[0];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   createAlbum,
   fetchAlbums,
-  fetchAlbumById, fetchAlbumsWithReviews,
+  fetchAlbumById,
+  fetchAlbumsWithReviews,
   createTracks,
   fetchTracksByAlbumId,
+  updateAlbumListenedStatus, // Add this line
 };

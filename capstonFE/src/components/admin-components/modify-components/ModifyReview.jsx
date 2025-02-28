@@ -3,20 +3,28 @@ import React, { useState, useEffect } from 'react';
 
 function ModifyReview() {
   const { reviewId } = useParams();
+  console.log('reviewId from useParams:', reviewId); // Debugging log
   const navigate = useNavigate();
   const [review, setReview] = useState('');
   const [headline, setHeadline] = useState('');
   const [rating, setRating] = useState(0);
   const [favorite, setFavorite] = useState(false);
+  const [listened, setListened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
+    // If reviewId is undefined, set an error message and return early
+    if (!reviewId) {
+      setErrorMessage("Invalid review ID. Please go back and try again.");
+      return;
+    }
+
     console.log('Fetching review details for reviewId:', reviewId); // Debugging log
     const token = localStorage.getItem('token');
     fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        'Authorization': `Bearer ${token}`,
+      },
     })
       .then((response) => {
         if (!response.ok) {
@@ -26,34 +34,52 @@ function ModifyReview() {
       })
       .then((data) => {
         console.log('Fetched review details:', data); // Debugging log
-        setReview(data.review);
-        setHeadline(data.headline);
-        setRating(data.rating);
-        setFavorite(data.favorite);
+        setReview(data.review || '');
+        setHeadline(data.headline || '');
+        setRating(data.rating || 0);
+        setFavorite(data.favorite || false);
+        setListened(data.listened || false);
       })
       .catch((error) => {
         console.error('Error fetching review details:', error);
         setErrorMessage("An error occurred while fetching review details");
       });
- }, [reviewId]);
+  }, [reviewId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!reviewId) {
+      setErrorMessage("Invalid review ID. Cannot submit changes.");
+      return;
+    }
+
     const token = localStorage.getItem('token');
     try {
-      console.log('Submitting updated review details:', { review, headline, rating, favorite }); // Debugging log
-      const response = await fetch(`http://localhost:3000/api/admin/reviews/${reviewId}/update`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ review, headline, rating, favorite })
-      });
+      console.log('Submitting updated review details:', {
+        review,
+        headline,
+        rating,
+        favorite,
+        listened,
+      }); // Debugging log
+
+      const response = await fetch(
+        `http://localhost:3000/api/reviews/admin/reviews/${reviewId}/update`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ review, headline, rating, favorite, listened }),
+        }
+      );
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      navigate(`/admin/user/${userId}/reviews`);
+
+      navigate(`/admin/reviews`);
     } catch (error) {
       console.error('Error modifying review:', error);
       setErrorMessage("An error occurred while modifying review details");
@@ -63,7 +89,7 @@ function ModifyReview() {
   return (
     <div>
       <h2>Modify Review</h2>
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Headline:</label>
@@ -82,13 +108,6 @@ function ModifyReview() {
         </div>
         <div>
           <label>Rating:</label>
-         <textarea
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Rating:</label>
           <input
             type="number"
             value={rating}
@@ -101,6 +120,14 @@ function ModifyReview() {
             type="checkbox"
             checked={favorite}
             onChange={(e) => setFavorite(e.target.checked)}
+          />
+        </div>
+        <div>
+          <label>Listened:</label>
+          <input
+            type="checkbox"
+            checked={listened}
+            onChange={(e) => setListened(e.target.checked)}
           />
         </div>
         <button type="submit">Save Changes</button>
