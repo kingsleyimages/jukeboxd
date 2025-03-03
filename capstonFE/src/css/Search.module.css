@@ -1,4 +1,4 @@
-.searchContainer {
+/*.searchContainer {
   width: 80%;
   margin: 0 auto;
   display: flex;
@@ -84,4 +84,270 @@ img {
   margin: 7px auto;
   letter-spacing: 1px;
   line-height: 1rem;
+}*/
+
+:root {
+  --black: #121212;
+  --dark-gray: #181818;
+  --medium-gray: #282828;
+  --light-gray: #b3b3b3;
+  --olive-green: #556B2F;
+  --olive-light: #6B8E23;
+  --olive-dark: #3A4D1E;
+  --border-color: #333333;
+  --white: #FFFFFF;
+  --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --card-radius: 8px;
+  --transition-default: all 0.3s ease;
+}
+
+/* Search container styling */
+.searchContainer {
+  width: 90%;
+  max-width: 1200px;
+  margin: 40px auto 30px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Inner search container */
+.inner {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: var(--medium-gray);
+  border-radius: 500px;
+  padding: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Button styling */
+.button {
+  background-color: var(--olive-green);
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: 500px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  transition: var(--transition-default);
+  text-transform: uppercase;
+  margin-left: 10px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.button:hover {
+  background-color: var(--olive-light);
+  transform: scale(1.03);
+}
+
+.inner .button {
+  margin: 0 0 0 10px;
+  max-width: 175px;
+}
+
+/* Search input styling */
+.search {
+  background-color: transparent;
+  border: none;
+  color: var(--white);
+  font-size: 1rem;
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 20px;
+  border-radius: 500px;
+  outline: none;
+}
+
+.searchContainer input::placeholder {
+  color: var(--light-gray);
+  opacity: 0.7;
+}
+
+.searchContainer input {
+  color: var(--white);
+}
+
+/* Row of album cards */
+.row {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: row;
+  margin: 20px auto;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: flex-start;
+}
+
+/* Album card styling */
+.card {
+  background-color: var(--dark-gray);
+  width: calc(20% - 24px);
+  min-width: 200px;
+  margin: 0;
+  padding: 20px;
+  border: none;
+  border-radius: var(--card-radius);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transition: var(--transition-default);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  background-color: var(--medium-gray);
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--olive-green);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+/* Card title and text */
+.title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 16px 0 8px;
+  text-align: center;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.release {
+  font-size: 0.9rem;
+  color: var(--light-gray);
+  text-align: center;
+  margin: 0 0 16px;
+  line-height: 1.4;
+}
+
+/* Album image */
+.img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: calc(var(--card-radius) - 2px);
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: var(--transition-default);
+}
+
+.card:hover .img {
+  transform: scale(1.03);
+}
+
+/* Card body (used by react-bootstrap) */
+.card-body {
+  padding: 16px 0 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Button inside cards */
+.card .button {
+  margin: 8px 0;
+  padding: 10px;
+  width: 100%;
+  max-width: none;
+  font-size: 0.8rem;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+  .card {
+    width: calc(25% - 24px);
+  }
+}
+
+@media (max-width: 992px) {
+  .card {
+    width: calc(33.33% - 24px);
+  }
+  
+  .searchContainer {
+    width: 90%;
+  }
+  
+  .row {
+    width: 90%;
+  }
+  
+  .inner {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: calc(50% - 24px);
+  }
+  
+  .search {
+    max-width: 200px;
+  }
+  
+  .inner {
+    max-width: 400px;
+  }
+  
+  .searchContainer {
+    margin: 30px auto 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  .row {
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .inner {
+    flex-direction: column;
+    background-color: transparent;
+    box-shadow: none;
+    gap: 10px;
+    align-items: stretch;
+    border-radius: 0;
+  }
+  
+  .search {
+    max-width: none;
+    background-color: var(--medium-gray);
+    margin-bottom: 10px;
+  }
+  
+  .inner .button {
+    margin: 0;
+    max-width: none;
+  }
 }

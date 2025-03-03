@@ -51,34 +51,39 @@ const AlbumDetails = ({ token }) => {
 		}
 	}, [albumId, token]);
 
-	const markAsListened = async () => {
-		const storedToken = localStorage.getItem("token");
-		if (!storedToken) {
-			console.error("No token found, user might not be logged in.");
+	const markAsListenedFrontEnd = async (albumId, token) => {
+		if (!albumId) {
+			console.error("Error: albumId is undefined");
+			return;
+		}
+
+		if (!token) {
+			alert("You need to be logged in to mark album as listened");
 			return;
 		}
 
 		try {
-			const response = await fetch(
-				`${API_BASE_URL}/api/albums/listened`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${storedToken}`,
-					},
-					body: JSON.stringify({ album_id: albumId }),
-				}
-			);
+			const url = `${API_BASE_URL}/api/albums/${albumId}/listened`;
+			console.log("📡 Sending API Request to:", url);
 
-			if (!response.ok) throw new Error("Failed to update album");
+			const response = await fetch(url, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			});
 
-			setAlbum((prevAlbum) => ({ ...prevAlbum, listened: true }));
-		} catch (error) {
-			console.error(
-				"Error marking album as listened:",
-				error.message
-			);
+			if (response.ok) {
+				console.log("Album marked as listened");
+			} else {
+				console.error(
+					"Failed to mark album as listened:",
+					response.statusText
+				);
+			}
+		} catch (err) {
+			console.error("Error marking album as listened:", err.message);
 		}
 	};
 
@@ -105,15 +110,11 @@ const AlbumDetails = ({ token }) => {
 			});
 
 			if (response.ok) {
-				const updatedReview = await response.json();
+				const updatedReview = await response.json().catch(() => null);
 				setReviews((prevReviews) =>
-					editingReview
-						? prevReviews.map((review) =>
-								review.id === updatedReview.id
-									? updatedReview
-									: review
-						  )
-						: [...prevReviews, updatedReview]
+					prevReviews.map((review) =>
+						review.id === updatedReview.id ? updatedReview : review
+					)
 				);
 				setEditingReview(null);
 				setFormData({
@@ -129,6 +130,37 @@ const AlbumDetails = ({ token }) => {
 			console.error("Error saving review:", err.message);
 		}
 	};
+
+	const handleInputChange = (e) => {
+		const { name, value, type, checked } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: type === "checkbox" ? checked : value,
+		}));
+	};
+
+	const handleCancelEdit = () => {
+		setEditingReview(null);
+		setFormData({
+			headline: "",
+			review: "",
+			rating: 1,
+			favorite: false,
+		});
+	};
+
+	const handleEditClick = (review) => {
+		setEditingReview(review);
+		setFormData({
+			headline: review.headline,
+			review: review.review,
+			rating: review.rating,
+			favorite: review.favorite,
+		});
+		console.log("Edit review:", review);
+	};
+
+	if (!album) return <div>Loading...</div>;
 
 	const handleDeleteClick = async (review) => {
 		if (
@@ -256,7 +288,7 @@ const AlbumDetails = ({ token }) => {
 				)}
 				<button
 					className={styles.button}
-					onClick={markAsListened}
+					onClick={() => markAsListenedFrontEnd(albumId, token)}
 					disabled={album.listened}
 				>
 					{album.listened ? "Already Listened" : "Mark as Listened"}

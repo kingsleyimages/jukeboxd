@@ -10,15 +10,15 @@ const client = new Pool({
 
 const createTables = async () => {
 	const SQL = `
-  DROP TABLE IF EXISTS comments;
-  DROP TABLE IF EXISTS friends;
-  DROP TABLE IF EXISTS listenedto;
-  DROP TABLE IF EXISTS mixtapes;
-  DROP TABLE IF EXISTS songs;
-  DROP TABLE IF EXISTS reviews;
-  DROP TABLE IF EXISTS tracks;
-  DROP TABLE IF EXISTS albums;
-  DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS friends;
+DROP TABLE IF EXISTS listenedto;
+DROP TABLE IF EXISTS mixtapes;
+DROP TABLE IF EXISTS songs;
+DROP TABLE IF EXISTS reviews;
+DROP TABLE IF EXISTS tracks;
+DROP TABLE IF EXISTS albums;
+DROP TABLE IF EXISTS users;
 
 CREATE TABLE IF NOT EXISTS users(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS friends(
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT unique_user_id_friend_id UNIQUE (user_id, friend_id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS listenedto(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -86,8 +86,10 @@ CREATE TABLE IF NOT EXISTS listenedto(
   album_id UUID REFERENCES albums(id) ON DELETE CASCADE NOT NULL,
   is_listened BOOLEAN DEFAULT false NOT NULL, 
   created_at TIMESTAMP DEFAULT now(),
-  updated_at TIMESTAMP DEFAULT now()
-);`;
+  updated_at TIMESTAMP DEFAULT now(),
+  CONSTRAINT unique_user_album UNIQUE (user_id, album_id)
+)
+;`;
 	await client.query(SQL);
 	console.log("tables created");
 };

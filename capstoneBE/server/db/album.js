@@ -102,12 +102,12 @@ const fetchTracksByAlbumId = async (album_id) => {
 const markAlbumAsListened = async (user_id, album_id) => {
 	try {
 		const SQL = `
-      INSERT INTO listenedto (id, user_id, album_id, is_listened, created_at, updated_at) 
-      VALUES ($1, $2, $3, $4, NOW(), NOW())
-      ON CONFLICT (user_id, album_id) 
-      DO UPDATE SET is_listened = TRUE, updated_at = NOW()
-      RETURNING *;
-    `;
+		INSERT INTO listenedto (id, user_id, album_id, is_listened, created_at, updated_at) 
+		VALUES ($1, $2, $3, $4, NOW(), NOW())
+		ON CONFLICT (user_id, album_id) 
+		DO UPDATE SET is_listened = TRUE, updated_at = NOW()
+		RETURNING *;
+	  `;
 
 		const response = await client.query(SQL, [
 			uuid.v4(),
