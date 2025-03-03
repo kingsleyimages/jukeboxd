@@ -63,7 +63,6 @@ function Me() {
 
         setUserData(updatedUserData);
         localStorage.setItem("user", JSON.stringify(updatedUserData));
-        console.log("spotify_id", updatedUserData.favorites[0].spotify_id);
       } else {
         console.error("User data is missing or invalid.");
       }
@@ -133,10 +132,6 @@ function Me() {
       fetchFriendsActivity(userData.id);
     }
   }, [activeTab, userData]);
-
-  //get spotifyId for navigate
-  // // const spotifyId = userData.favorites[0].spotify_id;
-  // console.log("boooiiii", spotifyId);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
