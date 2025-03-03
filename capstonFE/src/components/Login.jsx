@@ -83,7 +83,7 @@ function Login() {
 
       // Decode the token to get user role
       const decodedToken = jwtDecode(response.data.token);
-    const userRole = decodedToken.role;
+      const userRole = decodedToken.role;
 
       // Store user data and token
       localStorage.setItem('token', response.data.token);
