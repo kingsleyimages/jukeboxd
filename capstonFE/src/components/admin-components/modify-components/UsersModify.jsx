@@ -15,12 +15,11 @@ function UserModify() {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-   
     const token = localStorage.getItem('token');
     axios.get(`${API_BASE_URL}/api/users/${userId}`, {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         setUsername(response.data.username);
@@ -29,7 +28,7 @@ function UserModify() {
       })
       .catch((error) => {
         console.error('Error fetching user details:', error);
-        setErrorMessage("An error occurred while fetching user details");
+        setErrorMessage('An error occurred while fetching user details');
       });
   }, [userId]);
 
@@ -49,7 +48,7 @@ function UserModify() {
       navigate(`/admin/users/${userId}`);
     } catch (error) {
       console.error('Error modifying user:', error);
-      setErrorMessage("An error occurred while modifying user details");
+      setErrorMessage('An error occurred while modifying user details');
     }
   };
 
