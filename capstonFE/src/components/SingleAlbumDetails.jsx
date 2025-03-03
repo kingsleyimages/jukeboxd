@@ -63,7 +63,7 @@ const AlbumDetails = ({ token }) => {
 		}
 
 		try {
-			const url = `${API_BASE_URL}/api/albums/${albumId}/listened`;
+			const url = `${API_BASE_URL}/api/reviews/albums/${albumId}/listened`;
 			console.log("📡 Sending API Request to:", url);
 
 			const response = await fetch(url, {
