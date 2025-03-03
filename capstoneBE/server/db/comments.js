@@ -1,10 +1,10 @@
-const { get } = require('../api/userRoutes');
-const { client } = require('./index');
-const uuid = require('uuid');
+const { get } = require("../api/userRoutes");
+const { client } = require("./index");
+const uuid = require("uuid");
 
 // create a comment
 const createComment = async (reviewId, userId, comment) => {
-  console.log('DB generation of Comments');
+  console.log("DB generation of Comments");
   console.log(userId, reviewId, comment);
   try {
     const SQL = `INSERT INTO comments (id, user_id, review_id, comment)
@@ -56,21 +56,28 @@ const fetchComments = async () => {
 };
 
 // fetch comments by review id
-const fetchCommentsByReviewId = async (id) => {
+const fetchCommentsByReviewId = async (reviewId) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT users.username, comments.comment
+      SELECT users.username, comments.id, comments.comment, comments.user_id
       FROM comments
       INNER JOIN users ON comments.user_id = users.id
       WHERE review_id = $1
     `,
-      [id]
+      [reviewId]
     );
     return rows;
   } catch (error) {
     console.log(error);
   }
+};
+
+const fetchCommentbyCommentId = async (commentId) => {
+  const { rows } = await client.query(`SELECT * FROM comments WHERE id = $1;`, [
+    commentId,
+  ]);
+  return rows;
 };
 
 const fetchCommentsByUserId = async (id) => {
@@ -84,7 +91,7 @@ const fetchCommentsByUserId = async (id) => {
     `,
       [id]
     );
-    return rows.map(row => ({
+    return rows.map((row) => ({
       id: row.id,
       comment: row.comment,
       user_id: row.user_id,
@@ -138,7 +145,6 @@ const updateComment = async (id, comment) => {
   }
 };
 
-
 // Get all comments (admin only)
 const getAllComments = async () => {
   try {
@@ -151,7 +157,7 @@ const getAllComments = async () => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 module.exports = {
   createComment,
@@ -162,4 +168,5 @@ module.exports = {
   updateComment,
   fetchComments,
   getAllComments,
+  fetchCommentbyCommentId,
 };
