@@ -96,12 +96,7 @@ function Me() {
         updatedUserData.favorites = favoritesResponse.data;
 
         setUserData(updatedUserData);
-<<<<<<< HEAD
-        localStorage.setItem("user", JSON.stringify(updatedUserData));
-        // console.log("spotify_id", updatedUserData.favorites[0].spotify_id);
-=======
         localStorage.setItem('user', JSON.stringify(updatedUserData));
->>>>>>> eb859c025e52b49688cdf095d536e85c8f4a9ced
       } else {
         console.error('User data is missing or invalid.');
       }
