@@ -36,10 +36,22 @@ const seed = async () => {
     // Create dummy users
     const users = [
       {
-        username: `jbkdadm`,
-        email: `scott.kingsley@kingsleyimages.com`,
+        username: `user${uuid.v4().slice(0, 8)}`,
+        email: `user${uuid.v4().slice(0, 8)}@example.com`,
+        password: 'password11',
+        role: 'user',
+      },
+      {
+        username: `user${uuid.v4().slice(0, 8)}`,
+        email: `user${uuid.v4().slice(0, 8)}@example.com`,
+        password: 'password22',
+        role: 'user',
+      },
+      {
+        username: 'jkbdadm',
+        email: 'scott.kingsley@kingsleyiamges.com',
         password: '89de47051554bdd930deb19e91d438d5',
-        role: 'admin',
+        role: 'user',
       },
     ];
 
