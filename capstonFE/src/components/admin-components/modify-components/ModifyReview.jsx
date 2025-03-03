@@ -1,5 +1,10 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const API_BASE_URL = import.meta.env.MODE === 'production' 
+  ? import.meta.env.VITE_API_BASE_URL_PROD
+  : import.meta.env.VITE_API_BASE_URL_DEV;
 
 function ModifyReview() {
   const { reviewId } = useParams();
@@ -21,24 +26,18 @@ function ModifyReview() {
 
     console.log('Fetching review details for reviewId:', reviewId); // Debugging log
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
+    axios.get(`${API_BASE_URL}/api/reviews/${reviewId}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Fetched review details:', data); // Debugging log
-        setReview(data.review || '');
-        setHeadline(data.headline || '');
-        setRating(data.rating || 0);
-        setFavorite(data.favorite || false);
-        setListened(data.listened || false);
+        console.log('Fetched review details:', response.data); // Debugging log
+        setReview(response.data.review || '');
+        setHeadline(response.data.headline || '');
+        setRating(response.data.rating || 0);
+        setFavorite(response.data.favorite || false);
+        setListened(response.data.listened || false);
       })
       .catch((error) => {
         console.error('Error fetching review details:', error);
@@ -63,21 +62,16 @@ function ModifyReview() {
         listened,
       }); // Debugging log
 
-      const response = await fetch(
-        `http://localhost:3000/api/reviews/admin/reviews/${reviewId}/update`,
+      const response = await axios.put(
+        `${API_BASE_URL}/api/reviews/admin/reviews/${reviewId}/update`,
+        { review, headline, rating, favorite, listened },
         {
-          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ review, headline, rating, favorite, listened }),
         }
       );
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
 
       navigate(`/admin/reviews`);
     } catch (error) {

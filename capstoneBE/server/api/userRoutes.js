@@ -12,6 +12,7 @@ const {
   getAllReviews,
   deleteUser,
   modifyUser,
+  fetchUserById,
 } = require('../db/user.js');
 const { authenticateToken, adminAuth } = require('./middlewares.js');
 

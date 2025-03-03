@@ -153,5 +153,4 @@ module.exports = {
   fetchAlbumsWithReviews,
   createTracks,
   fetchTracksByAlbumId,
-  updateAlbumListenedStatus, // Add this line
 };

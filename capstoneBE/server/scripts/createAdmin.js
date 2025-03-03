@@ -1,4 +1,4 @@
-require("dotenv").config();
+require('dotenv').config({ path: '../../.env' });
 const { client } = require("../db/index.js");
 const { createUser } = require("../db/user.js");
 
