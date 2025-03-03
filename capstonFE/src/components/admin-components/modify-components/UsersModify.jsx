@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+const API_BASE_URL =
+  import.meta.env.MODE === 'production'
+    ? import.meta.env.VITE_API_BASE_URL_PROD
+    : import.meta.env.VITE_API_BASE_URL_DEV;
+
 function UserModify() {
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -11,10 +16,10 @@ function UserModify() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/users/${userId}`, {
+    fetch(`${API_BASE_URL}/api/users/${userId}`, {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
         if (!response.ok) {
@@ -29,7 +34,7 @@ function UserModify() {
       })
       .catch((error) => {
         console.error('Error fetching user details:', error);
-        setErrorMessage("An error occurred while fetching user details");
+        setErrorMessage('An error occurred while fetching user details');
       });
   }, [userId]);
 
@@ -37,21 +42,24 @@ function UserModify() {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:3000/api/users/admin/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ username, email, role })
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/users/admin/users/${userId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ username, email, role }),
+        }
+      );
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       navigate(`/admin/users/${userId}`);
     } catch (error) {
       console.error('Error modifying user:', error);
-      setErrorMessage("An error occurred while modifying user details");
+      setErrorMessage('An error occurred while modifying user details');
     }
   };
 

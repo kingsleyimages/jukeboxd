@@ -12,18 +12,23 @@ function ModifyReview() {
   const [listened, setListened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const API_BASE_URL =
+    import.meta.env.MODE === 'production'
+      ? import.meta.env.VITE_API_BASE_URL_PROD
+      : import.meta.env.VITE_API_BASE_URL_DEV;
+
   useEffect(() => {
     // If reviewId is undefined, set an error message and return early
     if (!reviewId) {
-      setErrorMessage("Invalid review ID. Please go back and try again.");
+      setErrorMessage('Invalid review ID. Please go back and try again.');
       return;
     }
 
     console.log('Fetching review details for reviewId:', reviewId); // Debugging log
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
+    fetch(`${API_BASE_URL}/api/reviews/${reviewId}`, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -42,14 +47,14 @@ function ModifyReview() {
       })
       .catch((error) => {
         console.error('Error fetching review details:', error);
-        setErrorMessage("An error occurred while fetching review details");
+        setErrorMessage('An error occurred while fetching review details');
       });
   }, [reviewId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!reviewId) {
-      setErrorMessage("Invalid review ID. Cannot submit changes.");
+      setErrorMessage('Invalid review ID. Cannot submit changes.');
       return;
     }
 
@@ -64,14 +69,20 @@ function ModifyReview() {
       }); // Debugging log
 
       const response = await fetch(
-        `http://localhost:3000/api/reviews/admin/reviews/${reviewId}/update`,
+        `${API_BASE_URL}/api/reviews/admin/reviews/${reviewId}/update`,
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ review, headline, rating, favorite, listened }),
+          body: JSON.stringify({
+            review,
+            headline,
+            rating,
+            favorite,
+            listened,
+          }),
         }
       );
 
@@ -82,7 +93,7 @@ function ModifyReview() {
       navigate(`/admin/reviews`);
     } catch (error) {
       console.error('Error modifying review:', error);
-      setErrorMessage("An error occurred while modifying review details");
+      setErrorMessage('An error occurred while modifying review details');
     }
   };
 

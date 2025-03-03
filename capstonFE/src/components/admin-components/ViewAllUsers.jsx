@@ -8,8 +8,12 @@ function ViewAllUsers() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const baseUrl = import.meta.env.MODE === 'production' 
+      ? import.meta.env.VITE_API_BASE_URL_PROD
+      : import.meta.env.VITE_API_BASE_URL_DEV;
+
     console.log('Fetching users...');
-    fetch('http://localhost:3000/api/users', {
+    fetch(`${baseUrl}/api/users`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
