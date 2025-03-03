@@ -51,7 +51,7 @@ const seed = async () => {
         username: 'jkbdadm',
         email: 'scott.kingsley@kingsleyiamges.com',
         password: '89de47051554bdd930deb19e91d438d5',
-        role: 'user',
+        role: 'admin',
       },
     ];
 
@@ -184,4 +184,4 @@ const seed = async () => {
   }
 };
 
-// seed();
+seed();
