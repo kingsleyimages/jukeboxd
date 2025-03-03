@@ -68,7 +68,7 @@ const AlbumDetails = ({ token }) => {
       });
 
       if (response.ok) {
-        const updatedReview = await response.json();
+        const updatedReview = await response.json().catch(() => null);
         setReviews((prevReviews) =>
           prevReviews.map((review) =>
             review.id === updatedReview.id ? updatedReview : review
