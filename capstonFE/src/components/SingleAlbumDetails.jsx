@@ -293,6 +293,7 @@ const AlbumDetails = ({ token }) => {
 							review={review}
 							userId={userId}
 							onDeleteClick={handleDeleteClick}
+                token={token}
 						/>
 					))
 				) : (
