@@ -39,9 +39,8 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/account" element={<Me />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            {/* Remove ViewAllComments and ViewAllReviews */}
-            {/* <Route path="/admin/dashboard/comments" element={<ViewAllComments />} /> */}
-            {/* <Route path="/admin/dashboard/reviews" element={<ViewAllReviews />} /> */}
+       
+       
             <Route path="/admin/dashboard/users" element={<ViewAllUsers />} />
             <Route path="/admin/dashboard/reviewed-albums" element={<ReviewedAlbums />} />
             <Route path="/admin/users/:userId" element={<UserDetails />} />

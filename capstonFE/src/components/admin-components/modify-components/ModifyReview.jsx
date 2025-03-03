@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import { application } from 'express';
 
 function ModifyReview() {
   const { reviewId } = useParams();
@@ -12,6 +13,10 @@ function ModifyReview() {
   const [listened, setListened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+    const API_BASE_URL = import.meta.env.MODE === 'production' 
+    ? import.meta.env.VITE_API_BASE_URL_PROD
+    : import.meta.env.VITE_API_BASE_URL_DEV;
+
   useEffect(() => {
     // If reviewId is undefined, set an error message and return early
     if (!reviewId) {
@@ -21,7 +26,7 @@ function ModifyReview() {
 
     console.log('Fetching review details for reviewId:', reviewId); // Debugging log
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
+    fetch(`${API_BASE_URL}/api/reviews/${reviewId}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -64,7 +69,7 @@ function ModifyReview() {
       }); // Debugging log
 
       const response = await fetch(
-        `http://localhost:3000/api/reviews/admin/reviews/${reviewId}/update`,
+        `${API_BASE_URL}/api/reviews/admin/reviews/${reviewId}/update`,
         {
           method: 'PUT',
           headers: {
