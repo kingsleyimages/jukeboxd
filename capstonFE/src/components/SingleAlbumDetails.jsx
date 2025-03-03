@@ -226,6 +226,7 @@ const AlbumDetails = ({ token }) => {
                 userId={userId}
                 onEditClick={handleEditClick}
                 onDeleteClick={handleDeleteClick}
+                token={token}
               />
             ))
           ) : (
