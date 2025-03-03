@@ -11,7 +11,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Callback from './components/Callback';
 import SingleAlbumDetails from './components/SingleAlbumDetails';
-import Friends from './components/Friends';
+
 import AdminDashboard from './components/home-components/AdminDashBoard';
 import UserDetails from './components/admin-components/UserDetails';
 import ViewAllUsers from './components/admin-components/ViewAllUsers';
@@ -43,13 +43,28 @@ function App() {
             {/* <Route path="/admin/dashboard/comments" element={<ViewAllComments />} /> */}
             {/* <Route path="/admin/dashboard/reviews" element={<ViewAllReviews />} /> */}
             <Route path="/admin/dashboard/users" element={<ViewAllUsers />} />
-            <Route path="/admin/dashboard/reviewed-albums" element={<ReviewedAlbums />} />
+            <Route
+              path="/admin/dashboard/reviewed-albums"
+              element={<ReviewedAlbums />}
+            />
             <Route path="/admin/users/:userId" element={<UserDetails />} />
-            <Route path="/admin/user/:userId/reviews" element={<UserReviewsPage />} />
-            <Route path="/admin/user/:userId/comments" element={<UserCommentsPage />} />
+            <Route
+              path="/admin/user/:userId/reviews"
+              element={<UserReviewsPage />}
+            />
+            <Route
+              path="/admin/user/:userId/comments"
+              element={<UserCommentsPage />}
+            />
             <Route path="/admin/user/:userId/modify" element={<UserModify />} />
-            <Route path="/admin/review/:reviewId/modify" element={<ModifyReview />} />
-            <Route path="/admin/comment/:commentId/modify" element={<ModifyComment />} />
+            <Route
+              path="/admin/review/:reviewId/modify"
+              element={<ModifyReview />}
+            />
+            <Route
+              path="/admin/comment/:commentId/modify"
+              element={<ModifyComment />}
+            />
           </Route>
           <Route path="/callback" element={<Callback />} />
           <Route path="/" element={<Home />} />
@@ -58,7 +73,7 @@ function App() {
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/friends" element={<Friends />} />
+
           <Route
             path="/album/:albumId"
             element={<SingleAlbumDetails token={token} />}
