@@ -7,11 +7,11 @@ const createAlbum = async (
 	name,
 	artist,
 	image,
-	spotifyUrl
+	spotifyUrl = false
 ) => {
 	try {
 		const SQL = `
-    INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl) VALUES($1, $2, $3, $4, $5, $6) RETURNING *;
+    INSERT INTO albums(id, spotify_id, name, artist, image, spotifyUrl ) VALUES($1, $2, $3, $4, $5, $6 ) RETURNING *;
   `;
 		const response = await client.query(SQL, [
 			uuid.v4(),
@@ -99,6 +99,63 @@ const fetchTracksByAlbumId = async (album_id) => {
 	}
 };
 
+//This function will fetch all albums that have a review attached to them
+const fetchAlbumsWithReviews = async () => {
+	try {
+		const SQL = `
+    SELECT albums.*, reviews.id AS review_id, reviews.rating, reviews.favorite, reviews.headline, reviews.review, reviews.created_at AS review_created_at, reviews.updated_at AS review_updated_at
+    FROM albums
+    LEFT JOIN reviews ON albums.id = reviews.album_id
+    `;
+		const response = await client.query(SQL);
+		console.log("Fetched albums with reviews:", response.rows); // Add logging
+
+		// Group reviews by album
+		const albumsMap = new Map();
+		response.rows.forEach((row) => {
+			if (!albumsMap.has(row.id)) {
+				albumsMap.set(row.id, {
+					...row,
+					reviews: [],
+				});
+			}
+			if (row.review_id) {
+				albumsMap.get(row.id).reviews.push({
+					review_id: row.review_id,
+					rating: row.rating,
+					favorite: row.favorite,
+					headline: row.headline,
+					review: row.review,
+					review_created_at: row.review_created_at,
+					review_updated_at: row.review_updated_at,
+				});
+			}
+		});
+
+		// Convert the map to an array and filter out albums with no reviews
+		const albums = Array.from(albumsMap.values()).filter(
+			(album) => album.reviews.length > 0
+		);
+		console.log("Processed albums with reviews:", albums); // Add logging
+		return albums;
+	} catch (error) {
+		console.log("Error fetching albums with reviews:", error);
+		throw error;
+	}
+};
+
+const updateAlbumListenedStatus = async (albumId, listened) => {
+	try {
+		const SQL = `
+    UPDATE albums SET listened = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *;
+  `;
+		const response = await client.query(SQL, [listened, albumId]);
+		return response.rows[0];
+	} catch (error) {
+		console.log(error);
+	}
+};
+
 const markAlbumAsListened = async (user_id, album_id) => {
 	try {
 		const SQL = `
@@ -127,7 +184,8 @@ module.exports = {
 	createAlbum,
 	fetchAlbums,
 	fetchAlbumById,
+	fetchAlbumsWithReviews,
 	createTracks,
 	fetchTracksByAlbumId,
-	markAlbumAsListened,
+	updateAlbumListenedStatus, // Add this line
 };

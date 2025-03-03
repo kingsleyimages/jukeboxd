@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const {
   createComment,
+  fetchCommentById,
   fetchCommentsByReviewId,
   fetchCommentsByUserId,
   fetchComments,
   deleteComment,
   updateComment,
+  getAllComments,
 } = require('../db/comments.js');
 const { authenticateToken, adminAuth } = require('./middlewares.js');
 
@@ -26,6 +28,16 @@ router.post('/review/:reviewId/create', async (req, res, next) => {
     );
 
     res.status(201).send(comment);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// fetch comment by id
+router.get('/:id/', async (req, res, next) => {
+  try {
+    const comment = await fetchCommentById(req.params.id);
+    res.send(comment);
   } catch (error) {
     next(error);
   }
@@ -75,17 +87,15 @@ router.delete('/:id/delete', authenticateToken, async (req, res, next) => {
   }
 });
 
-// delete a comment by id(admin only)
-router.delete('/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
-  try{
+// delete a comment by id (admin only)
+router.delete('/admin/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
     const response = await deleteComment(req.params.id);
-    res.status(200).send({message: 'Comment deleted successfully', comment: response});
-  }
-  catch(error){
+    res.status(200).send({ message: 'Comment deleted successfully', comment: response });
+  } catch (error) {
     next(error);
   }
-}
-);
+});
 
 // update a comment by id (non-admin)
 router.put('/:id/update', authenticateToken, async (req, res, next) => {
@@ -109,6 +119,17 @@ router.put('/admin/:id/update', authenticateToken, adminAuth, async (req, res, n
     res.status(200).send(response);
   } catch (error) {
     next(error);
+  }
+});
+
+// Get all comments (admin only)
+router.get("/", authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const comments = await getAllComments();
+    res.json(comments);
+  } catch (err) {
+    console.error("error fetching comments", err.message);
+    res.status(500).send("unable to get comments");
   }
 });
 

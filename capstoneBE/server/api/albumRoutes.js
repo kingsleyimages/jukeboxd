@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const { authenticateToken } = require("./middlewares");
+
 const {
 	createAlbum,
 	fetchAlbums,
@@ -7,6 +9,13 @@ const {
 	createTracks,
 	fetchTracksByAlbumId,
 	markAlbumAsListened,
+	createAlbum,
+	fetchAlbums,
+	fetchAlbumById,
+	createTracks,
+	fetchTracksByAlbumId,
+	fetchAlbumsWithReviews,
+	updateAlbumListenedStatus,
 } = require("../db/album.js");
 const { authenticateToken } = require("./middlewares.js");
 
@@ -73,7 +82,24 @@ router.post(
 	}
 );
 
-// fetch all albums from database
+// fetch all albums with reviews
+router.get("/reviewed", async (req, res, next) => {
+	try {
+		console.log("API route accessed: /albums/reviewed");
+		const albums = await fetchAlbumsWithReviews();
+		console.log("Albums with reviews:", albums); // Add logging
+		res.json(albums);
+	} catch (error) {
+		console.error("Error fetching albums with reviews:", error);
+		res
+			.status(500)
+			.json({
+				error: "An error occurred while fetching albums with reviews",
+			});
+	}
+});
+
+// fetch all albums from the database
 router.get("/", async (req, res, next) => {
 	try {
 		const response = await fetchAlbums();
@@ -104,5 +130,22 @@ router.get("/:albumId/tracks", async (req, res, next) => {
 		next(error);
 	}
 });
+
+router.put(
+	"/:id/listened",
+	authenticateToken,
+	async (req, res, next) => {
+		try {
+			const { listened } = req.body;
+			const album = await updateAlbumListenedStatus(
+				req.params.id,
+				listened
+			);
+			res.status(200).json(album);
+		} catch (error) {
+			next(error);
+		}
+	}
+);
 
 module.exports = router;

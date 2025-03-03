@@ -48,18 +48,18 @@ CREATE TABLE IF NOT EXISTS tracks(
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS reviews(
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-  album_id UUID REFERENCES albums(id) ON DELETE CASCADE NOT NULL,
-  rating INT NOT NULL DEFAULT 0 CHECK (rating BETWEEN 1 AND 5),
-  favorite BOOLEAN DEFAULT false,
-  headline TEXT NOT NULL,
-  review TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT unique_user_id_album_id UNIQUE (user_id, album_id)
-);
+    CREATE TABLE IF NOT EXISTS reviews(
+      id UUID PRIMARY KEY,
+      user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+      album_id UUID REFERENCES albums(id) NOT NULL,
+      rating INT NOT NULL DEFAULT 0,
+      favorite BOOLEAN DEFAULT false,
+      headline TEXT NOT NULL,
+      review TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      CONSTRAINT unique_user_id_album_id UNIQUE (user_id, album_id)
+    );
 
 CREATE TABLE IF NOT EXISTS comments(
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

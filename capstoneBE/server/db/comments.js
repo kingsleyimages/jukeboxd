@@ -1,3 +1,4 @@
+const { get } = require('../api/userRoutes');
 const { client } = require('./index');
 const uuid = require('uuid');
 
@@ -16,6 +17,22 @@ const createComment = async (reviewId, userId, comment) => {
       reviewId,
       comment,
     ]);
+    return rows[0];
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//fetch comment by id
+const fetchCommentById = async (id) => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT * FROM comments
+      WHERE id = $1
+    `,
+      [id]
+    );
     return rows[0];
   } catch (error) {
     console.log(error);
@@ -60,7 +77,7 @@ const fetchCommentsByUserId = async (id) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT comments.id, comments.comment, comments.user_id, users.username
+      SELECT comments.id, comments.comment, comments.user_id, comments.review_id, comments.created_at, comments.updated_at, users.username
       FROM comments
       INNER JOIN users ON comments.user_id = users.id
       WHERE comments.user_id = $1
@@ -70,6 +87,10 @@ const fetchCommentsByUserId = async (id) => {
     return rows.map(row => ({
       id: row.id,
       comment: row.comment,
+      user_id: row.user_id,
+      review_id: row.review_id,
+      created_at: row.created_at,
+      updated_at: row.updated_at,
       user: {
         id: row.user_id,
         username: row.username,
@@ -117,11 +138,28 @@ const updateComment = async (id, comment) => {
   }
 };
 
+
+// Get all comments (admin only)
+const getAllComments = async () => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT * FROM comments;
+    `
+    );
+    return rows;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = {
   createComment,
+  fetchCommentById,
   fetchCommentsByReviewId,
   fetchCommentsByUserId,
   deleteComment,
   updateComment,
   fetchComments,
+  getAllComments,
 };

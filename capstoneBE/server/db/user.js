@@ -24,8 +24,9 @@ const createUser = async (username, email, password, role) => {
 };
 
 const deleteUser = async (id) => {
-  const SQL = `DELETE FROM users WHERE id = $1;`;
-  await client.query(SQL, [id]);
+  const SQL = `DELETE FROM users WHERE id = $1 RETURNING *;`;
+  const { rows } = await client.query(SQL, [id]);
+  return rows[0];
 };
 
 const authenticate = async ({ username, password }) => {
@@ -84,6 +85,13 @@ const modifyUser = async (id, username, email, role) => {
   return response.rows[0];
 }
 
+//Fetch user by id
+const fetchUserById = async (id) => {
+  const SQL = `SELECT * FROM users WHERE id = $1;`;
+  const response = await client.query(SQL, [id]);
+  return response.rows[0];
+};
+
 const getAllUsers = async () => {
   const SQL = `SELECT id, username, email, role FROM users;`;
   const response = await client.query(SQL);
@@ -111,4 +119,5 @@ module.exports = {
   getAllUsers,
   getAllComments,
   getAllReviews,
+  fetchUserById,
 };
