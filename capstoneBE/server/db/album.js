@@ -144,42 +144,6 @@ const fetchAlbumsWithReviews = async () => {
 	}
 };
 
-const updateAlbumListenedStatus = async (albumId, listened) => {
-	try {
-		const SQL = `
-    UPDATE albums SET listened = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *;
-  `;
-		const response = await client.query(SQL, [listened, albumId]);
-		return response.rows[0];
-	} catch (error) {
-		console.log(error);
-	}
-};
-
-const markAlbumAsListened = async (user_id, album_id) => {
-	try {
-		const SQL = `
-		INSERT INTO listenedto (id, user_id, album_id, is_listened, created_at, updated_at) 
-		VALUES ($1, $2, $3, $4, NOW(), NOW())
-		ON CONFLICT (user_id, album_id) 
-		DO UPDATE SET is_listened = TRUE, updated_at = NOW()
-		RETURNING *;
-	  `;
-
-		const response = await client.query(SQL, [
-			uuid.v4(),
-			user_id,
-			album_id,
-			true,
-		]);
-
-		return response.rows[0];
-	} catch (error) {
-		console.error("Error marking album as listened:", error.message);
-		throw error;
-	}
-};
-
 module.exports = {
 	createAlbum,
 	fetchAlbums,
@@ -187,5 +151,4 @@ module.exports = {
 	fetchAlbumsWithReviews,
 	createTracks,
 	fetchTracksByAlbumId,
-	updateAlbumListenedStatus, // Add this line
 };

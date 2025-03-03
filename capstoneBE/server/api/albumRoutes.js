@@ -8,16 +8,8 @@ const {
 	fetchAlbumById,
 	createTracks,
 	fetchTracksByAlbumId,
-	markAlbumAsListened,
-	createAlbum,
-	fetchAlbums,
-	fetchAlbumById,
-	createTracks,
-	fetchTracksByAlbumId,
 	fetchAlbumsWithReviews,
-	updateAlbumListenedStatus,
 } = require("../db/album.js");
-const { authenticateToken } = require("./middlewares.js");
 
 // base route and return for the api for albums
 
@@ -49,38 +41,7 @@ router.post("/create", async (req, res, next) => {
 		next(error);
 	}
 });
-router.post(
-	"/:albumId/listened",
-	authenticateToken,
-	async (req, res, next) => {
-		console.log("✅ API HIT: /api/albums/:albumId/listened"); // Debugging
-		console.log("➡ Params albumId:", req.params.albumId);
-		console.log("➡ Full Request URL:", req.originalUrl);
 
-		try {
-			const user_id = req.user?.id;
-			const album_id = req.params.albumId;
-
-			if (!user_id || !album_id) {
-				console.log("❌ Missing user_id or album_id");
-				return res
-					.status(400)
-					.json({ error: "Missing user_id or album_id" });
-			}
-
-			console.log("✅ User ID:", user_id);
-			console.log("✅ Album ID:", album_id);
-
-			const result = await markAlbumAsListened(user_id, album_id);
-			console.log("✅ Database Response:", result);
-
-			res.status(201).json(result);
-		} catch (error) {
-			console.error("❌ Error in /listened:", error.message);
-			next(error);
-		}
-	}
-);
 
 // fetch all albums with reviews
 router.get("/reviewed", async (req, res, next) => {
@@ -91,11 +52,9 @@ router.get("/reviewed", async (req, res, next) => {
 		res.json(albums);
 	} catch (error) {
 		console.error("Error fetching albums with reviews:", error);
-		res
-			.status(500)
-			.json({
-				error: "An error occurred while fetching albums with reviews",
-			});
+		res.status(500).json({
+			error: "An error occurred while fetching albums with reviews",
+		});
 	}
 });
 
