@@ -51,6 +51,15 @@ const AlbumDetails = ({ token }) => {
       return;
     }
 
+    const userAlreadyReviewed = reviews.some(
+      (review) => review.user_id === userId
+    );
+
+    if (!editingReview && userAlreadyReviewed) {
+      alert("You already reviewed this album!");
+      return;
+    }
+
     try {
       const url = editingReview
         ? `${API_BASE_URL}/api/reviews/${editingReview.id}/update`
@@ -226,6 +235,7 @@ const AlbumDetails = ({ token }) => {
                 userId={userId}
                 onEditClick={handleEditClick}
                 onDeleteClick={handleDeleteClick}
+                token={token}
               />
             ))
           ) : (

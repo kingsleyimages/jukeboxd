@@ -17,6 +17,10 @@ function ModifyReview() {
   const [listened, setListened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+    const API_BASE_URL = import.meta.env.MODE === 'production' 
+    ? import.meta.env.VITE_API_BASE_URL_PROD
+    : import.meta.env.VITE_API_BASE_URL_DEV;
+
   useEffect(() => {
     // If reviewId is undefined, set an error message and return early
     if (!reviewId) {

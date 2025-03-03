@@ -1,3 +1,4 @@
+import { application } from 'express';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -15,6 +16,7 @@ function UserModify() {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
+   
     const token = localStorage.getItem('token');
     axios.get(`${API_BASE_URL}/api/users/${userId}`, {
       headers: {

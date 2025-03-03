@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../App.css";
+import Friends from "./Friends";
 
 function Me() {
   const navigate = useNavigate();
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_PROD ||
-  import.meta.env.VITE_API_BASE_URL_DEV; 
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,12 +58,12 @@ function Me() {
         const favoritesResponse = await axios.get(
           `${API_BASE_URL}/api/favorites/${response.data.id}`
         );
-        console.log("API response (User Favorites):", favoritesResponse.data);
+        console.log("API response (User Favorites):", favoritesResponse);
         updatedUserData.favorites = favoritesResponse.data;
 
         setUserData(updatedUserData);
         localStorage.setItem("user", JSON.stringify(updatedUserData));
-        console.log("Updated userData:", updatedUserData);
+        console.log("spotify_id", updatedUserData.favorites[0].spotify_id);
       } else {
         console.error("User data is missing or invalid.");
       }
@@ -132,6 +134,10 @@ function Me() {
     }
   }, [activeTab, userData]);
 
+  //get spotifyId for navigate
+  // // const spotifyId = userData.favorites[0].spotify_id;
+  // console.log("boooiiii", spotifyId);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -200,6 +206,14 @@ function Me() {
                 >
                   Friends' Activity
                 </button>
+                <button
+                  className={`tab-button ${
+                    activeTab === "friends" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("friends")}
+                >
+                  See and Find Friends
+                </button>
               </div>
 
               {activeTab === "myActivity" ? (
@@ -225,7 +239,11 @@ function Me() {
                                   width: "100px",
                                   borderRadius: "8px",
                                   marginTop: "5px",
+                                  cursor: "pointer",
                                 }}
+                                onClick={() =>
+                                  navigate(`/album/${album.spotify_id}`)
+                                }
                               />
                             )}
                           </li>
@@ -261,7 +279,7 @@ function Me() {
                     <p>No reviews yet.</p>
                   )}
                 </div>
-              ) : (
+              ) : activeTab === "friendsActivity" ? (
                 <div className="friends-activity">
                   <h2>Friends' Activity</h2>
 
@@ -331,6 +349,10 @@ function Me() {
                       )}
                     </>
                   )}
+                </div>
+              ) : (
+                <div className="friends">
+                  <Friends />
                 </div>
               )}
             </div>
