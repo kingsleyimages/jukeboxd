@@ -144,17 +144,7 @@ const fetchAlbumsWithReviews = async () => {
   }
 };
 
-const updateAlbumListenedStatus = async (albumId, listened) => {
-  try {
-    const SQL = `
-    UPDATE albums SET listened = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *;
-  `;
-    const response = await client.query(SQL, [listened, albumId]);
-    return response.rows[0];
-  } catch (error) {
-    console.log(error);
-  }
-};
+
 
 module.exports = {
   createAlbum,
@@ -163,5 +153,4 @@ module.exports = {
   fetchAlbumsWithReviews,
   createTracks,
   fetchTracksByAlbumId,
-  updateAlbumListenedStatus, // Add this line
 };

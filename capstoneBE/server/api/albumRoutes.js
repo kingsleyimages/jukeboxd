@@ -9,7 +9,6 @@ const {
   createTracks,
   fetchTracksByAlbumId,
   fetchAlbumsWithReviews,
-updateAlbumListenedStatus
 } = require("../db/album.js");
 
 // base route and return for the api for albums
@@ -87,15 +86,7 @@ router.get("/albums/:albumId/tracks", async (req, res, next) => {
   }
 });
 
-router.put('/:id/listened', authenticateToken, async (req, res, next) => {
-  try {
-    const { listened } = req.body;
-    const album = await updateAlbumListenedStatus(req.params.id, listened);
-    res.status(200).json(album);
-  } catch (error) {
-    next(error);
-  }
-});
+
 
 
 module.exports = router;

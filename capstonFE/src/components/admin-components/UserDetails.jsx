@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
 import UserInfo from './details-components/UserInfo';
+
+const API_BASE_URL = import.meta.env.MODE === 'production' 
+  ? import.meta.env.VITE_API_BASE_URL_PROD
+  : import.meta.env.VITE_API_BASE_URL_DEV;
 
 function UserDetails() {
   const { userId } = useParams();
@@ -13,20 +18,14 @@ function UserDetails() {
     console.log(`Fetching details for user ${userId}...`);
 
     // Fetch user details
-    fetch(`http://localhost:3000/api/users/${userId}`, {
+    axios.get(`${API_BASE_URL}/api/users/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Fetched user details:', data);
-        setUser(data);
+        console.log('Fetched user details:', response.data);
+        setUser(response.data);
         setIsLoading(false);
       })
       .catch((error) => {

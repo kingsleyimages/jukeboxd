@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
-import {jwtDecode}from 'jwt-decode'; // Correct the import statement
+import { jwtDecode } from 'jwt-decode'; 
 
 export const handleLogout = (navigate) => {
   // Remove token and user data from localStorage
@@ -17,9 +17,9 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const API_BASE_URL = import.meta.env.MODE === 'production' 
-    ? import.meta.env.VITE_API_BASE_URL_PROD
-    : import.meta.env.VITE_API_BASE_URL_DEV;
+const API_BASE_URL = import.meta.env.MODE === 'production' 
+  ? import.meta.env.VITE_API_BASE_URL_PROD
+  : import.meta.env.VITE_API_BASE_URL_DEV;
 
   // Determine initial mode based on current path
   const [isLoginMode, setIsLoginMode] = useState(
@@ -85,13 +85,13 @@ function Login() {
       const decodedToken = jwtDecode(response.data.token);
       const userRole = decodedToken.role;
 
-      // Store user data and token
+  // Store user data and token
       localStorage.setItem('token', response.data.token);
       localStorage.setItem(
         'user',
-        JSON.stringify({ username: response.data.username })
+        JSON.stringify({ username: response.data.username, role: userRole })
       );
-
+      
       // Trigger storage event for Navbar to detect login
       window.dispatchEvent(new Event('storage'));
 
