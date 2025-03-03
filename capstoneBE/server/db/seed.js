@@ -3,6 +3,7 @@ const { Client } = require('pg');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const { createTables } = require('.');
+const { createUser } = require('./user');
 
 console.log('Environment Variables:');
 console.log('PGUSER:', process.env.PGUSER);
@@ -30,32 +31,39 @@ const seed = async () => {
   try {
     await client.connect();
     console.log('connected to database');
-    await createTables();
-    // Create dummy users
-    // const users = [
-    //   {
-    //     username: `user${uuid.v4().slice(0, 8)}`,
-    //     email: `user${uuid.v4().slice(0, 8)}@example.com`,
-    //     password: 'password11',
-    //     role: 'user',
-    //   },
-    //   {
-    //     username: `user${uuid.v4().slice(0, 8)}`,
-    //     email: `user${uuid.v4().slice(0, 8)}@example.com`,
-    //     password: 'password22',
-    //     role: 'user',
-    //   },
-    // ];
+    // await createTables();
 
-    // const userIds = [];
-    // for (const user of users) {
-    //   const hashedPassword = await bcrypt.hash(user.password, 5);
-    //   const result = await client.query(
-    //     `INSERT INTO users(id, username, email, password, role) VALUES($1, $2, $3, $4, $5) RETURNING id`,
-    //     [uuid.v4(), user.username, user.email, hashedPassword, user.role]
-    //   );
-    //   userIds.push(result.rows[0].id);
-    // }
+    // Create dummy users
+    const users = [
+      {
+        username: `user${uuid.v4().slice(0, 8)}`,
+        email: `user${uuid.v4().slice(0, 8)}@example.com`,
+        password: 'password11',
+        role: 'user',
+      },
+      {
+        username: `user${uuid.v4().slice(0, 8)}`,
+        email: `user${uuid.v4().slice(0, 8)}@example.com`,
+        password: 'password22',
+        role: 'user',
+      },
+      {
+        username: 'jkbdadm',
+        email: 'scott.kingsley@kingsleyiamges.com',
+        password: '89de47051554bdd930deb19e91d438d5',
+        role: 'admin',
+      },
+    ];
+
+    const userIds = [];
+    for (const user of users) {
+      const hashedPassword = await bcrypt.hash(user.password, 5);
+      const result = await client.query(
+        `INSERT INTO users(id, username, email, password, role) VALUES($1, $2, $3, $4, $5) RETURNING id`,
+        [uuid.v4(), user.username, user.email, hashedPassword, user.role]
+      );
+      userIds.push(result.rows[0].id);
+    }
 
     // Create dummy albums with random spotify_id and artist
     // const albums = [
@@ -176,4 +184,4 @@ const seed = async () => {
   }
 };
 
-// seed();
+seed();

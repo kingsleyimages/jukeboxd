@@ -120,6 +120,7 @@ router.put("/:id/update", authenticateToken, async (req, res, next) => {
     if (!comment || comment.user.id !== req.user.id) {
       return res
         .status(401)
+
         .send("You are not authorized to update this comment");
     }
     const response = await updateComment(req.params.id, req.body.comment);
@@ -145,13 +146,13 @@ router.put(
 );
 
 // Get all comments (admin only)
-router.get("/", authenticateToken, adminAuth, async (req, res, next) => {
+router.get('/', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const comments = await getAllComments();
     res.json(comments);
   } catch (err) {
-    console.error("error fetching comments", err.message);
-    res.status(500).send("unable to get comments");
+    console.error('error fetching comments', err.message);
+    res.status(500).send('unable to get comments');
   }
 });
 
