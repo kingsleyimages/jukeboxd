@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
-import { jwtDecode } from 'jwt-decode'; // Correct the import statement
+import { jwtDecode } from 'jwt-decode'; 
 
 export const handleLogout = (navigate) => {
   // Remove token and user data from localStorage
