@@ -186,8 +186,17 @@ const getAllReviews = async () => {
 	}
 };
 
-const markAlbumAsListened = async (user_id, album_id) => {
+const markAlbumAsListened = async (user_id, spotify_id) => {
 	try {
+		const albumQuery = "SELECT id FROM albums WHERE spotify_id = $1";
+		const albumRes = await client.query(albumQuery, [spotify_id]);
+		if (albumRes.rows.length === 0) {
+			throw new Error(
+				`Album with Spotify ID ${spotify_id} not found`
+			);
+		}
+		const album_id = albumRes.rows[0].id;
+
 		const SQL = `
 		INSERT INTO listenedto (id, user_id, album_id, is_listened, created_at, updated_at) 
 		VALUES ($1, $2, $3, $4, NOW(), NOW())

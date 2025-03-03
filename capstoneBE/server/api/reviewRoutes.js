@@ -212,37 +212,4 @@ router.get(
 	}
 );
 
-// set album as listened to
-router.post(
-	"albums/:albumId/listened",
-	authenticateToken,
-	async (req, res, next) => {
-		console.log("➡ Params albumId:", req.params.albumId);
-		console.log("➡ Full Request URL:", req.originalUrl);
-
-		try {
-			const user_id = req.user?.id;
-			const album_id = req.params.albumId;
-
-			if (!user_id || !album_id) {
-				console.log("Missing user_id or album_id");
-				return res
-					.status(400)
-					.json({ error: "Missing user_id or album_id" });
-			}
-
-			console.log("User ID:", user_id);
-			console.log("Album ID:", album_id);
-
-			const result = await markAlbumAsListened(user_id, album_id);
-			console.log("Database Response:", result);
-
-			res.status(201).json(result);
-		} catch (error) {
-			console.error("❌ Error in /listened:", error.message);
-			next(error);
-		}
-	}
-);
-
 module.exports = router;

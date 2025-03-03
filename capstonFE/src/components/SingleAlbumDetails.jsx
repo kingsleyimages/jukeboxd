@@ -5,6 +5,7 @@ import styles from "../css/AlbumDetails.module.css";
 
 const AlbumDetails = ({ token }) => {
 	const { albumId } = useParams();
+	const [isListened, setIsListened] = useState(false);
 	const [album, setAlbum] = useState(null);
 	const [reviews, setReviews] = useState([]);
 	const [userId, setUserId] = useState(null);
@@ -51,7 +52,8 @@ const AlbumDetails = ({ token }) => {
 		}
 	}, [albumId, token]);
 
-	const markAsListenedFrontEnd = async (albumId, token) => {
+	const markAsListenedFrontEnd = async (token) => {
+		console.log(albumId);
 		if (!albumId) {
 			console.error("Error: albumId is undefined");
 			return;
@@ -63,7 +65,7 @@ const AlbumDetails = ({ token }) => {
 		}
 
 		try {
-			const url = `${API_BASE_URL}/api/reviews/albums/${albumId}/listened`;
+			const url = `${API_BASE_URL}/api/listened/${albumId}`;
 			console.log("📡 Sending API Request to:", url);
 
 			const response = await fetch(url, {
@@ -76,6 +78,7 @@ const AlbumDetails = ({ token }) => {
 
 			if (response.ok) {
 				console.log("Album marked as listened");
+				setIsListened(true);
 			} else {
 				console.error(
 					"Failed to mark album as listened:",
@@ -288,10 +291,10 @@ const AlbumDetails = ({ token }) => {
 				)}
 				<button
 					className={styles.button}
-					onClick={() => markAsListenedFrontEnd(albumId, token)}
-					disabled={album.listened}
+					onClick={() => markAsListenedFrontEnd(token)}
+					disabled={isListened} //
 				>
-					{album.listened ? "Already Listened" : "Mark as Listened"}
+					{isListened ? "✅ Already Listened" : "🎵 Mark as Listened"}
 				</button>
 			</div>
 		</div>
