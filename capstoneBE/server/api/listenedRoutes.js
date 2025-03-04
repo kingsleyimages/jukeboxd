@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { authenticateToken } = require("./middlewares.js");
-const { markAlbumAsListened } = require("../db/review.js");
+const {
+	markAlbumAsListened,
+	getlistenedto,
+	getalllistened,
+} = require("../db/review.js");
 
 router.post(
 	"/:spotifyId",
@@ -32,18 +36,27 @@ router.post(
 	}
 );
 
-router.get("/:albumId", async (req, res) => {
+router.get("/:albumId", authenticateToken, async (req, res) => {
 	const { albumId } = req.params;
 	const userId = req.user?.id;
-
 	try {
-		const result = await db.query(
-			"SELECT * FROM listenedto WHERE user_id = $1 AND album_id = $2",
-			[userId, albumId]
-		);
-		res.json({ is_listened: result.rows.length > 0 });
+		const result = await getlistenedto(userId, albumId);
+		console.log("Backend Response:", result);
+		res.json({ is_listened: result.length > 0, data: result });
 	} catch (error) {
 		console.error("Error fetching listened status:", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
+});
+
+router.get("/me", authenticateToken, async (req, res) => {
+	const userId = req.user?.id;
+	console.log(userId);
+	try {
+		const result = await getalllistened(userId);
+		console.log("get add listened response: ", result);
+	} catch (error) {
+		console.error("error fetching all listened", error);
 		res.status(500).json({ error: "Internal server error" });
 	}
 });

@@ -8,7 +8,7 @@ router.use("/albums", require("./albumRoutes.js"));
 router.use("/comments", require("./commentRoutes.js"));
 router.use("/friends", require("./friendRoutes.js"));
 router.use("/favorites", require("./favoriteRoutes.js"));
-router.use("/listened", require("./listened.js"));
+router.use("/listened", require("./listenedRoutes.js"));
 
 // Base route for the API
 router.get("/", (req, res) => {

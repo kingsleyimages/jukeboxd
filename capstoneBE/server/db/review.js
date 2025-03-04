@@ -232,6 +232,58 @@ const markAlbumAsListened = async (user_id, spotify_id) => {
 	}
 };
 
+const getlistenedto = async (user_id, spotify_id) => {
+	try {
+		// Validate user_id before querying the database
+		if (
+			!user_id ||
+			typeof user_id !== "string" ||
+			user_id.length !== 36
+		) {
+			throw new Error(`Invalid UUID provided: ${user_id}`);
+		}
+
+		// Fetch the album ID using the Spotify ID
+		const albumQuery = "SELECT id FROM albums WHERE spotify_id = $1";
+		const albumRes = await client.query(albumQuery, [spotify_id]);
+
+		if (albumRes.rows.length === 0) {
+			throw new Error(
+				`Album with Spotify ID ${spotify_id} not found`
+			);
+		}
+
+		const album_Id = albumRes.rows[0].id;
+
+		// Query for listened-to status
+		const listenedQuery = `
+            SELECT * FROM listenedto 
+            WHERE user_id = $1 AND album_id = $2 AND is_listened = true;
+        `;
+
+		const { rows } = await client.query(listenedQuery, [
+			user_id,
+			album_Id,
+		]);
+
+		return rows;
+	} catch (error) {
+		console.error("Error in getlistenedto:", error);
+		return []; // Return an empty array instead of undefined to prevent frontend errors
+	}
+};
+
+const getalllistened = async (user_id) => {
+	try {
+		const SQL = `SELECT * FROM listenedto WHERE user_id = $1`;
+		const { rows } = client.await(SQL, [user_id]);
+		return rows;
+	} catch (error) {
+		console.error("Error in getalllistened", error);
+		return [];
+	}
+};
+
 // delete a review by id
 const deleteReview = async (id) => {
 	try {
@@ -259,4 +311,6 @@ module.exports = {
 	getReviewById,
 	getAllReviews,
 	markAlbumAsListened,
+	getlistenedto,
+	getalllistened,
 };
