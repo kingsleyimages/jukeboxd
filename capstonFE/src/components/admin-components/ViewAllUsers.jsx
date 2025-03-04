@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.MODE === 'production' 
-  ? import.meta.env.VITE_API_BASE_URL_PROD
-  : import.meta.env.VITE_API_BASE_URL_DEV;
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
 function ViewAllUsers() {
   const [users, setUsers] = useState([]);

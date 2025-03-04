@@ -3,9 +3,9 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import UserInfo from './details-components/UserInfo';
 
-const API_BASE_URL = import.meta.env.MODE === 'production' 
-  ? import.meta.env.VITE_API_BASE_URL_PROD
-  : import.meta.env.VITE_API_BASE_URL_DEV;
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
 function UserDetails() {
   const { userId } = useParams();

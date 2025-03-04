@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.MODE === 'production' 
-  ? import.meta.env.VITE_API_BASE_URL_PROD
-  : import.meta.env.VITE_API_BASE_URL_DEV;
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
 function ReviewedAlbums() {
   const [albums, setAlbums] = useState([]);

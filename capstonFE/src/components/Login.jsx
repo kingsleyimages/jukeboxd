@@ -17,9 +17,9 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-const API_BASE_URL = import.meta.env.MODE === 'production' 
-  ? import.meta.env.VITE_API_BASE_URL_PROD
-  : import.meta.env.VITE_API_BASE_URL_DEV;
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   // Determine initial mode based on current path
   const [isLoginMode, setIsLoginMode] = useState(
