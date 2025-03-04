@@ -47,6 +47,11 @@ const userExists = async (username) => {
   const response = await client.query(SQL, [username]);
   return response.rows.length > 0;
 };
+const modifyUser2 = async (id, username, email, password) => {
+  const SQL = `UPDATE users SET username = $2, email = $3, password = $4 WHERE id = $1 RETURNING *;`;
+  const response = await client.query(SQL, [id, username, email, password]);
+  return response.rows[0];
+};
 
 const modifyUser = async (id, username, email, role) => {
   const SQL = `UPDATE users SET username = $1, email = $2, role = $3 WHERE id = $4 RETURNING *;`;
@@ -88,4 +93,5 @@ module.exports = {
   getAllComments,
   getAllReviews,
   fetchUserById,
+  modifyUser2,
 };

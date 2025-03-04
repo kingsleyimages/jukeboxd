@@ -67,7 +67,7 @@ function Me() {
       console.log("Starting userUpdate...");
 
       const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }, // Ensure token is valid and correctly formatted
       });
 
       console.log("API response (User Data):", response.data);
@@ -101,7 +101,7 @@ function Me() {
         console.error("User data is missing or invalid.");
       }
     } catch (apiError) {
-      console.error("API fetch error:", apiError);
+      console.error("API fetch error:", apiError); // Check error response for more details
       if (apiError.response) {
         if (apiError.response.status === 401) {
           localStorage.removeItem("token");
@@ -197,8 +197,7 @@ function Me() {
         <div className="error">{error}</div>
         <button
           className="retry-button"
-          onClick={() => window.location.reload()}
-        >
+          onClick={() => window.location.reload()}>
           Try Again
         </button>
       </div>
@@ -274,24 +273,21 @@ function Me() {
                   className={`tab-button ${
                     activeTab === "myActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("myActivity")}
-                >
+                  onClick={() => setActiveTab("myActivity")}>
                   My Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friendsActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friendsActivity")}
-                >
+                  onClick={() => setActiveTab("friendsActivity")}>
                   Friends' Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friends" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friends")}
-                >
+                  onClick={() => setActiveTab("friends")}>
                   See and Find Friends
                 </button>
               </div>
