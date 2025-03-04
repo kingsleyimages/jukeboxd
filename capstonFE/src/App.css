@@ -350,6 +350,35 @@ nav a.active {
 }
 
 /* Nav mobile responsiveness */
+nav a,
+.logout-button {
+  position: relative;
+}
+
+nav a::after,
+.logout-button::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: olive;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+nav a:hover::after,
+.logout-button:hover::after {
+  width: 70%;
+  left: 15%;
+}
+
+nav a.active::after {
+  width: 70%;
+  left: 15%;
+}
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
   nav {
     flex-direction: column;
@@ -665,7 +694,7 @@ nav a.active {
 }
 
 .tab-button.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -940,7 +969,10 @@ nav a.active {
 .edit-button:hover {
   background-color: #eef2ff;
 }
-
+/*comments*/
+.commentForm textarea {
+  color: #1d1d1d;
+}
 /* Loading & Error States */
 .loading-spinner {
   text-align: center;
@@ -1206,7 +1238,7 @@ nav a.active {
 
 /* Loading */
 .loading::after {
-  content: '.';
+  content: ".";
   animation: loading-dots 1.5s infinite;
   display: inline-block;
   width: 20px;
@@ -1215,13 +1247,13 @@ nav a.active {
 
 @keyframes loading-dots {
   0% {
-    content: '.';
+    content: ".";
   }
   33% {
-    content: '..';
+    content: "..";
   }
   66% {
-    content: '...';
+    content: "...";
   }
 }
 
@@ -1327,18 +1359,18 @@ nav a.active {
 }
 
 .edit-button:hover {
-  background-color: #6B8E23;
+  background-color: #6b8e23;
   transform: translateY(-2px);
 }
 
 .edit-button[type="submit"] {
   background-color: black;
-  color:white;
+  color: white;
   font-size: 14px;
 }
 
 .edit-button[type="submit"]:hover {
-  background-color: #6B8E23;
+  background-color: #6b8e23;
 }
 
 /* Friends Activity*/
@@ -1357,7 +1389,7 @@ nav a.active {
 }
 
 .friends-activity h3 {
-  color: #6B8E23;
+  color: #6b8e23;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bolder;
   font-size: 20px;
@@ -1409,7 +1441,7 @@ nav a.active {
 .friends-activity p {
   color: white;
   margin: 5px 0;
-  text-align: left; 
+  text-align: left;
 }
 
 .friends-activity small {
@@ -1439,7 +1471,7 @@ nav a.active {
 .friends-activity p b {
   font-weight: bold;
   color: white;
-  display: inline; 
+  display: inline;
 }
 
 .activity-tabs {
@@ -1468,6 +1500,6 @@ nav a.active {
 }
 
 .tab-button:hover:not(.active) {
-  background-color: #6B8E23;
+  background-color: #6b8e23;
   color: rgba(222, 222, 222, 0.9);
 }
