@@ -224,6 +224,12 @@ const AlbumDetails = ({ token }) => {
           <p className={styles.artist}>{album.artist}</p>
           <img className={styles.img} src={album.image} alt={album.name} />
           {averageRating && <p>Average Rating: {averageRating} /5</p>}
+          <button
+            className={styles.button}
+            onClick={markAsListened}
+            disabled={isListened}>
+            {isListened ? "✅ Already Listened" : "🎵 Mark as Listened"}
+          </button>
           {album?.tracks?.length > 0 ? (
             album.tracks.map((track) => (
               <p key={track.id}>
@@ -272,6 +278,7 @@ const AlbumDetails = ({ token }) => {
                 />
                 Mark as Favorite
               </label>
+
               <button type="submit">
                 {editingReview ? "Update Review" : "Submit Review"}
               </button>
@@ -301,13 +308,6 @@ const AlbumDetails = ({ token }) => {
           ) : (
             <p>No Reviews for this album</p>
           )}
-          <button
-            className={styles.button}
-            onClick={markAsListened}
-            disabled={isListened}
-          >
-            {isListened ? "✅ Already Listened" : "🎵 Mark as Listened"}
-          </button>
         </div>
       </div>
     </div>
