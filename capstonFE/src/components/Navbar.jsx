@@ -47,7 +47,9 @@ function Navbar() {
   return (
     <div className="nav-container">
       <nav>
-        <img src={jukeboxdLogo} alt="Jukeboxd logo" style={{ width: '70px' }} />
+       <Link to="/">
+    <img src={jukeboxdLogo} alt="Jukeboxd logo" style={{ width: '70px' }} />
+  </Link>
         {isLoggedIn ? (
           <>
             {/* Navigation for logged-in users */}
