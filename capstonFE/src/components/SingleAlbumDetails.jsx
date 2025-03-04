@@ -15,6 +15,7 @@ const AlbumDetails = ({ token }) => {
     rating: 1,
     favorite: false,
   });
+  const [reload, setReload] = useState(false); // State variable to trigger re-render
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
     import.meta.env.VITE_API_BASE_URL_DEV;
@@ -40,8 +41,10 @@ const AlbumDetails = ({ token }) => {
       } catch (error) {
         console.error("Invalid token format", error.message);
       }
+    } else {
+      setUserId(null);
     }
-  }, [albumId, token]);
+  }, [albumId, token, reload]); // Add reload to the dependency array
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
@@ -139,6 +142,9 @@ const AlbumDetails = ({ token }) => {
 
       if (response.ok) {
         alert("Review deleted successfully!");
+        setReviews((prevReviews) =>
+          prevReviews.filter((r) => r.id !== review.id)
+        );
       } else {
         alert("Failed to delete the review. Please try again.");
       }
@@ -247,4 +253,38 @@ const AlbumDetails = ({ token }) => {
   );
 };
 
-export default AlbumDetails;
+function SingleAlbumsDetails() {
+  const [reload, setReload] = useState(false); // State variable to trigger re-render
+
+  // Function to reload or update the component
+  const reloadComponent = () => {
+    setReload((prev) => !prev); // Toggle the reload state to trigger re-render
+  };
+
+  useEffect(() => {
+    const handleLoginEvent = () => {
+      reloadComponent();
+    };
+
+    const handleLogoutEvent = () => {
+      reloadComponent();
+    };
+
+    window.addEventListener('login', handleLoginEvent);
+    window.addEventListener('logout', handleLogoutEvent);
+
+    // Cleanup event listeners on component unmount
+    return () => {
+      window.removeEventListener('login', handleLoginEvent);
+      window.removeEventListener('logout', handleLogoutEvent);
+    };
+  }, []);
+
+  return (
+    <div>
+      <AlbumDetails token={localStorage.getItem('token')} />
+    </div>
+  );
+}
+
+export default SingleAlbumsDetails;

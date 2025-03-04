@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CommentForm = ({ reviewId, onCommentAdded, token }) => {
   const [commentText, setCommentText] = useState("");
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
     import.meta.env.VITE_API_BASE_URL_DEV;
+
+  useEffect(() => {
+    // Reset comment text when token changes (e.g., user logs in or out)
+    setCommentText("");
+  }, [token]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +44,7 @@ const CommentForm = ({ reviewId, onCommentAdded, token }) => {
         placeholder="Write a comment..."
         required
       />
-      <button type="submit">Post Comment</button>{" "}
+      <button type="submit">Post Comment</button>
     </form>
   );
 };

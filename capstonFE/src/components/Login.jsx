@@ -3,11 +3,13 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
 
-
 export const handleLogout = (navigate) => {
   // Remove token and user data from localStorage
   localStorage.removeItem('token');
   localStorage.removeItem('user');
+
+  // Dispatch a custom event to notify other components of the logout
+  window.dispatchEvent(new Event('logout'));
 
   // Redirect to home page
   navigate('/');
@@ -63,59 +65,61 @@ function Login() {
   };
 
   // Handle login submission
-const handleLogin = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
     try {
-        const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
-            username: formData.username,
-            password: formData.password,
-        });
+      const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
+        username: formData.username,
+        password: formData.password,
+      });
 
-        if (!response.data.token) {
-            throw new Error('Invalid response from server');
-        }
+      if (!response.data.token) {
+        throw new Error('Invalid response from server');
+      }
 
-        // Store the token
-        localStorage.setItem('token', response.data.token);
+      // Store the token
+      localStorage.setItem('token', response.data.token);
 
-        // Fetch user details from backend
-        const userResponse = await axios.get(`${API_BASE_URL}/api/users/me`, {
-            headers: { Authorization: `Bearer ${response.data.token}` },
-        });
+      // Fetch user details from backend
+      const userResponse = await axios.get(`${API_BASE_URL}/api/users/me`, {
+        headers: { Authorization: `Bearer ${response.data.token}` },
+      });
 
-        const userRole = userResponse.data.role;
+      const userRole = userResponse.data.role;
 
-        // Store user information
-        localStorage.setItem(
-            'user',
-            JSON.stringify({ username: userResponse.data.username, role: userRole })
-        );
+      // Store user information
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ username: userResponse.data.username, role: userRole })
+      );
 
-        // Trigger storage event for Navbar to detect login
-        window.dispatchEvent(new Event('storage'));
+      // Trigger storage event for Navbar to detect login
+      window.dispatchEvent(new Event('storage'));
 
-        // Redirect based on role
-        if (userRole === 'admin') {
-            navigate('/admin/dashboard');
-        } else {
-            navigate('/');
-        }
+      // Dispatch a custom login event
+      window.dispatchEvent(new Event('login'));
+
+      // Redirect based on role
+      if (userRole === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
-        let errorMessage = 'Login failed. Please check your credentials.';
-        if (err.response) {
-            errorMessage = err.response.data?.message || `Error: ${err.response.data}`;
-        } else if (err.request) {
-            errorMessage = 'No response from server. Please check your connection.';
-        }
-        setError(errorMessage);
+      let errorMessage = 'Login failed. Please check your credentials.';
+      if (err.response) {
+        errorMessage = err.response.data?.message || `Error: ${err.response.data}`;
+      } else if (err.request) {
+        errorMessage = 'No response from server. Please check your connection.';
+      }
+      setError(errorMessage);
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
-
+  };
 
   // Handle registration submission
   const handleRegister = async (e) => {
@@ -189,6 +193,29 @@ const handleLogin = async (e) => {
       window.history.replaceState({}, document.title);
     }
   }, [location]);
+
+  // Add event listener for logout
+  useEffect(() => {
+    const handleLogoutEvent = () => {
+      // Perform any necessary cleanup or state updates on logout
+      setFormData({
+        username: '',
+        password: '',
+        email: '',
+        confirmPassword: '',
+      });
+      setError('');
+      setSuccessMessage('');
+      setIsLoginMode(true);
+    };
+
+    window.addEventListener('logout', handleLogoutEvent);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('logout', handleLogoutEvent);
+    };
+  }, []);
 
   return (
     <div className="auth-page">
