@@ -19,9 +19,17 @@ const createUser = async (username, email, password, role) => {
 };
 
 const deleteUser = async (id) => {
-  const SQL = `DELETE FROM users WHERE id = $1 RETURNING *;`;
-  const { rows } = await client.query(SQL, [id]);
-  return rows[0];
+  try {
+    const SQL = `DELETE FROM users WHERE id = $1 RETURNING *;`;
+    const { rows } = await client.query(SQL, [id]);
+    if (rows.length === 0) {
+      throw new Error('User not found');
+    }
+    return rows[0];
+  } catch (error) {
+    console.error('Error deleting user:', error.message);
+    throw error;
+  }
 };
 
 const authenticate = async ({ username, password }) => {
@@ -48,6 +56,7 @@ const userExists = async (username) => {
   const response = await client.query(SQL, [username]);
   return response.rows.length > 0;
 };
+
 const modifyUser2 = async (id, username, email, password) => {
   const SQL = `UPDATE users SET username = $2, email = $3, password = $4 WHERE id = $1 RETURNING *;`;
   const response = await client.query(SQL, [
@@ -77,13 +86,13 @@ const getAllUsers = async () => {
   return response.rows;
 };
 
-const getAllComments = async () => {
+const getAllUserComments = async () => {
   const SQL = `SELECT * FROM comments;`;
   const response = await client.query(SQL);
   return response.rows;
 };
 
-const getAllReviews = async () => {
+const getAllUserReviews = async () => {
   const SQL = `SELECT * FROM reviews;`;
   const response = await client.query(SQL);
   return response.rows;
@@ -96,8 +105,8 @@ module.exports = {
   authenticate,
   userExists,
   getAllUsers,
-  getAllComments,
-  getAllReviews,
+  getAllUserComments,
+  getAllUserReviews,
   fetchUserById,
   modifyUser2,
 };

@@ -11,7 +11,7 @@ function ModifyReview() {
   const [headline, setHeadline] = useState('');
   const [rating, setRating] = useState(0);
   const [favorite, setFavorite] = useState(false);
-  const [listened, setListened] = useState(false);
+  // const [listened, setListened] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
@@ -116,14 +116,14 @@ function ModifyReview() {
             onChange={(e) => setFavorite(e.target.checked)}
           />
         </div>
-        <div>
+        {/* <div>
           <label>Listened:</label>
           <input
             type="checkbox"
             checked={listened}
             onChange={(e) => setListened(e.target.checked)}
           />
-        </div>
+        </div> */}
         <button type="submit">Save Changes</button>
       </form>
     </div>

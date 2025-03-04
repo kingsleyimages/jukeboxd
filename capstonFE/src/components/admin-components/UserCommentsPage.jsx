@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
-  const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL_PROD ||
-    import.meta.env.VITE_API_BASE_URL_DEV;
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL_PROD ||
+  import.meta.env.VITE_API_BASE_URL_DEV;
 
 function UserCommentsPage() {
   const { userId } = useParams();
@@ -36,7 +36,7 @@ function UserCommentsPage() {
   const handleDeleteComment = (commentId) => {
     console.log(`Deleting comment with ID: ${commentId}`);
     const token = localStorage.getItem('token');
-    axios.delete(`${API_BASE_URL}/api/comments/admin/${commentId}/delete`, {
+    axios.delete(`${API_BASE_URL}/api/admin/comments/${commentId}/delete`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

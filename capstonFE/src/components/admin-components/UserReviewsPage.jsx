@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
-  const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL_PROD ||
-    import.meta.env.VITE_API_BASE_URL_DEV;
-    
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL_PROD ||
+  import.meta.env.VITE_API_BASE_URL_DEV;
+
 function UserReviewsPage() {
   const { userId } = useParams();
   const [userReviews, setUserReviews] = useState([]);
@@ -36,7 +36,7 @@ function UserReviewsPage() {
   const handleDeleteReview = (reviewId) => {
     console.log(`Deleting review with ID: ${reviewId}`);
     const token = localStorage.getItem('token');
-    axios.delete(`${API_BASE_URL}/api/reviews/admin/${reviewId}/delete`, {
+    axios.delete(`${API_BASE_URL}/api/admin/reviews/${reviewId}/delete`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
