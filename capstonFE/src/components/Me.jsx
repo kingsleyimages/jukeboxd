@@ -362,7 +362,7 @@ function Me() {
                                 review.album?.name ||
                                 "Unknown Album"}{" "}
                             </strong>{" "}
-                            -<span> Rating: {review.favorite}/5</span>
+                            -<span> Rating: {review.rating}/5</span>
                             <p>{review.review || "No review text provided."}</p>
                             <small>By: {review.username}</small>
                           </li>
