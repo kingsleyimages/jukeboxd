@@ -10,15 +10,6 @@ const {
 	updateReview,
 	getReviewById,
 	getAllReviews,
-	createReview,
-	fetchReviewsByAlbumId,
-	fetchReviewsByUserId,
-	fetchReviewsDesc,
-	fetchReviews,
-	deleteReview,
-	updateReview,
-	getReviewById,
-	getAllReviews,
 } = require("../db/review.js");
 const { authenticateToken } = require("./middlewares.js");
 
