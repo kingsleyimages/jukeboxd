@@ -4,12 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const createUser = async (username, email, password, role) => {
-  console.log(username, email, password, role);
-
-  if (!password) {
-    throw new Error('Password is required');
-  }
-
+  if (!password) throw new Error('Password is required');
   const SQL = `
     INSERT INTO users(id, username, email, password, role) VALUES($1, $2, $3, $4, $5) RETURNING *
   `;
@@ -30,64 +25,42 @@ const deleteUser = async (id) => {
 };
 
 const authenticate = async ({ username, password }) => {
-  console.log('authenticating user:', username);
-  const SQL = `
-  SELECT id, password, email, role FROM users WHERE username = $1;`;
-
+  const SQL = `SELECT id, password, email, role FROM users WHERE username = $1;`;
   const response = await client.query(SQL, [username]);
-  if (!response.rows.length) {
-    console.log('User not found');
-    const error = new Error('not authorized');
-    error.status = 401;
-    throw error;
-  }
 
+  if (!response.rows.length) throw new Error('User not found');
   const user = response.rows[0];
-  console.log('Retrieved user:', user);
-
-  if (!user.password) {
-    console.log('User password is undefined');
-    const error = new Error('not authorized');
-    error.status = 401;
-    throw error;
-  }
+  if (!user.password) throw new Error('User password not defined');
 
   const passwordMatch = await bcrypt.compare(password, user.password);
-  if (!passwordMatch) {
-    console.log('Password does not match');
-    const error = new Error('not authorized');
-    error.status = 401;
-    throw error;
-  }
+  if (!passwordMatch) throw new Error('Incorrect password');
 
   const myToken = jwt.sign(
     { id: user.id, role: user.role },
     process.env.JWT_SECRET
   );
-  console.log('authentication success, token generated');
   return { token: myToken };
 };
 
 const userExists = async (username) => {
-  try {
-    const SQL = `SELECT id FROM users WHERE username = $1;`;
-    const response = await client.query(SQL, [username]);
-    return response.rows.length > 0;
-  } catch (err) {
-    console.error('Error checking if user exists:', err.message);
-    throw err;
-  }
+  const SQL = `SELECT id FROM users WHERE username = $1;`;
+  const response = await client.query(SQL, [username]);
+  return response.rows.length > 0;
+};
+const modifyUser2 = async (id, username, email, password) => {
+  const SQL = `UPDATE users SET username = $2, email = $3, password = $4 WHERE id = $1 RETURNING *;`;
+  const response = await client.query(SQL, [id, username, email, password]);
+  return response.rows[0];
 };
 
 const modifyUser = async (id, username, email, role) => {
   const SQL = `UPDATE users SET username = $1, email = $2, role = $3 WHERE id = $4 RETURNING *;`;
   const response = await client.query(SQL, [username, email, role, id]);
   return response.rows[0];
-}
+};
 
-//Fetch user by id
 const fetchUserById = async (id) => {
-  const SQL = `SELECT * FROM users WHERE id = $1;`;
+  const SQL = `SELECT id, username, email, role FROM users WHERE id = $1;`;
   const response = await client.query(SQL, [id]);
   return response.rows[0];
 };
@@ -120,4 +93,5 @@ module.exports = {
   getAllComments,
   getAllReviews,
   fetchUserById,
+  modifyUser2,
 };

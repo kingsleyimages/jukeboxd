@@ -9,9 +9,9 @@ function ModifyComment() {
   const [errorMessage, setErrorMessage] = useState('');
 
 
-    const API_BASE_URL = import.meta.env.MODE === 'production' 
-    ? import.meta.env.VITE_API_BASE_URL_PROD
-    : import.meta.env.VITE_API_BASE_URL_DEV;
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   useEffect(() => {
     const token = localStorage.getItem('token');

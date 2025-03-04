@@ -12,6 +12,7 @@ const {
   getAllReviews,
   deleteUser,
   modifyUser,
+  modifyUser2,
   fetchUserById,
 } = require('../db/user.js');
 const { authenticateToken, adminAuth } = require('./middlewares.js');
@@ -21,11 +22,6 @@ router.post('/register', async (req, res, next) => {
   console.log('Received data:', req.body);
   try {
     const { username, email, password, role } = req.body;
-    console.log('username:', username);
-    console.log('email:', email);
-    console.log('password:', password);
-    console.log('role:', role);
-
     if (!username || !email || !password || !role) {
       throw new Error('All fields are required');
     }
@@ -39,68 +35,71 @@ router.post('/register', async (req, res, next) => {
 
 // Login
 router.post('/login', async (req, res, next) => {
-  console.log('POST /login route hit');
-  const { username, password } = req.body;
-  console.log('login request received', req.body);
   try {
+    const { username, password } = req.body;
     const userFound = await userExists(username);
     if (!userFound) {
-      return res.status(404).send('username not found');
+      return res.status(404).send({ error: 'Username not found' });
     }
     const { token } = await authenticate({ username, password });
     res.json({ token, username });
   } catch (err) {
-    console.error('authentication error', err.message);
-    res.status(401).send('invalid details');
+    console.error('Authentication error', err.message);
+    res.status(401).send({ error: 'Invalid login details' });
   }
 });
 
 // Get current user
 router.get('/me', authenticateToken, async (req, res, next) => {
   try {
-    console.log('authenticated user', req.user);
-    const SQL = `SELECT id, username FROM users WHERE id = $1;`;
+    const SQL = `SELECT id, username, role FROM users WHERE id = $1;`;
     const user = await client.query(SQL, [req.user.id]);
     res.json(user.rows[0]);
   } catch (err) {
-    console.error('error fetching user', err.message);
-    res.status(500).send('unable to get info');
+    console.error('Error fetching user', err.message);
+    res.status(500).send({ error: 'Unable to fetch user info' });
   }
 });
 
 // Get all users
-router.get('/', async (req, res, next) => {
+router.get('/', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const users = await getAllUsers();
     res.json(users);
   } catch (err) {
-    console.error('error fetching users', err.message);
-    res.status(500).send('unable to get users');
+    console.error('Error fetching users', err.message);
+    res.status(500).send({ error: 'Unable to fetch users' });
   }
 });
 
 //Fetch user by id (admin only)
-router.get("/:id", authenticateToken, adminAuth, async (req, res, next) => {
+
+router.get('/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
+    console.log(`Admin ${req.user.id} fetching user ID: ${req.params.id}`);
     const user = await fetchUserById(req.params.id);
     res.json(user);
   } catch (err) {
-    console.error('error fetching user', err.message);
-    res.status(500).send('unable to get info');
+    console.error('Error fetching user by ID', err.message);
+    res.status(500).send({ error: 'Unable to fetch user info' });
   }
 });
 
-// Get all users
-router.get('/', async (req, res, next) => {
+router.put('/:id/edit', authenticateToken, async (req, res, next) => {
   try {
-    const users = await getAllUsers();
-    res.json(users);
+    const { username, email, password } = req.body;
+    const response = await modifyUser2(
+      req.params.id,
+      username,
+      email,
+      password
+    );
+    res.status(200).send(response);
   } catch (err) {
-    console.error('error fetching users', err.message);
-    res.status(500).send('unable to get users');
+    console.error('error modifying user', err.message);
+    res.status(500).send('unable to modify user');
   }
 });
-
 // Get all users, comments, and reviews (admin only)
 router.get(
   '/admin/data',
@@ -113,8 +112,8 @@ router.get(
       const reviews = await getAllReviews();
       res.json({ users, comments, reviews });
     } catch (err) {
-      console.error('error fetching data', err.message);
-      res.status(500).send('unable to get data');
+      console.error('Error fetching data', err.message);
+      res.status(500).send({ error: 'Unable to fetch data' });
     }
   }
 );
@@ -126,12 +125,13 @@ router.put(
   adminAuth,
   async (req, res, next) => {
     try {
+      console.log(`Admin ${req.user.id} modifying user ID: ${req.params.id}`);
       const { username, email, role } = req.body;
       const response = await modifyUser(req.params.id, username, email, role);
       res.status(200).send(response);
     } catch (err) {
-      console.error('error modifying user', err.message);
-      res.status(500).send('unable to modify user');
+      console.error('Error modifying user', err.message);
+      res.status(500).send({ error: 'Unable to modify user' });
     }
   }
 );
@@ -143,11 +143,12 @@ router.delete(
   adminAuth,
   async (req, res, next) => {
     try {
+      console.log(`Admin ${req.user.id} deleting user ID: ${req.params.id}`);
       await deleteUser(req.params.id);
       res.status(200).send({ message: 'User deleted successfully' });
     } catch (err) {
-      console.error('error deleting user', err.message);
-      res.status(500).send('unable to delete user');
+      console.error('Error deleting user', err.message);
+      res.status(500).send({ error: 'Unable to delete user' });
     }
   }
 );
