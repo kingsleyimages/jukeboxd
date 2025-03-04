@@ -55,7 +55,24 @@ const fetchReviews = async () => {
 		console.log(error);
 	}
 };
-
+// fetch all reviews
+const fetchReviewsDesc = async () => {
+	try {
+		const { rows } = await client.query(
+			`
+      SELECT users.username, review, rating, favorite, headline, TO_CHAR(reviews.updated_at, 'MM/DD/YYYY') AS updated_at
+      FROM reviews
+      INNER JOIN users
+      ON reviews.user_id = users.id
+      ORDER BY reviews.created_at DESC
+      LIMIT 20
+    `
+		);
+		return rows;
+	} catch (error) {
+		console.log(error);
+	}
+};
 // fetch all reviews for an album
 // const fetchReviewsByAlbumId = async (id) => {
 //   try {
@@ -305,6 +322,7 @@ module.exports = {
 	createReview,
 	fetchReviewsByAlbumId,
 	fetchReviewsByUserId,
+	fetchReviewsDesc,
 	fetchReviews,
 	deleteReview,
 	updateReview,

@@ -10,6 +10,7 @@ import Search from "./components/Search";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Callback from "./components/Callback";
+import AllReviews from "./components/AllReviews";
 import SingleAlbumDetails from "./components/SingleAlbumDetails";
 
 import AdminDashboard from "./components/home-components/AdminDashBoard";
@@ -79,6 +80,7 @@ function App() {
 					<Route path="/callback" element={<Callback />} />
 					<Route path="/" element={<Home />} />
 					<Route path="/mixtapes" element={<Mixtapes />} />
+					<Route path="/reviews" element={<AllReviews />} />
 					<Route path="/discover" element={<Discover />} />
 					<Route path="/search" element={<Search />} />
 					<Route path="/login" element={<Login />} />

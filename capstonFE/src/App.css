@@ -1,4 +1,4 @@
-/* reset */
+/* App.css styling */
 
 html,
 body,
@@ -88,7 +88,7 @@ video {
   font: inherit;
   vertical-align: baseline;
 }
-/* HTML5 display-role reset for older browsers */
+
 article,
 aside,
 details,
@@ -107,23 +107,20 @@ body {
   font-size: 16px;
 }
 
-/* 1. Use a more-intuitive box-sizing model */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
-/* 2. Remove default margin */
+
 * {
   margin: 0;
 }
 body {
-  /* 3. Add accessible line-height */
   line-height: 1.5;
-  /* 4. Improve text rendering */
   -webkit-font-smoothing: antialiased;
 }
-/* 5. Improve media defaults */
+
 img,
 picture,
 video,
@@ -132,14 +129,14 @@ svg {
   display: block;
   max-width: 100%;
 }
-/* 6. Inherit fonts for form controls */
+
 input,
 button,
 textarea,
 select {
   font: inherit;
 }
-/* 7. Avoid text overflows */
+
 p,
 h1,
 h2,
@@ -149,7 +146,7 @@ h5,
 h6 {
   overflow-wrap: break-word;
 }
-/* 8. Improve line wrapping */
+
 p {
   text-wrap: pretty;
 }
@@ -161,9 +158,7 @@ h5,
 h6 {
   text-wrap: balance;
 }
-/*
-  9. Create a root stacking context - primarily for react etc.
-*/
+
 #root,
 #__next {
   isolation: isolate;
@@ -180,7 +175,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-color: white; */
   padding: 20px;
 }
 
@@ -215,7 +209,7 @@ body {
   margin: 0;
 }
 
-/* Form styles */
+/* Auth form styles */
 .auth-form {
   margin-bottom: 24px;
 }
@@ -273,17 +267,7 @@ form input {
   margin-right: 8px;
 }
 
-.forgot-password {
-  color: #0061ff;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.forgot-password:hover {
-  text-decoration: underline;
-}
-
-/* Button styles */
+/* Auth button styles */
 .auth-button {
   width: 100%;
   padding: 14px 20px;
@@ -299,70 +283,6 @@ form input {
 
 .auth-button:hover {
   background-color: olive;
-}
-
-.auth-button:disabled {
-  background-color: #a4c5ff;
-  cursor: not-allowed;
-}
-
-/* Footer styles */
-.auth-footer {
-  text-align: center;
-  color: #555;
-  font-size: 15px;
-  margin-top: 30px;
-}
-
-.auth-footer a {
-  color: #0061ff;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.auth-footer a:hover {
-  text-decoration: underline;
-}
-
-/* Message styling */
-.error-message {
-  background-color: #fff1f0;
-  color: #ff4d4f;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  border-left: 4px solid #ff4d4f;
-}
-
-.success-message {
-  background-color: #f6ffed;
-  color: blue;
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
-  border-left: 4px solid #505050;
-}
-
-/* Responsive adjustments */
-@media (max-width: 576px) {
-  .auth-container {
-    padding: 30px 20px;
-  }
-
-  .auth-header h1 {
-    font-size: 24px;
-  }
-
-  .form-options {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .remember-me {
-    margin-bottom: 12px;
-  }
 }
 
 /* Nav Bar Styling */
@@ -426,27 +346,10 @@ nav a:hover,
 }
 
 nav a.active {
-  color: olive;
+  color: #6B8E23;
 }
 
-.logout-button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-weight: 700;
-  padding: 8px 12px;
-}
-
-.user-greeting {
-  color: olive;
-  font-weight: 600;
-  font-size: 14px;
-  margin-left: 16px;
-  background-color: rgba(30, 215, 96, 0.1);
-  padding: 4px 12px;
-  border-radius: 20px;
-}
-
+/* Nav mobile responsiveness */
 nav a,
 .logout-button {
   position: relative;
@@ -454,7 +357,7 @@ nav a,
 
 nav a::after,
 .logout-button::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -504,7 +407,6 @@ nav a.active::after {
 }
 
 /* Registration Page Styles */
-
 .register-container {
   max-width: 400px;
   margin: 40px auto;
@@ -522,7 +424,7 @@ nav a.active::after {
 .register-header h2 {
   font-size: 28px;
   font-weight: 600;
-  color: #333;
+  color: black;
   margin-bottom: 8px;
 }
 
@@ -558,7 +460,6 @@ nav a.active::after {
 }
 
 .form-input:focus {
-  border-color: #4a6cf7;
   outline: none;
   box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
 }
@@ -573,27 +474,6 @@ nav a.active::after {
   font-size: 14px;
 }
 
-.register-button {
-  background-color: #4a6cf7;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  margin-top: 8px;
-}
-
-.register-button:hover {
-  background-color: #3a5be0;
-}
-
-.register-button:active {
-  background-color: #2d4bd7;
-}
-
 .login-link {
   text-align: center;
   margin-top: 20px;
@@ -601,18 +481,7 @@ nav a.active::after {
   color: #666;
 }
 
-.login-link a {
-  color: #4a6cf7;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.login-link a:hover {
-  text-decoration: underline;
-}
-
 /*Registration page styling*/
-
 .register-page {
   min-height: 100vh;
   display: flex;
@@ -626,12 +495,13 @@ nav a.active::after {
 .register-container {
   width: 100%;
   max-width: 480px;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #181818; 
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   padding: 40px;
   box-sizing: border-box;
+  color: white;
 }
 
 .register-header {
@@ -647,7 +517,7 @@ nav a.active::after {
 }
 
 .register-header p {
-  color: #777;
+  color: white;
   font-size: 16px;
   margin: 0;
 }
@@ -664,7 +534,7 @@ nav a.active::after {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #333;
+  color: white;
   font-size: 15px;
 }
 
@@ -724,20 +594,20 @@ nav a.active::after {
 
 .login-link {
   text-align: center;
-  color: #555;
+  color: white;
   font-size: 15px;
   margin-top: 30px;
 }
 
 .login-link a {
-  color: #202020;
+  color: #6B8E23;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: bolder;
   transition: color 0.2s ease;
 }
 
 .login-link a:hover {
-  color: olive;
+  color: #6B8E23;
   text-decoration: underline;
 }
 
@@ -824,7 +694,7 @@ nav a.active::after {
 }
 
 .tab-button.active::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -1099,7 +969,10 @@ nav a.active::after {
 .edit-button:hover {
   background-color: #eef2ff;
 }
-
+/*comments*/
+.commentForm textarea {
+  color: #1d1d1d;
+}
 /* Loading & Error States */
 .loading-spinner {
   text-align: center;
@@ -1365,7 +1238,7 @@ nav a.active::after {
 
 /* Loading */
 .loading::after {
-  content: '.';
+  content: ".";
   animation: loading-dots 1.5s infinite;
   display: inline-block;
   width: 20px;
@@ -1374,13 +1247,13 @@ nav a.active::after {
 
 @keyframes loading-dots {
   0% {
-    content: '.';
+    content: ".";
   }
   33% {
-    content: '..';
+    content: "..";
   }
   66% {
-    content: '...';
+    content: "...";
   }
 }
 
@@ -1486,18 +1359,18 @@ nav a.active::after {
 }
 
 .edit-button:hover {
-  background-color: #6B8E23;
+  background-color: #6b8e23;
   transform: translateY(-2px);
 }
 
 .edit-button[type="submit"] {
   background-color: black;
-  color:white;
+  color: white;
   font-size: 14px;
 }
 
 .edit-button[type="submit"]:hover {
-  background-color: #6B8E23;
+  background-color: #6b8e23;
 }
 
 /* Friends Activity*/
@@ -1516,7 +1389,7 @@ nav a.active::after {
 }
 
 .friends-activity h3 {
-  color: #6B8E23;
+  color: #6b8e23;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bolder;
   font-size: 20px;
@@ -1568,7 +1441,7 @@ nav a.active::after {
 .friends-activity p {
   color: white;
   margin: 5px 0;
-  text-align: left; 
+  text-align: left;
 }
 
 .friends-activity small {
@@ -1598,7 +1471,7 @@ nav a.active::after {
 .friends-activity p b {
   font-weight: bold;
   color: white;
-  display: inline; 
+  display: inline;
 }
 
 .activity-tabs {
@@ -1627,6 +1500,12 @@ nav a.active::after {
 }
 
 .tab-button:hover:not(.active) {
-  background-color: #6B8E23;
+  background-color: #6b8e23;
   color: rgba(222, 222, 222, 0.9);
 }
+
+/*Comments styling*/
+.commentForm textarea {
+  color: #1D1D1D;
+ }
+ 

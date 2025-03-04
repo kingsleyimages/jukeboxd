@@ -32,7 +32,7 @@ const CommentForm = ({ reviewId, onCommentAdded, token }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="commentForm" onSubmit={handleSubmit}>
       <textarea
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}

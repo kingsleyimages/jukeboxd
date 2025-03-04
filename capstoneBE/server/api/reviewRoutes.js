@@ -4,6 +4,7 @@ const {
 	createReview,
 	fetchReviewsByAlbumId,
 	fetchReviewsByUserId,
+	fetchReviewsDesc,
 	fetchReviews,
 	deleteReview,
 	updateReview,
@@ -41,6 +42,14 @@ router.post(
 router.get("/", async (req, res, next) => {
 	try {
 		const reviews = await fetchReviews();
+		res.send(reviews);
+	} catch (error) {
+		next(error);
+	}
+});
+router.get("/desc", async (req, res, next) => {
+	try {
+		const reviews = await fetchReviewsDesc();
 		res.send(reviews);
 	} catch (error) {
 		next(error);
@@ -93,15 +102,19 @@ router.delete(
 				return res.status(404).json({ message: "Review not found" });
 			}
 			if (review.user_id !== req.user.id) {
-				return res.status(403).json({
-					message: "You are not authorized to delete this review",
-				});
+				return res
+					.status(403)
+					.json({
+						message: "You are not authorized to delete this review",
+					});
 			}
 			const response = await deleteReview(req.params.id);
-			res.status(200).json({
-				message: "Review deleted successfully",
-				review: response,
-			});
+			res
+				.status(200)
+				.json({
+					message: "Review deleted successfully",
+					review: response,
+				});
 		} catch (error) {
 			next(error);
 		}
@@ -139,10 +152,12 @@ router.delete(
 	async (req, res, next) => {
 		try {
 			const response = await deleteReview(req.params.id);
-			res.status(200).json({
-				message: "Review deleted successfully",
-				review: response,
-			});
+			res
+				.status(200)
+				.json({
+					message: "Review deleted successfully",
+					review: response,
+				});
 		} catch (error) {
 			next(error);
 		}
@@ -179,9 +194,11 @@ router.put(
 		try {
 			const review = await getReviewById(req.params.id);
 			if (review.user_id !== req.user.id) {
-				return res.status(403).json({
-					message: "You are not authorized to update this review",
-				});
+				return res
+					.status(403)
+					.json({
+						message: "You are not authorized to update this review",
+					});
 			}
 			const response = await updateReview(
 				req.params.id,
