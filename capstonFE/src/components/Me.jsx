@@ -207,7 +207,8 @@ function Me() {
         <div className="error">{error}</div>
         <button
           className="retry-button"
-          onClick={() => window.location.reload()}>
+          onClick={() => window.location.reload()}
+        >
           Try Again
         </button>
       </div>
@@ -291,21 +292,24 @@ function Me() {
                   className={`tab-button ${
                     activeTab === "myActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("myActivity")}>
+                  onClick={() => setActiveTab("myActivity")}
+                >
                   My Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friendsActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friendsActivity")}>
+                  onClick={() => setActiveTab("friendsActivity")}
+                >
                   Friends' Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friends" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friends")}>
+                  onClick={() => setActiveTab("friends")}
+                >
                   See and Find Friends
                 </button>
               </div>
@@ -357,12 +361,27 @@ function Me() {
                       <ul className="reviews-list">
                         {userData.reviews.map((review, index) => (
                           <li key={index}>
-                            <strong>
-                              {review.albumName ||
-                                review.album?.name ||
-                                "Unknown Album"}{" "}
-                            </strong>{" "}
-                            -<span> Rating: {review.rating}/5</span>
+                            <img
+                              src={review.album_image}
+                              alt={review.album_name || "Album Cover"}
+                              style={{
+                                width: "100px",
+                                borderRadius: "8px",
+                                marginTop: "5px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                navigate(`/album/${review.album_spotify_id}`)
+                              }
+                            />
+                            <p>
+                              <strong>
+                                {review.album_name ||
+                                  review.album?.name ||
+                                  "Unknown Album"}{" "}
+                              </strong>
+                            </p>
+                            <span> Rating: {review.rating}/5</span>
                             <p>{review.review || "No review text provided."}</p>
                             <small>By: {review.username}</small>
                           </li>
@@ -406,7 +425,13 @@ function Me() {
                                         width: "100px",
                                         borderRadius: "8px",
                                         marginTop: "5px",
+                                        cursor: "pointer",
                                       }}
+                                      onClick={() =>
+                                        navigate(
+                                          `/album/${favorite.spotify_id}`
+                                        )
+                                      }
                                     />
                                   )}
                                 </li>
@@ -426,10 +451,27 @@ function Me() {
                           <ul className="reviews-list">
                             {friendsActivity.reviews.map((review, index) => (
                               <li key={index}>
-                                <strong>
-                                  {review.headline || "Unknown Album"}
-                                </strong>{" "}
-                                -<span> Rating: {review.rating}/5</span>
+                                <img
+                                  src={review.album_image}
+                                  alt={review.album_name || "Album Cover"}
+                                  style={{
+                                    width: "100px",
+                                    borderRadius: "8px",
+                                    marginTop: "5px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() =>
+                                    navigate(
+                                      `/album/${review.album_spotify_id}`
+                                    )
+                                  }
+                                />
+                                <p>
+                                  <strong>
+                                    {review.album_name || "Unknown Album"}
+                                  </strong>
+                                </p>
+                                <span> Rating: {review.rating}/5</span>
                                 <p>
                                   {review.review || "No review text provided."}
                                 </p>
