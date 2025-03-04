@@ -357,12 +357,29 @@ function Me() {
                       <ul className="reviews-list">
                         {userData.reviews.map((review, index) => (
                           <li key={index}>
-                            <strong>
-                              {review.albumName ||
-                                review.album?.name ||
-                                "Unknown Album"}{" "}
-                            </strong>{" "}
-                            -<span> Rating: {review.rating}/5</span>
+                            <img
+                              src={review.album_image}
+                              alt={review.album_name || "Album Cover"}
+                              style={{
+                                width: "100px",
+                                borderRadius: "8px",
+                                marginTop: "5px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                navigate(
+                                  `/album/${review.album_spotify_id}`
+                                )
+                              }
+                            />
+                            <p>
+                              <strong>
+                                {review.album_name ||
+                                  review.album?.name ||
+                                  "Unknown Album"}{" "}
+                              </strong>
+                            </p>
+                            <span> Rating: {review.rating}/5</span>
                             <p>{review.review || "No review text provided."}</p>
                             <small>By: {review.username}</small>
                           </li>
@@ -426,10 +443,27 @@ function Me() {
                           <ul className="reviews-list">
                             {friendsActivity.reviews.map((review, index) => (
                               <li key={index}>
-                                <strong>
-                                  {review.headline || "Unknown Album"}
-                                </strong>{" "}
-                                -<span> Rating: {review.rating}/5</span>
+                                <img
+                                  src={review.album_image}
+                                  alt={review.album_name || "Album Cover"}
+                                  style={{
+                                    width: "100px",
+                                    borderRadius: "8px",
+                                    marginTop: "5px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() =>
+                                    navigate(
+                                      `/album/${review.album_spotify_id}`
+                                    )
+                                  }
+                                />
+                                <p>
+                                  <strong>
+                                    {review.album_name || "Unknown Album"}
+                                  </strong>
+                                </p>
+                                <span> Rating: {review.rating}/5</span>
                                 <p>
                                   {review.review || "No review text provided."}
                                 </p>
