@@ -4,6 +4,7 @@ const {
   createReview,
   fetchReviewsByAlbumId,
   fetchReviewsByUserId,
+  fetchReviewsDesc,
   fetchReviews,
   deleteReview,
   updateReview,
@@ -46,6 +47,14 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
+router.get("/desc", async (req, res, next) => {
+  try {
+    const reviews = await fetchReviewsDesc();
+    res.send(reviews);
+  } catch (error) {
+    next(error);
+  }
+});
 
 // fetch all reviews for an album
 router.get("/album/:albumId/", async (req, res, next) => {
@@ -70,14 +79,14 @@ router.get("/user/:userId/", async (req, res, next) => {
 // fetch review by id
 router.get("/:id", async (req, res, next) => {
   try {
-    console.log('Fetching review with ID:', req.params.id); // Debugging log
+    console.log("Fetching review with ID:", req.params.id); // Debugging log
     const review = await getReviewById(req.params.id);
     if (!review) {
       return res.status(404).json({ message: "Review not found" });
     }
     res.status(200).json(review);
   } catch (error) {
-    console.error('Error fetching review by ID:', error);
+    console.error("Error fetching review by ID:", error);
     next(error);
   }
 });
@@ -103,7 +112,6 @@ router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
   }
 });
 
-
 // delete a review by id (non-admin)
 router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
   try {
@@ -123,15 +131,21 @@ router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
 });
 
 // delete review by id (admin only)
-router.delete('/admin/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
-  try {
-    const response = await deleteReview(req.params.id);
-    res.status(200).json({ message: 'Review deleted successfully', review: response });
-  } catch (error) {
-    next(error);
+router.delete(
+  "/admin/:id/delete",
+  authenticateToken,
+  adminAuth,
+  async (req, res, next) => {
+    try {
+      const response = await deleteReview(req.params.id);
+      res
+        .status(200)
+        .json({ message: "Review deleted successfully", review: response });
+    } catch (error) {
+      next(error);
+    }
   }
-});
-
+);
 
 // update a review by id (admin only)
 router.put(
@@ -141,7 +155,13 @@ router.put(
   async (req, res, next) => {
     try {
       const { review, headline, rating, favorite } = req.body;
-      const response = await updateReview(req.params.id, review, headline, rating, favorite);
+      const response = await updateReview(
+        req.params.id,
+        review,
+        headline,
+        rating,
+        favorite
+      );
       res.send(response);
     } catch (error) {
       next(error);
@@ -154,7 +174,9 @@ router.put("/:id/update", authenticateToken, async (req, res, next) => {
   try {
     const review = await getReviewById(req.params.id);
     if (review.user_id !== req.user.id) {
-      return res.status(403).json({ message: 'You are not authorized to update this review' });
+      return res
+        .status(403)
+        .json({ message: "You are not authorized to update this review" });
     }
     const response = await updateReview(
       req.params.id,
@@ -170,13 +192,18 @@ router.put("/:id/update", authenticateToken, async (req, res, next) => {
 });
 
 // Get all reviews (admin only)
-router.get("/admin/reviews", authenticateToken, adminAuth, async (req, res, next) => {
-  try {
-    const reviews = await getAllReviews();
-    res.json(reviews);
-  } catch (error) {
-    next(error);
+router.get(
+  "/admin/reviews",
+  authenticateToken,
+  adminAuth,
+  async (req, res, next) => {
+    try {
+      const reviews = await getAllReviews();
+      res.json(reviews);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 module.exports = router;
