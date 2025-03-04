@@ -1,5 +1,5 @@
-const { client } = require('./index');
-const uuid = require('uuid');
+const { client } = require("./index");
+const uuid = require("uuid");
 
 // create a unique friend relationship between two users
 const createFriend = async (userId, friendId) => {
@@ -80,14 +80,27 @@ const fetchReviewsByFriends = async (userId) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT reviews.review, reviews.headline, reviews.rating, reviews.favorite, users.username
-FROM reviews
-INNER JOIN users ON reviews.user_id = users.id
-WHERE reviews.user_id IN (
-  SELECT friend_id FROM friends WHERE user_id = $1
-  UNION
-  SELECT user_id FROM friends WHERE friend_id = $1
-)
+      SELECT 
+  reviews.review, 
+  reviews.headline, 
+  reviews.rating, 
+  reviews.favorite,
+  users.username, 
+  albums.name AS album_name, 
+  albums.image AS album_image,
+  albums.spotify_id AS album_spotify_id
+FROM 
+  reviews
+INNER JOIN 
+  users ON reviews.user_id = users.id
+INNER JOIN 
+  albums ON reviews.album_id = albums.id
+WHERE 
+  reviews.user_id IN (
+    SELECT friend_id FROM friends WHERE user_id = $1
+    UNION
+    SELECT user_id FROM friends WHERE friend_id = $1
+  );
       `,
       [userId]
     );

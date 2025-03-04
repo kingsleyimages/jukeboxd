@@ -24,6 +24,12 @@ function Me() {
   const [isLoadingFriendsActivity, setIsLoadingFriendsActivity] =
     useState(false);
 
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
   const token = localStorage.getItem("token") || null;
 
   useEffect(() => {
@@ -39,22 +45,16 @@ function Me() {
 
       console.log("API response (User Data):", response.data);
       if (response.data && response.data.id) {
-        const updatedUsername = document.getElementById("username").value;
-        const updatedPassword = document.getElementById("password").value;
-        const updatedEmail = document.getElementById("email").value;
-        const userId = userData.id;
+        const userId = response.data.id;
         const updateResponse = await axios.put(
           `${API_BASE_URL}/api/users/${userId}/edit`,
-          {
-            username: updatedUsername,
-            email: updatedEmail,
-            password: updatedPassword,
-          },
+          formData,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
         console.log("User updated:", updateResponse.data);
+        setFormData({ username: "", email: "", password: "" });
       }
     } catch (error) {
       console.error("Error updating user:", error);
@@ -178,13 +178,23 @@ function Me() {
     setEditFormVisible(!editFormVisible);
   };
 
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
   // submit profile changes
   const handleEdit = async (event) => {
     event.preventDefault();
-    const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const response = await updateSelf(userData.id, username, email, password);
+    if (!formData.username || !formData.email || formData.password === "") {
+      alert("Please fill out all fields.");
+      return;
+    }
+    await updateSelf(
+      userData.id,
+      formData.username,
+      formData.email,
+      formData.password
+    );
   };
 
   if (isLoading) {
@@ -237,8 +247,9 @@ function Me() {
                         Username:
                         <input
                           type="text"
-                          id="username"
-                          defaultValue={userData.username}
+                          name="username"
+                          onChange={handleChange}
+                          value={formData?.username}
                           required
                         />
                       </label>
@@ -246,14 +257,21 @@ function Me() {
                         Email:
                         <input
                           type="email"
-                          id="email"
-                          defaultValue={userData.email}
+                          name="email"
+                          onChange={handleChange}
+                          value={formData?.email}
                           required
                         />
                       </label>
                       <label htmlFor="password">
                         Password:
-                        <input type="text" id="password" required />
+                        <input
+                          type="text"
+                          onChange={handleChange}
+                          name="password"
+                          value={formData?.password}
+                          required
+                        />
                       </label>
                       <button className="edit-button" type="submit">
                         Save Changes
@@ -343,12 +361,27 @@ function Me() {
                       <ul className="reviews-list">
                         {userData.reviews.map((review, index) => (
                           <li key={index}>
-                            <strong>
-                              {review.albumName ||
-                                review.album?.name ||
-                                "Unknown Album"}{" "}
-                            </strong>{" "}
-                            -<span> Rating: {review.favorite}/5</span>
+                            <img
+                              src={review.album_image}
+                              alt={review.album_name || "Album Cover"}
+                              style={{
+                                width: "100px",
+                                borderRadius: "8px",
+                                marginTop: "5px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                navigate(`/album/${review.album_spotify_id}`)
+                              }
+                            />
+                            <p>
+                              <strong>
+                                {review.album_name ||
+                                  review.album?.name ||
+                                  "Unknown Album"}{" "}
+                              </strong>
+                            </p>
+                            <span> Rating: {review.rating}/5</span>
                             <p>{review.review || "No review text provided."}</p>
                             <small>By: {review.username}</small>
                           </li>
@@ -392,7 +425,13 @@ function Me() {
                                         width: "100px",
                                         borderRadius: "8px",
                                         marginTop: "5px",
+                                        cursor: "pointer",
                                       }}
+                                      onClick={() =>
+                                        navigate(
+                                          `/album/${favorite.spotify_id}`
+                                        )
+                                      }
                                     />
                                   )}
                                 </li>
@@ -412,10 +451,27 @@ function Me() {
                           <ul className="reviews-list">
                             {friendsActivity.reviews.map((review, index) => (
                               <li key={index}>
-                                <strong>
-                                  {review.headline || "Unknown Album"}
-                                </strong>{" "}
-                                -<span> Rating: {review.rating}/5</span>
+                                <img
+                                  src={review.album_image}
+                                  alt={review.album_name || "Album Cover"}
+                                  style={{
+                                    width: "100px",
+                                    borderRadius: "8px",
+                                    marginTop: "5px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() =>
+                                    navigate(
+                                      `/album/${review.album_spotify_id}`
+                                    )
+                                  }
+                                />
+                                <p>
+                                  <strong>
+                                    {review.album_name || "Unknown Album"}
+                                  </strong>
+                                </p>
+                                <span> Rating: {review.rating}/5</span>
                                 <p>
                                   {review.review || "No review text provided."}
                                 </p>

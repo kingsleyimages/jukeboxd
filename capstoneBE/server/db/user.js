@@ -1,10 +1,10 @@
-const { client } = require('./index');
-const uuid = require('uuid');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const { client } = require("./index");
+const uuid = require("uuid");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const createUser = async (username, email, password, role) => {
-  if (!password) throw new Error('Password is required');
+  if (!password) throw new Error("Password is required");
   const SQL = `
     INSERT INTO users(id, username, email, password, role) VALUES($1, $2, $3, $4, $5) RETURNING *
   `;
@@ -28,17 +28,18 @@ const authenticate = async ({ username, password }) => {
   const SQL = `SELECT id, password, email, role FROM users WHERE username = $1;`;
   const response = await client.query(SQL, [username]);
 
-  if (!response.rows.length) throw new Error('User not found');
+  if (!response.rows.length) throw new Error("User not found");
   const user = response.rows[0];
-  if (!user.password) throw new Error('User password not defined');
+  if (!user.password) throw new Error("User password not defined");
 
   const passwordMatch = await bcrypt.compare(password, user.password);
-  if (!passwordMatch) throw new Error('Incorrect password');
-
+  if (!passwordMatch) throw new Error("Incorrect password");
+  console.log(passwordMatch);
   const myToken = jwt.sign(
     { id: user.id, role: user.role },
     process.env.JWT_SECRET
   );
+  console.log(myToken);
   return { token: myToken };
 };
 
@@ -46,6 +47,16 @@ const userExists = async (username) => {
   const SQL = `SELECT id FROM users WHERE username = $1;`;
   const response = await client.query(SQL, [username]);
   return response.rows.length > 0;
+};
+const modifyUser2 = async (id, username, email, password) => {
+  const SQL = `UPDATE users SET username = $2, email = $3, password = $4 WHERE id = $1 RETURNING *;`;
+  const response = await client.query(SQL, [
+    id,
+    username,
+    email,
+    await bcrypt.hash(password, 5),
+  ]);
+  return response.rows[0];
 };
 
 const modifyUser = async (id, username, email, role) => {
@@ -88,4 +99,5 @@ module.exports = {
   getAllComments,
   getAllReviews,
   fetchUserById,
+  modifyUser2,
 };

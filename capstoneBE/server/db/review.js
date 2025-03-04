@@ -97,11 +97,24 @@ const fetchReviewsByUserId = async (id) => {
 	try {
 		const { rows } = await client.query(
 			`
-      SELECT reviews.id, users.username, review, rating, favorite, headline
-      FROM reviews
-      INNER JOIN users
-      ON reviews.user_id = users.id
-      WHERE user_id = $1
+      SELECT 
+  reviews.id, 
+  users.username, 
+  reviews.review, 
+  reviews.rating, 
+  reviews.favorite, 
+  reviews.headline, 
+  albums.spotify_id AS album_spotify_id,
+  albums.name AS album_name, 
+  albums.image AS album_image
+FROM 
+  reviews
+INNER JOIN 
+  users ON reviews.user_id = users.id
+INNER JOIN 
+  albums ON reviews.album_id = albums.id
+WHERE 
+  reviews.user_id = $1;
     `,
 			[id]
 		);

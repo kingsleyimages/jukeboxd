@@ -232,7 +232,8 @@ body {
   font-size: 15px;
 }
 
-.form-group input {
+.form-group input,
+form input {
   width: 100%;
   padding: 14px 16px;
   border: 1px solid #dde1e7;
@@ -1209,9 +1210,15 @@ nav a.active::after {
 .info-item {
   margin-bottom: 1rem;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-content: start;
 }
-
+.editWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+}
 .label {
   font-weight: 700;
   margin-right: 0.5rem;

@@ -25,7 +25,7 @@ const fetchFriendFavorites = async (userId) => {
   try {
     const { rows } = await client.query(
       `
-      SELECT albums.name, albums.artist, albums.image, users.username
+      SELECT albums.spotify_id, albums.name, albums.artist, albums.image, users.username
 FROM albums
 INNER JOIN reviews ON albums.id = reviews.album_id
 INNER JOIN users ON reviews.user_id = users.id
