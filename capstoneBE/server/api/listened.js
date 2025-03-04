@@ -32,4 +32,20 @@ router.post(
 	}
 );
 
+router.get("/:albumId", async (req, res) => {
+	const { albumId } = req.params;
+	const userId = req.user?.id;
+
+	try {
+		const result = await db.query(
+			"SELECT * FROM listenedto WHERE user_id = $1 AND album_id = $2",
+			[userId, albumId]
+		);
+		res.json({ is_listened: result.rows.length > 0 });
+	} catch (error) {
+		console.error("Error fetching listened status:", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
+});
+
 module.exports = router;

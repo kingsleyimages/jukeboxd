@@ -18,6 +18,15 @@ const AlbumDetails = ({ token }) => {
 		favorite: false,
 	});
 
+	useEffect(() => {
+		const hasRefreshed = sessionStorage.getItem("hasRefreshed");
+
+		if (!hasRefreshed) {
+			sessionStorage.setItem("hasRefreshed", "true");
+			window.location.reload();
+		}
+	}, []);
+
 	const API_BASE_URL =
 		import.meta.env.VITE_API_BASE_URL_PROD ||
 		import.meta.env.VITE_API_BASE_URL_DEV;
@@ -31,15 +40,6 @@ const AlbumDetails = ({ token }) => {
 				const data = await response.json();
 				setAlbum(data);
 				setReviews(data.reviews || []);
-
-				// const listenedResponse = await fetch(`${API_BASE_URL}/api/users/me/listened/${albumId}`, {
-				// 	headers: { Authorization: `Bearer ${token}` },
-				//   });
-
-				//   if (listenedResponse.ok) {
-				// 	const listenedData = await listenedResponse.json();
-				// 	setIsListened(listenedData.is_listened); // ✅ Update the state
-				//   }
 			} catch (error) {
 				console.error("Error fetching album details:", error.message);
 			} finally {
@@ -61,41 +61,54 @@ const AlbumDetails = ({ token }) => {
 		}
 	}, [albumId, token]);
 
-	const markAsListenedFrontEnd = async (token) => {
-		console.log(albumId);
-		if (!albumId) {
-			console.error("Error: albumId is undefined");
-			return;
-		}
+	useEffect(() => {
+		const fetchListenedStatus = async () => {
+			if (!token) return;
 
+			try {
+				const response = await fetch(
+					`${API_BASE_URL}/api/listened/${albumId}`,
+					{
+						headers: { Authorization: `Bearer ${token}` },
+					}
+				);
+
+				if (response.ok) {
+					const data = await response.json();
+					setIsListened(data.is_listened);
+				}
+			} catch (error) {
+				console.error("Error fetching listened status:", error);
+			}
+		};
+		fetchListenedStatus();
+	}, [albumId, token]);
+
+	const markAsListened = async () => {
 		if (!token) {
 			alert("You need to be logged in to mark album as listened");
 			return;
 		}
 
 		try {
-			const url = `${API_BASE_URL}/api/listened/${albumId}`;
-			console.log("📡 Sending API Request to:", url);
-
-			const response = await fetch(url, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-			});
+			const response = await fetch(
+				`${API_BASE_URL}/api/listened/${albumId}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
 
 			if (response.ok) {
-				console.log("Album marked as listened");
 				setIsListened(true);
 			} else {
-				console.error(
-					"Failed to mark album as listened:",
-					response.statusText
-				);
+				console.error("Failed to mark album as listened");
 			}
-		} catch (err) {
-			console.error("Error marking album as listened:", err.message);
+		} catch (error) {
+			console.error("Error marking album as listened:", error);
 		}
 	};
 
@@ -311,8 +324,8 @@ const AlbumDetails = ({ token }) => {
 				)}
 				<button
 					className={styles.button}
-					onClick={() => markAsListenedFrontEnd(token)}
-					disabled={isListened} //
+					onClick={markAsListened}
+					disabled={isListened}
 				>
 					{isListened ? "✅ Already Listened" : "🎵 Mark as Listened"}
 				</button>
