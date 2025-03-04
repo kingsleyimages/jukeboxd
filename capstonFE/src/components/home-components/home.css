@@ -355,4 +355,6 @@
 	  margin-left: 10px;
 	}
   }
-  
+  .home-container .cta-button {
+	margin-left: 40px;  
+  }

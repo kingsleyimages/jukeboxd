@@ -12,10 +12,10 @@ function Home() {
 					Track albums you've listened to, share your favorites, and
 					discover new gems!
 				</p>
-				<Link to="/search" className="cta-button">
+			</section>
+			<Link to="/search" className="cta-button">
 					Start finding albums!
 				</Link>
-			</section>
 
 			<AlbumCarousel />
 		</div>
