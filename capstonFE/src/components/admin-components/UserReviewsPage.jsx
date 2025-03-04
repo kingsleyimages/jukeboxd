@@ -16,7 +16,7 @@ function UserReviewsPage() {
     const token = localStorage.getItem('token');
     console.log(`Fetching reviews for user ${userId}...`);
 
-    axios.get(`${API_BASE_URL}/api/reviews/user/${userId}`, {
+    axios.get(`${API_BASE_URL}/api/admin/reviews`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -36,7 +36,7 @@ function UserReviewsPage() {
   const handleDeleteReview = (reviewId) => {
     console.log(`Deleting review with ID: ${reviewId}`);
     const token = localStorage.getItem('token');
-    axios.delete(`${API_BASE_URL}/api/admin/reviews/${reviewId}/delete`, {
+    axios.delete(`${API_BASE_URL}/api/admin/${reviewId}/delete`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

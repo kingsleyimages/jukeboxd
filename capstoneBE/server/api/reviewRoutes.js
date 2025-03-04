@@ -143,47 +143,7 @@ router.delete(
 	}
 );
 
-// delete review by id (admin only)
-router.delete(
-	"/admin/:id/delete",
-	authenticateToken,
-	adminAuth,
-	async (req, res, next) => {
-		try {
-			const response = await deleteReview(req.params.id);
-			res
-				.status(200)
-				.json({
-					message: "Review deleted successfully",
-					review: response,
-				});
-		} catch (error) {
-			next(error);
-		}
-	}
-);
 
-// update a review by id (admin only)
-router.put(
-	"/admin/reviews/:id/update",
-	authenticateToken,
-	adminAuth,
-	async (req, res, next) => {
-		try {
-			const { review, headline, rating, favorite } = req.body;
-			const response = await updateReview(
-				req.params.id,
-				review,
-				headline,
-				rating,
-				favorite
-			);
-			res.send(response);
-		} catch (error) {
-			next(error);
-		}
-	}
-);
 
 // update a review by id (non-admin)
 router.put(
@@ -213,19 +173,6 @@ router.put(
 	}
 );
 
-// Get all reviews (admin only)
-router.get(
-	"/admin/reviews",
-	authenticateToken,
-	adminAuth,
-	async (req, res, next) => {
-		try {
-			const reviews = await getAllReviews();
-			res.json(reviews);
-		} catch (error) {
-			next(error);
-		}
-	}
-);
+
 
 module.exports = router;

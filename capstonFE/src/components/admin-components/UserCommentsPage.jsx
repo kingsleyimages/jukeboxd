@@ -16,7 +16,7 @@ function UserCommentsPage() {
     const token = localStorage.getItem('token');
     console.log(`Fetching comments for user ${userId}...`);
 
-    axios.get(`${API_BASE_URL}/api/comments/user/${userId}`, {
+    axios.get(`${API_BASE_URL}/api/admin/comments`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -36,7 +36,7 @@ function UserCommentsPage() {
   const handleDeleteComment = (commentId) => {
     console.log(`Deleting comment with ID: ${commentId}`);
     const token = localStorage.getItem('token');
-    axios.delete(`${API_BASE_URL}/api/admin/comments/${commentId}/delete`, {
+    axios.delete(`${API_BASE_URL}/api/admin/comments/${commentId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
