@@ -207,7 +207,8 @@ function Me() {
         <div className="error">{error}</div>
         <button
           className="retry-button"
-          onClick={() => window.location.reload()}>
+          onClick={() => window.location.reload()}
+        >
           Try Again
         </button>
       </div>
@@ -291,21 +292,24 @@ function Me() {
                   className={`tab-button ${
                     activeTab === "myActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("myActivity")}>
+                  onClick={() => setActiveTab("myActivity")}
+                >
                   My Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friendsActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friendsActivity")}>
+                  onClick={() => setActiveTab("friendsActivity")}
+                >
                   Friends' Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friends" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friends")}>
+                  onClick={() => setActiveTab("friends")}
+                >
                   See and Find Friends
                 </button>
               </div>
@@ -367,9 +371,7 @@ function Me() {
                                 cursor: "pointer",
                               }}
                               onClick={() =>
-                                navigate(
-                                  `/album/${review.album_spotify_id}`
-                                )
+                                navigate(`/album/${review.album_spotify_id}`)
                               }
                             />
                             <p>
@@ -423,7 +425,13 @@ function Me() {
                                         width: "100px",
                                         borderRadius: "8px",
                                         marginTop: "5px",
+                                        cursor: "pointer",
                                       }}
+                                      onClick={() =>
+                                        navigate(
+                                          `/album/${favorite.spotify_id}`
+                                        )
+                                      }
                                     />
                                   )}
                                 </li>
