@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
 function ReviewedAlbums() {
   const [albums, setAlbums] = useState([]);
@@ -8,21 +13,16 @@ function ReviewedAlbums() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     console.log('Fetching albums with reviews...');
-    fetch('http://localhost:3000/api/albums/reviewed', {
+    axios.get(`${API_BASE_URL}/api/albums/reviewed`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
         console.log('Response:', response);
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers);
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Fetched albums with reviews:', data);
-        if (Array.isArray(data)) {
-          setAlbums(data);
+        console.log('Fetched albums with reviews:', response.data);
+        if (Array.isArray(response.data)) {
+          setAlbums(response.data);
         } else {
           setAlbums([]);
         }

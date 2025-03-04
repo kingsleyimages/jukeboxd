@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
 function ViewAllUsers() {
   const [users, setUsers] = useState([]);
@@ -8,22 +13,19 @@ function ViewAllUsers() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const baseUrl = import.meta.env.MODE === 'production' 
+      ? import.meta.env.VITE_API_BASE_URL_PROD
+      : import.meta.env.VITE_API_BASE_URL_DEV;
+
     console.log('Fetching users...');
-    fetch('http://localhost:3000/api/users', {
+    axios.get(`${API_BASE_URL}/api/users`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        console.log('Response:', response);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Fetched users:', data);
-        setUsers(data);
+        console.log('Fetched users:', response.data);
+        setUsers(response.data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -44,7 +46,6 @@ function ViewAllUsers() {
   return (
     <div>
       <h2>View All Users</h2>
-      
       <ul>
         {users.map((user) => (
           <li key={user.id}>

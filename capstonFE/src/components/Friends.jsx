@@ -4,7 +4,9 @@ import axios from 'axios';
 import styles from '../css/Friends.module.css';
 
 function Friends() {
-  const API_BASE_URL = 'https://jukeboxd-znlr.onrender.com';
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   const navigate = useNavigate();
   const [friendsList, setFriendsList] = useState([]);
@@ -197,7 +199,7 @@ function Friends() {
     <>
       <div className={styles.friendsWrapper}>
         <div className={styles.column}>
-          <h1 className={styles.title}>Friends:</h1>
+          <h1 className={styles.title}>My Friends:</h1>
           {friendsList.length > 0 ? (
             friendsList.map((friend) => (
               <div className={styles.friends} key={friend.id}>

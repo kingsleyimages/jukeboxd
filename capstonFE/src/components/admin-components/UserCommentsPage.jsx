@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
+
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
 function UserCommentsPage() {
   const { userId } = useParams();
@@ -11,20 +16,14 @@ function UserCommentsPage() {
     const token = localStorage.getItem('token');
     console.log(`Fetching comments for user ${userId}...`);
 
-    fetch(`http://localhost:3000/api/comments/user/${userId}`, {
+    axios.get(`${API_BASE_URL}/api/comments/user/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Fetched comments:', data);
-        setUserComments(data);
+        console.log('Fetched comments:', response.data);
+        setUserComments(response.data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -37,20 +36,13 @@ function UserCommentsPage() {
   const handleDeleteComment = (commentId) => {
     console.log(`Deleting comment with ID: ${commentId}`);
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/comments/admin/${commentId}/delete`, {
-      method: 'DELETE',
+    axios.delete(`${API_BASE_URL}/api/comments/admin/${commentId}/delete`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Comment deleted:', data);
+        console.log('Comment deleted:', response.data);
         setUserComments(userComments.filter(comment => comment.id !== commentId));
       })
       .catch((error) => {

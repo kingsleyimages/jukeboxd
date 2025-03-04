@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
+
 function ModifyComment() {
   const { commentId } = useParams();
   const navigate = useNavigate();
   const [comment, setComment] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
+
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
+
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/comments/${commentId}`, {
+    fetch(`${API_BASE_URL}/api/comments/${commentId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -33,7 +39,7 @@ function ModifyComment() {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:3000/api/comments/admin/comments/${commentId}/update`, {
+      const response = await fetch(`${API_BASE_URL}/api/comments/admin/comments/${commentId}/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

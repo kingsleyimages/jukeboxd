@@ -31,11 +31,11 @@ const AlbumDetails = ({ token }) => {
 				const data = await response.json();
 				setAlbum(data);
 				setReviews(data.reviews || []);
-				
+
 				// const listenedResponse = await fetch(`${API_BASE_URL}/api/users/me/listened/${albumId}`, {
 				// 	headers: { Authorization: `Bearer ${token}` },
 				//   });
-			
+
 				//   if (listenedResponse.ok) {
 				// 	const listenedData = await listenedResponse.json();
 				// 	setIsListened(listenedData.is_listened); // ✅ Update the state
@@ -101,8 +101,18 @@ const AlbumDetails = ({ token }) => {
 
 	const handleSubmitReview = async (e) => {
 		e.preventDefault();
+
 		if (!token) {
 			alert("You need to be logged in to leave a review");
+			return;
+		}
+
+		const userAlreadyReviewed = reviews.some(
+			(review) => review.user_id === userId
+		);
+
+		if (!editingReview && userAlreadyReviewed) {
+			alert("You already reviewed this album!");
 			return;
 		}
 
@@ -293,7 +303,7 @@ const AlbumDetails = ({ token }) => {
 							review={review}
 							userId={userId}
 							onDeleteClick={handleDeleteClick}
-                token={token}
+							token={token}
 						/>
 					))
 				) : (

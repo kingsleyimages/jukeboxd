@@ -3,12 +3,12 @@ const router = express.Router();
 const { authenticateToken } = require("./middlewares");
 
 const {
-	createAlbum,
-	fetchAlbums,
-	fetchAlbumById,
-	createTracks,
-	fetchTracksByAlbumId,
-	fetchAlbumsWithReviews,
+  createAlbum,
+  fetchAlbums,
+  fetchAlbumById,
+  createTracks,
+  fetchTracksByAlbumId,
+  fetchAlbumsWithReviews,
 } = require("../db/album.js");
 
 // base route and return for the api for albums
@@ -77,34 +77,5 @@ router.get("/:id", async (req, res, next) => {
 		next(error);
 	}
 });
-
-//fetch all tracks for an album
-router.get("/:albumId/tracks", async (req, res, next) => {
-	try {
-		const albumId = req.params.albumId;
-		const tracks = await fetchTracksByAlbumId(albumId);
-		res.status(200).send(tracks);
-	} catch (error) {
-		console.error("Error fetching tracks for album:", error);
-		next(error);
-	}
-});
-
-router.put(
-	"/:id/listened",
-	authenticateToken,
-	async (req, res, next) => {
-		try {
-			const { listened } = req.body;
-			const album = await updateAlbumListenedStatus(
-				req.params.id,
-				listened
-			);
-			res.status(200).json(album);
-		} catch (error) {
-			next(error);
-		}
-	}
-);
 
 module.exports = router;

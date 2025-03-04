@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
 
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
+    
 function UserReviewsPage() {
   const { userId } = useParams();
   const [userReviews, setUserReviews] = useState([]);
@@ -11,20 +16,14 @@ function UserReviewsPage() {
     const token = localStorage.getItem('token');
     console.log(`Fetching reviews for user ${userId}...`);
 
-    fetch(`http://localhost:3000/api/reviews/user/${userId}`, {
+    axios.get(`${API_BASE_URL}/api/reviews/user/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Fetched reviews:', data);
-        setUserReviews(data);
+        console.log('Fetched reviews:', response.data);
+        setUserReviews(response.data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -37,20 +36,13 @@ function UserReviewsPage() {
   const handleDeleteReview = (reviewId) => {
     console.log(`Deleting review with ID: ${reviewId}`);
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/reviews/admin/${reviewId}/delete`, {
-      method: 'DELETE',
+    axios.delete(`${API_BASE_URL}/api/reviews/admin/${reviewId}/delete`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Review deleted:', data);
+        console.log('Review deleted:', response.data);
         setUserReviews(userReviews.filter(review => review.id !== reviewId));
       })
       .catch((error) => {

@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
 function UserModify() {
   const { userId } = useParams();
@@ -11,21 +16,15 @@ function UserModify() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch(`http://localhost:3000/api/users/${userId}`, {
+    axios.get(`${API_BASE_URL}/api/users/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUsername(data.username);
-        setEmail(data.email);
-        setRole(data.role);
+        setUsername(response.data.username);
+        setEmail(response.data.email);
+        setRole(response.data.role);
       })
       .catch((error) => {
         console.error('Error fetching user details:', error);
@@ -37,17 +36,15 @@ function UserModify() {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`http://localhost:3000/api/users/admin/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ username, email, role })
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      const response = await axios.put(`${API_BASE_URL}/api/users/admin/users/${userId}`, 
+        { username, email, role },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
       navigate(`/admin/users/${userId}`);
     } catch (error) {
       console.error('Error modifying user:', error);

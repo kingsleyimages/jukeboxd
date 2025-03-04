@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import jukeboxdLogo from '../images/jukeboxdLogoTransparent.png';
-// Remove the import for handleLogout
 
 function Navbar() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
- // Check if user is logged in and if they are an admin when component mounts and when auth state changes
+  // Check if user is logged in and if they are an admin when component mounts and when auth state changes
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = localStorage.getItem('token');
@@ -50,7 +49,7 @@ function Navbar() {
       <nav>
         <img src={jukeboxdLogo} alt="Jukeboxd logo" style={{ width: '70px' }} />
         {isLoggedIn ? (
-         <>
+          <>
             {/* Navigation for logged-in users */}
             <Link to="/">Home</Link>
             <Link to="/discover">Discover</Link>

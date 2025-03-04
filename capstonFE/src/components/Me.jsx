@@ -2,16 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../App.css";
+import Friends from "./Friends";
 
 function Me() {
   const navigate = useNavigate();
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL_PROD ||
-  import.meta.env.VITE_API_BASE_URL_DEV; 
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [activeTab, setActiveTab] = useState("myActivity");
+  const [editFormVisible, setEditFormVisible] = useState(false);
+
   const [friendsActivity, setFriendsActivity] = useState({
     reviews: [],
     favorites: [],
@@ -25,6 +30,37 @@ function Me() {
     console.log("Token in localStorage:", localStorage.getItem("token"));
     console.log("User in localStorage:", localStorage.getItem("user"));
   }, []);
+
+  const updateSelf = async (id, username, email, password) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      console.log("API response (User Data):", response.data);
+      if (response.data && response.data.id) {
+        const updatedUsername = document.getElementById("username").value;
+        const updatedPassword = document.getElementById("password").value;
+        const updatedEmail = document.getElementById("email").value;
+        const userId = userData.id;
+        const updateResponse = await axios.put(
+          `${API_BASE_URL}/api/users/${userId}/edit`,
+          {
+            username: updatedUsername,
+            email: updatedEmail,
+            password: updatedPassword,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        console.log("User updated:", updateResponse.data);
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+      return null;
+    }
+  };
 
   const userUpdate = async () => {
     try {
@@ -56,12 +92,11 @@ function Me() {
         const favoritesResponse = await axios.get(
           `${API_BASE_URL}/api/favorites/${response.data.id}`
         );
-        console.log("API response (User Favorites):", favoritesResponse.data);
+        console.log("API response (User Favorites):", favoritesResponse);
         updatedUserData.favorites = favoritesResponse.data;
 
         setUserData(updatedUserData);
         localStorage.setItem("user", JSON.stringify(updatedUserData));
-        console.log("Updated userData:", updatedUserData);
       } else {
         console.error("User data is missing or invalid.");
       }
@@ -138,6 +173,20 @@ function Me() {
     navigate("/login");
   };
 
+  // show/hide edit form
+  const handleFormShow = () => {
+    setEditFormVisible(!editFormVisible);
+  };
+
+  // submit profile changes
+  const handleEdit = async (event) => {
+    event.preventDefault();
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const response = await updateSelf(userData.id, username, email, password);
+  };
+
   if (isLoading) {
     return <div className="loading">Loading account information...</div>;
   }
@@ -171,10 +220,47 @@ function Me() {
             <div className="user-info">
               <h2>Account Information</h2>
               <div className="info-item">
-                <span className="label">Username:</span>
-                <span className="value">
-                  {userData.username || "Not available"}
-                </span>
+                <div className="userData">
+                  <span className="label">Username:</span>
+                  <span className="value">
+                    {userData.username || "Not available"}
+                  </span>
+                </div>
+
+                <div className="editWrapper">
+                  <button className="edit-button" onClick={handleFormShow}>
+                    {editFormVisible ? "Cancel" : "Edit Profile"}
+                  </button>
+                  {editFormVisible && (
+                    <form onSubmit={handleEdit}>
+                      <label>
+                        Username:
+                        <input
+                          type="text"
+                          id="username"
+                          defaultValue={userData.username}
+                          required
+                        />
+                      </label>
+                      <label>
+                        Email:
+                        <input
+                          type="email"
+                          id="email"
+                          defaultValue={userData.email}
+                          required
+                        />
+                      </label>
+                      <label htmlFor="password">
+                        Password:
+                        <input type="text" id="password" required />
+                      </label>
+                      <button className="edit-button" type="submit">
+                        Save Changes
+                      </button>
+                    </form>
+                  )}
+                </div>
               </div>
               {userData.email && (
                 <div className="info-item">
@@ -199,6 +285,14 @@ function Me() {
                   onClick={() => setActiveTab("friendsActivity")}
                 >
                   Friends' Activity
+                </button>
+                <button
+                  className={`tab-button ${
+                    activeTab === "friends" ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab("friends")}
+                >
+                  See and Find Friends
                 </button>
               </div>
 
@@ -225,7 +319,11 @@ function Me() {
                                   width: "100px",
                                   borderRadius: "8px",
                                   marginTop: "5px",
+                                  cursor: "pointer",
                                 }}
+                                onClick={() =>
+                                  navigate(`/album/${album.spotify_id}`)
+                                }
                               />
                             )}
                           </li>
@@ -261,7 +359,7 @@ function Me() {
                     <p>No reviews yet.</p>
                   )}
                 </div>
-              ) : (
+              ) : activeTab === "friendsActivity" ? (
                 <div className="friends-activity">
                   <h2>Friends' Activity</h2>
 
@@ -331,6 +429,10 @@ function Me() {
                       )}
                     </>
                   )}
+                </div>
+              ) : (
+                <div className="friends">
+                  <Friends />
                 </div>
               )}
             </div>
