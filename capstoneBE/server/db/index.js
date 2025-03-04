@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS listenedto(
   CONSTRAINT unique_user_album UNIQUE (user_id, album_id)
 )
 ;`;
-	await client.query(SQL);
+	aw
 	console.log("tables created");
 };
 

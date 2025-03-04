@@ -45,7 +45,7 @@
 .formContainer form textarea::placeholder {
   color: rgba(222, 222, 222, 1);
 }
-.formContainer input[type='checkbox'] {
+.formContainer input[type="checkbox"] {
   width: 20px;
   margin-right: 10px;
 }
@@ -65,11 +65,38 @@
   border-radius: 5px;
   max-width: 200px;
 }
-.albumWrapper {
-  width: 80%;
-  margin: 0 5% 0 10%;
+.albumWrapperMain {
+  width: 100%;
+  margin: 0 5% 0 3%;
   max-width: 1200px;
   color: rgba(222, 222, 222, 1);
+  display: flex;
+  flex-direction: row;
+}
+.albumWrapper {
+  width: 60%;
+  margin: 0 0% 0 0%;
+  max-width: 1200px;
+  color: rgba(222, 222, 222, 1);
+  display: flex;
+  flex-direction: column;
+}
+.tracks {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: start;
+  margin: 0;
+  padding: 0;
+}
+.tracks h2 {
+  color: var(--white);
+  font-weight: 700;
+  margin-bottom: 20px;
+  position: relative;
+  padding-left: 16px;
+  font-size: 1.3rem;
 }
 .title {
   font-size: 2rem;
@@ -146,16 +173,16 @@ img {
   --dark-gray: #181818;
   --medium-gray: #282828;
   --light-gray: #b3b3b3;
-  --olive-green: #556B2F;
-  --olive-light: #6B8E23;
-  --olive-dark: #3A4D1E;
-  --white: #FFFFFF;
+  --olive-green: #556b2f;
+  --olive-light: #6b8e23;
+  --olive-dark: #3a4d1e;
+  --white: #ffffff;
   --transition-default: all 0.3s ease;
 }
 
 body {
   background-color: var(--black);
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .topContainer {
@@ -206,7 +233,7 @@ img:hover {
 }
 
 .reviewTitle::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -234,7 +261,7 @@ img:hover {
 }
 
 .reviewCard::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -283,7 +310,7 @@ img:hover {
 }
 
 .rating::before {
-  content: '★';
+  content: "★";
   color: var(--olive-light);
   margin-right: 6px;
   font-size: 1.2rem;
@@ -307,7 +334,7 @@ img:hover {
 }
 
 .formContainer h2::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -352,7 +379,7 @@ img:hover {
   display: block;
 }
 
-.formContainer input[type='checkbox'] {
+.formContainer input[type="checkbox"] {
   background-color: var(--medium-gray);
   width: 18px;
   height: 18px;
@@ -421,24 +448,24 @@ img:hover {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .albumWrapper {
     width: 90%;
     margin: 20px auto;
   }
-  
+
   .reviewCard {
     width: 100%;
   }
-  
+
   .formContainer form {
     width: 90%;
   }
-  
+
   .reviewTitle {
     margin-left: 5%;
   }
-  
+
   .reviewWrapper {
     width: 90%;
   }
