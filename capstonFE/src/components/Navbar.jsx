@@ -7,21 +7,18 @@ function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Check if user is logged in and if they are an admin when component mounts and when auth state changes
   useEffect(() => {
     const checkLoginStatus = () => {
       const token = localStorage.getItem('token');
       const user = JSON.parse(localStorage.getItem('user'));
-      setIsLoggedIn(!!token); // Convert to boolean
-      setIsAdmin(user?.role === 'admin'); // Check if user is an admin
-      console.log('Auth check - Token exists:', !!token); // Debug log
-      console.log('Auth check - User is admin:', user?.role === 'admin'); // Debug log
+      setIsLoggedIn(!!token); 
+      setIsAdmin(user?.role === 'admin'); 
+      console.log('Auth check - Token exists:', !!token); 
+      console.log('Auth check - User is admin:', user?.role === 'admin'); 
     };
 
-    // Initial check
     checkLoginStatus();
 
-    // Listen for auth changes
     window.addEventListener('storage', checkLoginStatus);
 
     return () => {
@@ -29,25 +26,23 @@ function Navbar() {
     };
   }, []);
 
-  // Implement handleLogout directly in this component
   const onLogout = () => {
-    // Remove token and user data from localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('user');
 
-    console.log('Logout executed, localStorage cleared'); // Debug log
+    console.log('Logout executed, localStorage cleared'); 
 
-    // Redirect to home page
     navigate('/');
 
-    // Trigger storage event for other components to detect logout
     window.dispatchEvent(new Event('storage'));
   };
 
   return (
     <div className="nav-container">
       <nav>
-        <img src={jukeboxdLogo} alt="Jukeboxd logo" style={{ width: '70px' }} />
+       <Link to="/">
+    <img src={jukeboxdLogo} alt="Jukeboxd logo" style={{ width: '70px' }} />
+  </Link>
         {isLoggedIn ? (
           <>
             {/* Navigation for logged-in users */}
