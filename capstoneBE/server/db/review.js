@@ -10,12 +10,13 @@ const createReview = async (
 	rating,
 	favorite
 ) => {
-  console.log("DB generation of review");
-  try {
-    const albumId = await getAlbumIdBySpotifyId(spotifyAlbumId);
-    if (!albumId) {
-      console.error("invalid spotify id or album not found");
-    }
+	console.log("DB generation of review");
+	// console.log(albumId, userId, review, headline, rating, favorite);
+	try {
+		const albumId = await getAlbumIdBySpotifyId(spotifyAlbumId);
+		if (!albumId) {
+			console.error("invalid spotify id or album not found");
+		}
 
 		const SQL = `INSERT INTO reviews (id, album_id, user_id, rating, favorite, headline, review)
     VALUES ($1, $2, $3, $4, $5, $6, $7)

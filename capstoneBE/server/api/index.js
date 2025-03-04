@@ -1,4 +1,5 @@
 const express = require("express");
+const express = require("express");
 const router = express.Router();
 
 // Use the routes defined in the other route files
@@ -12,6 +13,8 @@ router.use("/listened", require("./listenedRoutes.js"));
 router.use("/admin", require("./adminRoutes.js"));
 
 // Base route for the API
+router.get("/", (req, res) => {
+	res.send("Hello World From Router api/index.js");
 router.get("/", (req, res) => {
 	res.send("Hello World From Router api/index.js");
 });
