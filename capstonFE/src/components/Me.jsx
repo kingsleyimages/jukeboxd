@@ -24,6 +24,12 @@ function Me() {
   const [isLoadingFriendsActivity, setIsLoadingFriendsActivity] =
     useState(false);
 
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
   const token = localStorage.getItem("token") || null;
 
   useEffect(() => {
@@ -39,22 +45,16 @@ function Me() {
 
       console.log("API response (User Data):", response.data);
       if (response.data && response.data.id) {
-        const updatedUsername = document.getElementById("username").value;
-        const updatedPassword = document.getElementById("password").value;
-        const updatedEmail = document.getElementById("email").value;
-        const userId = userData.id;
+        const userId = response.data.id;
         const updateResponse = await axios.put(
           `${API_BASE_URL}/api/users/${userId}/edit`,
-          {
-            username: updatedUsername,
-            email: updatedEmail,
-            password: updatedPassword,
-          },
+          formData,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
         console.log("User updated:", updateResponse.data);
+        setFormData({ username: "", email: "", password: "" });
       }
     } catch (error) {
       console.error("Error updating user:", error);
@@ -67,7 +67,7 @@ function Me() {
       console.log("Starting userUpdate...");
 
       const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
-        headers: { Authorization: `Bearer ${token}` }, // Ensure token is valid and correctly formatted
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       console.log("API response (User Data):", response.data);
@@ -101,7 +101,7 @@ function Me() {
         console.error("User data is missing or invalid.");
       }
     } catch (apiError) {
-      console.error("API fetch error:", apiError); // Check error response for more details
+      console.error("API fetch error:", apiError);
       if (apiError.response) {
         if (apiError.response.status === 401) {
           localStorage.removeItem("token");
@@ -178,13 +178,23 @@ function Me() {
     setEditFormVisible(!editFormVisible);
   };
 
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
   // submit profile changes
   const handleEdit = async (event) => {
     event.preventDefault();
-    const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const response = await updateSelf(userData.id, username, email, password);
+    if (!formData.username || !formData.email || formData.password === "") {
+      alert("Please fill out all fields.");
+      return;
+    }
+    await updateSelf(
+      userData.id,
+      formData.username,
+      formData.email,
+      formData.password
+    );
   };
 
   if (isLoading) {
@@ -197,7 +207,8 @@ function Me() {
         <div className="error">{error}</div>
         <button
           className="retry-button"
-          onClick={() => window.location.reload()}>
+          onClick={() => window.location.reload()}
+        >
           Try Again
         </button>
       </div>
@@ -236,8 +247,9 @@ function Me() {
                         Username:
                         <input
                           type="text"
-                          id="username"
-                          defaultValue={userData.username}
+                          name="username"
+                          onChange={handleChange}
+                          value={formData?.username}
                           required
                         />
                       </label>
@@ -245,14 +257,21 @@ function Me() {
                         Email:
                         <input
                           type="email"
-                          id="email"
-                          defaultValue={userData.email}
+                          name="email"
+                          onChange={handleChange}
+                          value={formData?.email}
                           required
                         />
                       </label>
                       <label htmlFor="password">
                         Password:
-                        <input type="text" id="password" required />
+                        <input
+                          type="text"
+                          onChange={handleChange}
+                          name="password"
+                          value={formData?.password}
+                          required
+                        />
                       </label>
                       <button className="edit-button" type="submit">
                         Save Changes
@@ -273,21 +292,24 @@ function Me() {
                   className={`tab-button ${
                     activeTab === "myActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("myActivity")}>
+                  onClick={() => setActiveTab("myActivity")}
+                >
                   My Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friendsActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friendsActivity")}>
+                  onClick={() => setActiveTab("friendsActivity")}
+                >
                   Friends' Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friends" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friends")}>
+                  onClick={() => setActiveTab("friends")}
+                >
                   See and Find Friends
                 </button>
               </div>
@@ -339,12 +361,27 @@ function Me() {
                       <ul className="reviews-list">
                         {userData.reviews.map((review, index) => (
                           <li key={index}>
-                            <strong>
-                              {review.albumName ||
-                                review.album?.name ||
-                                "Unknown Album"}{" "}
-                            </strong>{" "}
-                            -<span> Rating: {review.rating}/5</span>
+                            <img
+                              src={review.album_image}
+                              alt={review.album_name || "Album Cover"}
+                              style={{
+                                width: "100px",
+                                borderRadius: "8px",
+                                marginTop: "5px",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                navigate(`/album/${review.album_spotify_id}`)
+                              }
+                            />
+                            <p>
+                              <strong>
+                                {review.album_name ||
+                                  review.album?.name ||
+                                  "Unknown Album"}{" "}
+                              </strong>
+                            </p>
+                            <span> Rating: {review.rating}/5</span>
                             <p>{review.review || "No review text provided."}</p>
                             <small>By: {review.username}</small>
                           </li>
@@ -388,7 +425,13 @@ function Me() {
                                         width: "100px",
                                         borderRadius: "8px",
                                         marginTop: "5px",
+                                        cursor: "pointer",
                                       }}
+                                      onClick={() =>
+                                        navigate(
+                                          `/album/${favorite.spotify_id}`
+                                        )
+                                      }
                                     />
                                   )}
                                 </li>
@@ -408,10 +451,27 @@ function Me() {
                           <ul className="reviews-list">
                             {friendsActivity.reviews.map((review, index) => (
                               <li key={index}>
-                                <strong>
-                                  {review.headline || "Unknown Album"}
-                                </strong>{" "}
-                                -<span> Rating: {review.rating}/5</span>
+                                <img
+                                  src={review.album_image}
+                                  alt={review.album_name || "Album Cover"}
+                                  style={{
+                                    width: "100px",
+                                    borderRadius: "8px",
+                                    marginTop: "5px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() =>
+                                    navigate(
+                                      `/album/${review.album_spotify_id}`
+                                    )
+                                  }
+                                />
+                                <p>
+                                  <strong>
+                                    {review.album_name || "Unknown Album"}
+                                  </strong>
+                                </p>
+                                <span> Rating: {review.rating}/5</span>
                                 <p>
                                   {review.review || "No review text provided."}
                                 </p>
