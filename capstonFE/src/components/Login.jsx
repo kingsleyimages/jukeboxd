@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
-import { jwtDecode } from 'jwt-decode'; 
+
 
 export const handleLogout = (navigate) => {
   // Remove token and user data from localStorage
@@ -63,64 +63,59 @@ function Login() {
   };
 
   // Handle login submission
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
     try {
-      console.log('Attempting login at:', `${API_BASE_URL}/api/users/login`);
+        const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
+            username: formData.username,
+            password: formData.password,
+        });
 
-      const response = await axios.post(`${API_BASE_URL}/api/users/login`, {
-        username: formData.username,
-        password: formData.password,
-      });
+        if (!response.data.token) {
+            throw new Error('Invalid response from server');
+        }
 
-      // Check if response.data contains the expected properties
-      if (!response.data.token || !response.data.username) {
-        throw new Error('Invalid response from server');
-      }
+        // Store the token
+        localStorage.setItem('token', response.data.token);
 
-      // Decode the token to get user role
-      const decodedToken = jwtDecode(response.data.token);
-      const userRole = decodedToken.role;
+        // Fetch user details from backend
+        const userResponse = await axios.get(`${API_BASE_URL}/api/users/me`, {
+            headers: { Authorization: `Bearer ${response.data.token}` },
+        });
 
-  // Store user data and token
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem(
-        'user',
-        JSON.stringify({ username: response.data.username, role: userRole })
-      );
-      
-      // Trigger storage event for Navbar to detect login
-      window.dispatchEvent(new Event('storage'));
+        const userRole = userResponse.data.role;
 
-      // Redirect to admin dashboard if user is admin
-      if (userRole === 'admin') {
-        navigate('/admin/dashboard');
-      } else {
-        // Redirect to home page
-        navigate('/');
-      }
+        // Store user information
+        localStorage.setItem(
+            'user',
+            JSON.stringify({ username: userResponse.data.username, role: userRole })
+        );
+
+        // Trigger storage event for Navbar to detect login
+        window.dispatchEvent(new Event('storage'));
+
+        // Redirect based on role
+        if (userRole === 'admin') {
+            navigate('/admin/dashboard');
+        } else {
+            navigate('/');
+        }
     } catch (err) {
-      console.error('Login error:', err);
-
-      let errorMessage = 'Login failed. Please check your credentials.';
-
-      if (err.response) {
-        errorMessage =
-          err.response.data?.message || `Error: ${err.response.data}`;
-      } else if (err.request) {
-        errorMessage = 'No response from server. Please check your connection.';
-      } else if (err.message) {
-        errorMessage = err.message;
-      }
-
-      setError(errorMessage);
+        let errorMessage = 'Login failed. Please check your credentials.';
+        if (err.response) {
+            errorMessage = err.response.data?.message || `Error: ${err.response.data}`;
+        } else if (err.request) {
+            errorMessage = 'No response from server. Please check your connection.';
+        }
+        setError(errorMessage);
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
 
   // Handle registration submission
   const handleRegister = async (e) => {
