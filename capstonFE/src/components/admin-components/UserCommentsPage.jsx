@@ -36,7 +36,7 @@ function UserCommentsPage() {
   const handleDeleteComment = (commentId) => {
     console.log(`Deleting comment with ID: ${commentId}`);
     const token = localStorage.getItem('token');
-    axios.delete(`${API_BASE_URL}/api/comments/admin/${commentId}/delete`, {
+    axios.delete(`${API_BASE_URL}/api/admin/comments/${commentId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

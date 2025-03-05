@@ -72,18 +72,7 @@ router.get('/', authenticateToken, adminAuth, async (req, res, next) => {
   }
 });
 
-//Fetch user by id (admin only)
 
-router.get('/:id', authenticateToken, adminAuth, async (req, res, next) => {
-  try {
-    console.log(`Admin ${req.user.id} fetching user ID: ${req.params.id}`);
-    const user = await fetchUserById(req.params.id);
-    res.json(user);
-  } catch (err) {
-    console.error('Error fetching user by ID', err.message);
-    res.status(500).send({ error: 'Unable to fetch user info' });
-  }
-});
 
 router.put('/:id/edit', authenticateToken, async (req, res, next) => {
   try {
@@ -100,57 +89,8 @@ router.put('/:id/edit', authenticateToken, async (req, res, next) => {
     res.status(500).send('unable to modify user');
   }
 });
-// Get all users, comments, and reviews (admin only)
-router.get(
-  '/admin/data',
-  authenticateToken,
-  adminAuth,
-  async (req, res, next) => {
-    try {
-      const users = await getAllUsers();
-      const comments = await getAllComments();
-      const reviews = await getAllReviews();
-      res.json({ users, comments, reviews });
-    } catch (err) {
-      console.error('Error fetching data', err.message);
-      res.status(500).send({ error: 'Unable to fetch data' });
-    }
-  }
-);
 
-// Modify user (admin only)
-router.put(
-  '/admin/users/:id',
-  authenticateToken,
-  adminAuth,
-  async (req, res, next) => {
-    try {
-      console.log(`Admin ${req.user.id} modifying user ID: ${req.params.id}`);
-      const { username, email, role } = req.body;
-      const response = await modifyUser(req.params.id, username, email, role);
-      res.status(200).send(response);
-    } catch (err) {
-      console.error('Error modifying user', err.message);
-      res.status(500).send({ error: 'Unable to modify user' });
-    }
-  }
-);
 
-// Delete user (admin only)
-router.delete(
-  '/admin/users/:id',
-  authenticateToken,
-  adminAuth,
-  async (req, res, next) => {
-    try {
-      console.log(`Admin ${req.user.id} deleting user ID: ${req.params.id}`);
-      await deleteUser(req.params.id);
-      res.status(200).send({ message: 'User deleted successfully' });
-    } catch (err) {
-      console.error('Error deleting user', err.message);
-      res.status(500).send({ error: 'Unable to delete user' });
-    }
-  }
-);
+
 
 module.exports = router;

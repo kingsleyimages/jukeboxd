@@ -130,30 +130,6 @@ router.put("/:id/update", authenticateToken, async (req, res, next) => {
   }
 });
 
-// update a comment by id (admin only)
-router.put(
-  "/admin/:id/update",
-  authenticateToken,
-  adminAuth,
-  async (req, res, next) => {
-    try {
-      const response = await updateComment(req.params.id, req.body.comment);
-      res.status(200).send(response);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
 
-// Get all comments (admin only)
-router.get('/', authenticateToken, adminAuth, async (req, res, next) => {
-  try {
-    const comments = await getAllComments();
-    res.json(comments);
-  } catch (err) {
-    console.error('error fetching comments', err.message);
-    res.status(500).send('unable to get comments');
-  }
-});
 
 module.exports = router;

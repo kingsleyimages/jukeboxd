@@ -36,7 +36,7 @@ function UserReviewsPage() {
   const handleDeleteReview = (reviewId) => {
     console.log(`Deleting review with ID: ${reviewId}`);
     const token = localStorage.getItem('token');
-    axios.delete(`${API_BASE_URL}/api/reviews/admin/${reviewId}/delete`, {
+    axios.delete(`${API_BASE_URL}/api/admin/${reviewId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
