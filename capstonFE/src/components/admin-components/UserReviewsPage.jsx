@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import styles from '../../css/Admin.module.css';
 
-  const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL_PROD ||
-    import.meta.env.VITE_API_BASE_URL_DEV;
-    
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL_PROD ||
+  import.meta.env.VITE_API_BASE_URL_DEV;
+
 function UserReviewsPage() {
   const { userId } = useParams();
   const [userReviews, setUserReviews] = useState([]);
@@ -52,26 +53,28 @@ function UserReviewsPage() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   if (errorMessage) {
-    return <div>{errorMessage}</div>;
+    return <div className={styles.errorMessage}>{errorMessage}</div>;
   }
 
   return (
-    <div>
-      <h2>User Reviews</h2>
-      <ul>
+    <div className={styles.userReviewsContainer}>
+      <div className={styles.userReviewsHeader}>
+        <h2>User Reviews</h2>
+      </div>
+      <ul className={styles.reviewList}>
         {userReviews.map((review) => (
-          <li key={review.id}>
+          <li key={review.id} className={styles.reviewDetails}>
             <p><strong>Headline:</strong> {review.headline}</p>
             <p><strong>Review:</strong> {review.review}</p>
             <p><strong>Rating:</strong> {review.rating}</p>
             <p><strong>Favorite:</strong> {review.favorite ? 'Yes' : 'No'}</p>
-            <button onClick={() => handleDeleteReview(review.id)}>Delete Review</button>
+            <button onClick={() => handleDeleteReview(review.id)} className={styles.button}>Delete Review</button>
             <Link to={`/admin/review/${review.id}/modify`}>
-              <button>Modify Review</button>
+              <button className={styles.button}>Modify Review</button>
             </Link>
           </li>
         ))}

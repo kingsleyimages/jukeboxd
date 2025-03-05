@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import styles from '../../css/Admin.AlbumsReviewed.module.css';
 
-  const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL_PROD ||
-    import.meta.env.VITE_API_BASE_URL_DEV;
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL_PROD ||
+  import.meta.env.VITE_API_BASE_URL_DEV;
 
 function ReviewedAlbums() {
   const [albums, setAlbums] = useState([]);
@@ -36,39 +37,41 @@ function ReviewedAlbums() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   if (errorMessage) {
-    return <div>{errorMessage}</div>;
+    return <div className={styles.errorMessage}>{errorMessage}</div>;
   }
 
   return (
-    <div>
-      <h2>Reviewed Albums</h2>
-      <ul>
-        {albums.map((album) => (
-          <li key={album.id}>
-            <h3>{album.name} by {album.artist}</h3>
-            <p><strong>Spotify ID:</strong> {album.spotify_id}</p>
-            <p><strong>Image:</strong> <img src={album.image} alt={album.name} /></p>
-            <p><strong>Spotify URL:</strong> <a href={album.spotifyUrl} target="_blank" rel="noopener noreferrer">{album.spotifyUrl}</a></p>
-            <h4>Reviews:</h4>
-            <ul>
-              {album.reviews.map((review) => (
-                <li key={review.review_id}>
-                  <p><strong>Rating:</strong> {review.rating}</p>
-                  <p><strong>Favorite:</strong> {review.favorite ? 'Yes' : 'No'}</p>
-                  <p><strong>Headline:</strong> {review.headline}</p>
-                  <p><strong>Review:</strong> {review.review}</p>
-                  <p><strong>Created At:</strong> {new Date(review.review_created_at).toLocaleString()}</p>
-                  <p><strong>Updated At:</strong> {new Date(review.review_updated_at).toLocaleString()}</p>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
+    <div className={styles.albumWrapperMain}>
+      <div className={styles.albumWrapper}>
+        <h2 className={styles.reviewTitle}>Reviewed Albums</h2>
+        <ul className={styles.albumList}>
+          {albums.map((album) => (
+            <li key={album.id} className={styles.albumCard}>
+              <h3 className={styles.title}>{album.name} by {album.artist}</h3>
+              <p><strong>Spotify ID:</strong> {album.spotify_id}</p>
+              <p><strong>Image:</strong> <img src={album.image} alt={album.name} className={styles.img} /></p>
+              <p><strong>Spotify URL:</strong> <a href={album.spotifyUrl} target="_blank" rel="noopener noreferrer" className={styles.link}>{album.spotifyUrl}</a></p>
+              <h4 className={styles.reviewTitle}>Reviews:</h4>
+              <ul className={styles.reviewList}>
+                {album.reviews.map((review) => (
+                  <li key={review.review_id} className={styles.reviewCard}>
+                    <p className={styles.rating}><strong>Rating:</strong> {review.rating}</p>
+                    <p className={styles.favorite}><strong>Favorite:</strong> {review.favorite ? 'Yes' : 'No'}</p>
+                    <p className={styles.headline}><strong>Headline:</strong> {review.headline}</p>
+                    <p className={styles.review}><strong>Review:</strong> {review.review}</p>
+                    <p><strong>Created At:</strong> {new Date(review.review_created_at).toLocaleString()}</p>
+                    <p><strong>Updated At:</strong> {new Date(review.review_updated_at).toLocaleString()}</p>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

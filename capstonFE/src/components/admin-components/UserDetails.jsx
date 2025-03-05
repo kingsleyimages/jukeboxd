@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import UserInfo from './details-components/UserInfo';
+import styles from '../../css/Admin.module.css';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL_PROD ||
@@ -58,27 +59,27 @@ function UserDetails() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   if (errorMessage) {
-    return <div>{errorMessage}</div>;
+    return <div className={styles.errorMessage}>{errorMessage}</div>;
   }
 
   return (
-    <div>
-      <UserInfo user={user} />
-      <div>
+    <div className={styles.userDetailsContainer}>
+      <UserInfo user={user} className={styles.userInfo} />
+      <div className={styles.buttonContainer}>
         <Link to={`/admin/user/${userId}/reviews`}>
-          <button>View User Reviews</button>
+          <button className={styles.button}>View User Reviews</button>
         </Link>
         <Link to={`/admin/user/${userId}/comments`}>
-          <button>View User Comments</button>
+          <button className={styles.button}>View User Comments</button>
         </Link>
         <Link to={`/admin/user/${userId}/modify`}>
-          <button>Modify User</button>
+          <button className={styles.button}>Modify User</button>
         </Link>
-        <button onClick={handleDeleteUser}>Delete User</button>
+        <button onClick={handleDeleteUser} className={styles.button}>Delete User</button>
       </div>
     </div>
   );

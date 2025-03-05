@@ -1,0 +1,173 @@
+/* Container styling */
+.container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #121212;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+}
+
+/* Header styling */
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* List styling */
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list li {
+    background-color: #1d1d1d;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.list li:hover {
+    background-color: #333333;
+}
+
+/* Link styling */
+.list a {
+    color: #6B8E23;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.list a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Loading and error message styling */
+.loading,
+.error-message {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 18px;
+    color: #777;
+}
+
+.error-message {
+    color: #e83a2a;
+    background-color: #fff4f4;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Button container */
+.button-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Button styling */
+.button,
+.delete-button {
+    padding: 10px 20px;
+    background-color: #6B8E23;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover,
+.delete-button:hover {
+    background-color: #556B2F;
+}
+
+/* User Info container */
+.user-info-container {
+    padding: 20px;
+    background-color: #1d1d1d;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+/* User Info header styling */
+.user-info-container h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 16px;
+}
+
+/* User details styling */
+.user-info-container p,
+.review-details p,
+.comment-details p {
+    margin: 10px 0;
+}
+
+.user-info-container strong,
+.review-details strong,
+.comment-details strong {
+    color: #6B8E23;
+}
+
+/* Specific containers */
+.view-all-users-container,
+.user-details-container,
+.user-reviews-container,
+.user-comments-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #121212;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+}
+
+/* Specific headers */
+.view-all-users-header,
+.user-reviews-header,
+.user-comments-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+/* Specific lists */
+.user-list,
+.review-list,
+.comment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Specific details */
+.review-details,
+.comment-details {
+    padding: 20px;
+    background-color: #1d1d1d;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.review-details:hover,
+.comment-details:hover {
+    background-color: #333333;
+}
