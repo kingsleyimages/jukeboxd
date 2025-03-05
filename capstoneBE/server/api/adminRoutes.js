@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken, adminAuth } = require('./middlewares');
-const { deleteUser } = require('../db/user');
+const { deleteUser, fetchUserById, getAllUsers } = require('../db/user');
 const { deleteComment, updateComment, getAllComments } = require('../db/comments');
 const { deleteReview, updateReview, getAllReviews } = require('../db/review');
+
 
 // Delete comment (admin only)
 router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
@@ -82,4 +83,25 @@ router.get('/reviews', authenticateToken, adminAuth, async (req, res, next) => {
   }
 });
 
+// Get all users
+router.get('/users', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const users = await getAllUsers();
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching users', err.message);
+    res.status(500).send({ error: 'Unable to fetch users' });
+  }
+});
+
+// Get user by id
+router.get('/users/:id', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const user = await fetchUserById(req.params.id);
+    res.json(user);
+  } catch (err) {
+    console.error('Error fetching user', err.message);
+    res.status(500).send({ error: 'Unable to fetch user' });
+  }
+});
 module.exports = router;

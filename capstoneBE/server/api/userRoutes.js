@@ -61,16 +61,7 @@ router.get('/me', authenticateToken, async (req, res, next) => {
   }
 });
 
-// Get all users
-router.get('/', authenticateToken, adminAuth, async (req, res, next) => {
-  try {
-    const users = await getAllUsers();
-    res.json(users);
-  } catch (err) {
-    console.error('Error fetching users', err.message);
-    res.status(500).send({ error: 'Unable to fetch users' });
-  }
-});
+
 
 
 

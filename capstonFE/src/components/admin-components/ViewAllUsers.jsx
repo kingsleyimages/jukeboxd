@@ -18,7 +18,7 @@ function ViewAllUsers() {
       : import.meta.env.VITE_API_BASE_URL_DEV;
 
     console.log('Fetching users...');
-    axios.get(`${API_BASE_URL}/api/users`, {
+    axios.get(`${API_BASE_URL}/api/admin/users`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

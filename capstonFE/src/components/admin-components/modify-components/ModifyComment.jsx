@@ -39,7 +39,7 @@ function ModifyComment() {
     e.preventDefault();
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${API_BASE_URL}/api/comments/admin/comments/${commentId}/update`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/comments/${commentId}/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
