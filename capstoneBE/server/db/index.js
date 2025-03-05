@@ -1,15 +1,15 @@
 const { Pool } = require("pg");
 
 const client = new Pool({
-	user: process.env.PGUSER,
-	host: process.env.PGHOST,
-	database: process.env.PGDATABASE,
-	password: process.env.PGPASSWORD,
-	port: process.env.PGPORT,
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT,
 });
 
 const createTables = async () => {
-	const SQL = `
+  const SQL = `
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS listenedto;
@@ -91,11 +91,12 @@ CREATE TABLE IF NOT EXISTS listenedto(
   CONSTRAINT unique_user_album UNIQUE (user_id, album_id)
 )
 ;`;
-	aw
-	console.log("tables created");
+  await client.query(SQL);
+
+  console.log("tables created");
 };
 
 module.exports = {
-	client,
-	createTables,
+  client,
+  createTables,
 };
