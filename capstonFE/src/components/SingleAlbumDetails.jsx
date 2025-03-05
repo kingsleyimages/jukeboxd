@@ -219,26 +219,33 @@ const AlbumDetails = ({ token }) => {
   return (
     <div>
       <div className={styles.topContainer}>
-        <div className={styles.albumWrapper}>
-          <h1 className={styles.title}>{album.name}</h1>
-          <p className={styles.artist}>{album.artist}</p>
-          <img className={styles.img} src={album.image} alt={album.name} />
-          {averageRating && <p>Average Rating: {averageRating} /5</p>}
-          <button
-            className={styles.button}
-            onClick={markAsListened}
-            disabled={isListened}>
-            {isListened ? "✅ Already Listened" : "🎵 Mark as Listened"}
-          </button>
-          {album?.tracks?.length > 0 ? (
-            album.tracks.map((track) => (
-              <p key={track.id}>
-                {track.track_number}. {track.title}
-              </p>
-            ))
-          ) : (
-            <p>No tracks for this album</p>
-          )}
+        <div className={styles.albumWrapperMain}>
+          <div className={styles.albumWrapper}>
+            <h1 className={styles.title}>{album.name}</h1>
+            <p className={styles.artist}>{album.artist}</p>
+            {averageRating && <p>Average Rating: {averageRating} /5</p>}
+            <button
+              style={{ width: "100%", maxWidth: "225px", margin: "15px 0px" }}
+              className={styles.button}
+              onClick={markAsListened}
+              disabled={isListened}>
+              {isListened ? "✅ Already Listened" : "🎵 Mark as Listened"}
+            </button>
+
+            <img className={styles.img} src={album.image} alt={album.name} />
+          </div>
+          <div className={styles.tracks}>
+            <h2>Tracks:</h2>
+            {album?.tracks?.length > 0 ? (
+              album.tracks.map((track) => (
+                <p key={track.id}>
+                  {track.track_number}. {track.title}
+                </p>
+              ))
+            ) : (
+              <p>No tracks for this album</p>
+            )}
+          </div>
         </div>
         <div className={styles.formContainer}>
           {token && (
