@@ -5,11 +5,8 @@ import '../App.css';
 
 
 export const handleLogout = (navigate) => {
-  // Remove token and user data from localStorage
   localStorage.removeItem('token');
   localStorage.removeItem('user');
-
-  // Redirect to home page
   navigate('/');
 };
 
@@ -21,7 +18,6 @@ function Login() {
     import.meta.env.VITE_API_BASE_URL_PROD ||
     import.meta.env.VITE_API_BASE_URL_DEV;
 
-  // Determine initial mode based on current path
   const [isLoginMode, setIsLoginMode] = useState(
     location.pathname === '/login'
   );
@@ -30,7 +26,6 @@ function Login() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Form data state
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -38,7 +33,6 @@ function Login() {
     confirmPassword: '',
   });
 
-  // Reset form and messages when switching modes
   useEffect(() => {
     setError('');
     setSuccessMessage('');
@@ -49,11 +43,9 @@ function Login() {
       confirmPassword: '',
     });
 
-    // Update mode based on URL path when it changes
     setIsLoginMode(location.pathname === '/login');
   }, [location.pathname]);
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -62,7 +54,6 @@ function Login() {
     });
   };
 
-  // Handle login submission
 const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -78,26 +69,21 @@ const handleLogin = async (e) => {
             throw new Error('Invalid response from server');
         }
 
-        // Store the token
         localStorage.setItem('token', response.data.token);
 
-        // Fetch user details from backend
         const userResponse = await axios.get(`${API_BASE_URL}/api/users/me`, {
             headers: { Authorization: `Bearer ${response.data.token}` },
         });
 
         const userRole = userResponse.data.role;
 
-        // Store user information
         localStorage.setItem(
             'user',
             JSON.stringify({ username: userResponse.data.username, role: userRole })
         );
 
-        // Trigger storage event for Navbar to detect login
         window.dispatchEvent(new Event('storage'));
 
-        // Redirect based on role
         if (userRole === 'admin') {
             navigate('/admin/dashboard');
         } else {
@@ -116,14 +102,11 @@ const handleLogin = async (e) => {
     }
 };
 
-
-  // Handle registration submission
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Validation
     if (!formData.username || !formData.password || !formData.email) {
       setError('All fields are required');
       setIsLoading(false);
@@ -146,12 +129,9 @@ const handleLogin = async (e) => {
         username: formData.username,
         password: formData.password,
         email: formData.email,
-        role: 'user', // Default role for new users
+        role: 'user',
       });
 
-      console.log('Registration response:', response);
-
-      // If successful, navigate to login with success message
       if (response.status === 201 || response.status === 200) {
         navigate('/login', {
           state: { message: 'Registration successful...time to rock & roll!' },
@@ -176,16 +156,13 @@ const handleLogin = async (e) => {
     }
   };
 
-  // Switch between login and register modes
   const switchMode = () => {
     navigate(isLoginMode ? '/register' : '/login');
   };
 
-  // Check for success message in location state (after registration)
   useEffect(() => {
     if (location.state?.message) {
       setSuccessMessage(location.state.message);
-      // Clear the location state
       window.history.replaceState({}, document.title);
     }
   }, [location]);
