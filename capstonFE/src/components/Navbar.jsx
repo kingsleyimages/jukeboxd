@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import jukeboxdLogo from '../images/jukeboxdLogoTransparent.png';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import jukeboxdLogo from "../images/jukeboxdLogoTransparent.png";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -9,48 +9,50 @@ function Navbar() {
 
   useEffect(() => {
     const checkLoginStatus = () => {
-      const token = localStorage.getItem('token');
-      const user = JSON.parse(localStorage.getItem('user'));
-      setIsLoggedIn(!!token); 
-      setIsAdmin(user?.role === 'admin'); 
-      console.log('Auth check - Token exists:', !!token); 
-      console.log('Auth check - User is admin:', user?.role === 'admin'); 
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user"));
+      setIsLoggedIn(!!token);
+      setIsAdmin(user?.role === "admin");
     };
 
     checkLoginStatus();
 
-    window.addEventListener('storage', checkLoginStatus);
+    window.addEventListener("storage", checkLoginStatus);
 
     return () => {
-      window.removeEventListener('storage', checkLoginStatus);
+      window.removeEventListener("storage", checkLoginStatus);
     };
   }, []);
 
   const onLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
-    console.log('Logout executed, localStorage cleared'); 
+    navigate("/");
 
-    navigate('/');
-
-    window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new Event("storage"));
   };
 
   return (
     <div className="nav-container">
       <nav>
-       <Link to="/">
-    <img src={jukeboxdLogo} alt="Jukeboxd logo" style={{ width: '70px' }} />
-  </Link>
+        <Link to="/">
+          <img
+            src={jukeboxdLogo}
+            alt="Jukeboxd logo"
+            style={{ width: "70px" }}
+          />
+        </Link>
         {isLoggedIn ? (
           <>
             {/* Navigation for logged-in users */}
             <Link to="/">Home</Link>
-            <Link to="/discover">Discover</Link>
+            <Link to="/discover">Albums</Link>
+            <Link to="/reviews">Reviews</Link>
             <Link to="/search">Search</Link>
             <Link to="/account">Account</Link>
-            {isAdmin && <Link to="/admin/dashboard">Admin Dashboard</Link>} {/* Admin link */}
+            {isAdmin && <Link to="/admin/dashboard">Admin Dashboard</Link>}{" "}
+            {/* Admin link */}
             <button onClick={onLogout} className="logout-button">
               Log out
             </button>
@@ -58,8 +60,10 @@ function Navbar() {
         ) : (
           <>
             {/* Navigation for non-logged-in users */}
-            <Link to="/discover">Albums</Link>
             <Link to="/">Home</Link>
+            <Link to="/discover">Albums</Link>
+
+            <Link to="/reviews">Reviews</Link>
             <Link to="/search">Search</Link>
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
