@@ -1,8 +1,9 @@
 import React from 'react';
+import styles from '../../../css/Admin.module.css';
 
 function UserInfo({ user }) {
   return (
-    <div>
+    <div className={styles.userInfoContainer}>
       <h2>User Details</h2>
       {user && (
         <div>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import styles from '../../css/Admin.module.css';
 
-  const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL_PROD ||
-    import.meta.env.VITE_API_BASE_URL_DEV;
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL_PROD ||
+  import.meta.env.VITE_API_BASE_URL_DEV;
 
 function UserCommentsPage() {
   const { userId } = useParams();
@@ -36,7 +37,7 @@ function UserCommentsPage() {
   const handleDeleteComment = (commentId) => {
     console.log(`Deleting comment with ID: ${commentId}`);
     const token = localStorage.getItem('token');
-    axios.delete(`${API_BASE_URL}/api/comments/admin/${commentId}/delete`, {
+    axios.delete(`${API_BASE_URL}/api/admin/comments/${commentId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -52,26 +53,28 @@ function UserCommentsPage() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className={styles.loading}>Loading...</div>;
   }
 
   if (errorMessage) {
-    return <div>{errorMessage}</div>;
+    return <div className={styles.errorMessage}>{errorMessage}</div>;
   }
 
   return (
-    <div>
-      <h2>User Comments</h2>
-      <ul>
+    <div className={styles.userCommentsContainer}>
+      <div className={styles.userCommentsHeader}>
+        <h2>User Comments</h2>
+      </div>
+      <ul className={styles.commentList}>
         {userComments.map((comment) => (
-          <li key={comment.id}>
+          <li key={comment.id} className={styles.commentDetails}>
             <p><strong>Comment:</strong> {comment.comment}</p>
             <p><strong>Review ID:</strong> {comment.review_id}</p>
             <p><strong>Created At:</strong> {comment.created_at ? new Date(comment.created_at).toLocaleString() : 'N/A'}</p>
             <p><strong>Updated At:</strong> {comment.updated_at ? new Date(comment.updated_at).toLocaleString() : 'N/A'}</p>
-            <button onClick={() => handleDeleteComment(comment.id)}>Delete Comment</button>
+            <button onClick={() => handleDeleteComment(comment.id)} className={styles.button}>Delete Comment</button>
             <Link to={`/admin/comment/${comment.id}/modify`}>
-              <button>Modify Comment</button>
+              <button className={styles.button}>Modify Comment</button>
             </Link>
           </li>
         ))}
