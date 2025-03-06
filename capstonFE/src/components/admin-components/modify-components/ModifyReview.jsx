@@ -1,29 +1,29 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import styles from '../../../css/Admin.module.css'; // Import the styles
 
 function ModifyReview() {
   const { reviewId } = useParams();
-  console.log('reviewId from useParams:', reviewId); // Debugging log
   const navigate = useNavigate();
   const [review, setReview] = useState('');
   const [headline, setHeadline] = useState('');
   const [rating, setRating] = useState(0);
   const [favorite, setFavorite] = useState(false);
   const [listened, setListened] = useState(false);
+  const [userId, setUserId] = useState(''); // Add state for userId
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Add state for success message
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
     import.meta.env.VITE_API_BASE_URL_DEV;
 
   useEffect(() => {
-    // If reviewId is undefined, set an error message and return early
     if (!reviewId) {
       setErrorMessage('Invalid review ID. Please go back and try again.');
       return;
     }
 
-    console.log('Fetching review details for reviewId:', reviewId); 
     const token = localStorage.getItem('token');
     axios.get(`${API_BASE_URL}/api/reviews/${reviewId}`, {
       headers: {
@@ -31,15 +31,14 @@ function ModifyReview() {
       },
     })
       .then((response) => {
-  
         setReview(response.data.review || '');
         setHeadline(response.data.headline || '');
         setRating(response.data.rating || 0);
         setFavorite(response.data.favorite || false);
         setListened(response.data.listened || false);
+        setUserId(response.data.user_id || ''); // Set the userId from the response
       })
       .catch((error) => {
-        console.error('Error fetching review details:', error);
         setErrorMessage('An error occurred while fetching review details');
       });
   }, [reviewId]);
@@ -53,9 +52,8 @@ function ModifyReview() {
 
     const token = localStorage.getItem('token');
     try {
-
-      const response = await axios.put(
-        `${API_BASE_URL}/api/admin/reviews/${reviewId}`,
+      await axios.put(
+        `${API_BASE_URL}/api/admin/reviews/${reviewId}/update`,
         { review, headline, rating, favorite, listened },
         {
           headers: {
@@ -65,17 +63,26 @@ function ModifyReview() {
         }
       );
 
-      navigate(`/admin/reviews`);
+      // Set success message
+      setSuccessMessage('Review successfully modified');
+      // Clear error message
+      setErrorMessage('');
+
+      // Navigate back to the user's reviews page after a delay
+      setTimeout(() => {
+        navigate(`/admin/user/${userId}/reviews`);
+      }, 2000);
     } catch (error) {
-      console.error('Error modifying review:', error);
+      console.error('Error details:', error);
       setErrorMessage('An error occurred while modifying review details');
     }
   };
 
   return (
-    <div>
+    <div className={styles.formContainer}>
       <h2>Modify Review</h2>
-      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+      {errorMessage && <div className={styles.message} style={{ color: 'red' }}>{errorMessage}</div>}
+      {successMessage && <div className={styles.message} style={{ color: 'green' }}>{successMessage}</div>}
       <form onSubmit={handleSubmit}>
         <div>
           <label>Headline:</label>

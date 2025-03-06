@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from '../../css/Admin.module.css';
 
@@ -9,47 +9,30 @@ const API_BASE_URL =
 
 function UserReviewsPage() {
   const { userId } = useParams();
-  const [userReviews, setUserReviews] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log(`Fetching reviews for user ${userId}...`);
 
-    axios.get(`${API_BASE_URL}/api/reviews/user/${userId}`, {
+    console.log('Fetching reviews...');
+    axios.get(`${API_BASE_URL}/api/admin/users/${userId}/reviews`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        setUserReviews(response.data);
+        console.log('Fetched reviews:', response.data);
+        setReviews(response.data);
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching user reviews:', error);
-        setErrorMessage("An error occurred while fetching user reviews");
+        console.error('Error fetching reviews:', error);
+        setErrorMessage("An error occurred while fetching reviews");
         setIsLoading(false);
       });
   }, [userId]);
-
-  const handleDeleteReview = (reviewId) => {
-    console.log(`Deleting review with ID: ${reviewId}`);
-    const token = localStorage.getItem('token');
-    axios.delete(`${API_BASE_URL}/api/admin/${reviewId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then((response) => {
-        console.log('Review deleted:', response.data);
-        setUserReviews(userReviews.filter(review => review.id !== reviewId));
-      })
-      .catch((error) => {
-        console.error('Error deleting review:', error);
-        setErrorMessage("An error occurred while deleting the review");
-      });
-  };
 
   if (isLoading) {
     return <div className={styles.loading}>Loading...</div>;
@@ -65,16 +48,11 @@ function UserReviewsPage() {
         <h2>User Reviews</h2>
       </div>
       <ul className={styles.reviewList}>
-        {userReviews.map((review) => (
-          <li key={review.id} className={styles.reviewDetails}>
-            <p><strong>Headline:</strong> {review.headline}</p>
-            <p><strong>Review:</strong> {review.review}</p>
-            <p><strong>Rating:</strong> {review.rating}</p>
-            <p><strong>Favorite:</strong> {review.favorite ? 'Yes' : 'No'}</p>
-            <button onClick={() => handleDeleteReview(review.id)} className={styles.button}>Delete Review</button>
-            <Link to={`/admin/review/${review.id}/modify`}>
-              <button className={styles.button}>Modify Review</button>
-            </Link>
+        {reviews.map((review) => (
+          <li key={review.id}>
+            {review.headline}
+            <br />
+            <Link to={`/admin/review/${review.id}/modify`}>Modify Review</Link>
           </li>
         ))}
       </ul>

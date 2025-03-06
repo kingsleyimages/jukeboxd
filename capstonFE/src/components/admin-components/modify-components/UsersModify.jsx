@@ -1,84 +1,94 @@
-import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
-  const API_BASE_URL =
-    import.meta.env.VITE_API_BASE_URL_PROD ||
-    import.meta.env.VITE_API_BASE_URL_DEV;
+import styles from '../../../css/Admin.module.css'; // Import the styles
 
 function UserModify() {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
+  const [user, setUser] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Add state for success message
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
 
   useEffect(() => {
+    if (!userId) {
+      setErrorMessage('Invalid user ID. Please go back and try again.');
+      return;
+    }
+
     const token = localStorage.getItem('token');
-    axios.get(`${API_BASE_URL}/api/users/${userId}`, {
+    axios.get(`${API_BASE_URL}/api/admin/users/${userId}`, {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((response) => {
-        setUsername(response.data.username);
-        setEmail(response.data.email);
-        setRole(response.data.role);
+        setUser(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching user details:', error);
-        setErrorMessage("An error occurred while fetching user details");
+        setErrorMessage('An error occurred while fetching user details');
       });
   }, [userId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!userId) {
+      setErrorMessage('Invalid user ID. Cannot submit changes.');
+      return;
+    }
+
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.put(`${API_BASE_URL}/api/users/admin/users/${userId}`, 
-        { username, email, role },
+      await axios.put(
+        `${API_BASE_URL}/api/admin/users/${userId}`,
+        user,
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      navigate(`/admin/users/${userId}`);
+
+      // Set success message
+      setSuccessMessage('User successfully modified');
+      // Clear error message
+      setErrorMessage('');
+
+      // Navigate back to the users list page after a delay
+      setTimeout(() => {
+        navigate(`/admin/users`);
+      }, 2000);
     } catch (error) {
-      console.error('Error modifying user:', error);
-      setErrorMessage("An error occurred while modifying user details");
+      setErrorMessage('An error occurred while modifying user details');
     }
   };
 
   return (
-    <div>
+    <div className={styles.formContainer}>
       <h2>Modify User</h2>
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <div className={styles.message} style={{ color: 'red' }}>{errorMessage}</div>}
+      {successMessage && <div className={styles.message} style={{ color: 'green' }}>{successMessage}</div>}
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Username:</label>
+          <label>Name:</label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={user.name || ''}
+            onChange={(e) => setUser({ ...user, name: e.target.value })}
+            style={{ color: 'black', backgroundColor: 'white' }} // Add styles to make text visible
           />
         </div>
         <div>
           <label>Email:</label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Role:</label>
-          <input
-            type="text"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
+            value={user.email || ''}
+            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            style={{ color: 'black', backgroundColor: 'white' }} // Add styles to make text visible
           />
         </div>
         <button type="submit">Save Changes</button>

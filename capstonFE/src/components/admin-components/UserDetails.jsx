@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
-import UserInfo from './details-components/UserInfo';
 import styles from '../../css/Admin.module.css';
 
 const API_BASE_URL =
@@ -10,16 +9,14 @@ const API_BASE_URL =
 
 function UserDetails() {
   const { userId } = useParams();
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log(`Fetching details for user ${userId}...`);
 
-    // Fetch user details
+    console.log('Fetching user details...');
     axios.get(`${API_BASE_URL}/api/admin/users/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -37,27 +34,6 @@ function UserDetails() {
       });
   }, [userId]);
 
-  const handleDeleteUser = async () => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-    if (!confirmDelete) return;
-
-    const token = localStorage.getItem('token');
-    console.log(`Deleting user with ID: ${userId}`);
-
-    try {
-      await axios.delete(`${API_BASE_URL}/api/admin/users/${userId}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      alert('User deleted successfully');
-      navigate('/admin/users'); // Redirect to the user list page after deletion
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      alert('An error occurred while deleting the user');
-    }
-  };
-
   if (isLoading) {
     return <div className={styles.loading}>Loading...</div>;
   }
@@ -68,18 +44,19 @@ function UserDetails() {
 
   return (
     <div className={styles.userDetailsContainer}>
-      <UserInfo user={user} className={styles.userInfo} />
+      <div className={styles.userDetailsHeader}>
+        <h2>User Details</h2>
+      </div>
+      <div>
+        <p><strong>Username:</strong> {user.username}</p>
+        <p><strong>Email:</strong> {user.email}</p>
+        <p><strong>Role:</strong> {user.role}</p>
+      </div>
       <div className={styles.buttonContainer}>
-        <Link to={`/admin/user/${userId}/reviews`}>
-          <button className={styles.button}>View User Reviews</button>
-        </Link>
-        <Link to={`/admin/user/${userId}/comments`}>
-          <button className={styles.button}>View User Comments</button>
-        </Link>
-        <Link to={`/admin/user/${userId}/modify`}>
-          <button className={styles.button}>Modify User</button>
-        </Link>
-        <button onClick={handleDeleteUser} className={styles.button}>Delete User</button>
+        <Link to={`/admin/user/${userId}/reviews`}>See User Reviews</Link>
+        <Link to={`/admin/user/${userId}/comments`}>See User Comments</Link>
+        <Link to={`/admin/user/${userId}/modify`}>Modify User</Link>
+        <Link to={`/admin/user/${userId}/delete`}>Delete User</Link>
       </div>
     </div>
   );
