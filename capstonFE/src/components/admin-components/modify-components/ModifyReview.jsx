@@ -24,7 +24,7 @@ function ModifyReview() {
       return;
     }
 
-    console.log('Fetching review details for reviewId:', reviewId); // Debugging log
+    console.log('Fetching review details for reviewId:', reviewId); 
     const token = localStorage.getItem('token');
     axios.get(`${API_BASE_URL}/api/reviews/${reviewId}`, {
       headers: {
@@ -32,7 +32,7 @@ function ModifyReview() {
       },
     })
       .then((response) => {
-        console.log('Fetched review details:', response.data); // Debugging log
+  
         setReview(response.data.review || '');
         setHeadline(response.data.headline || '');
         setRating(response.data.rating || 0);
@@ -54,13 +54,6 @@ function ModifyReview() {
 
     const token = localStorage.getItem('token');
     try {
-      console.log('Submitting updated review details:', {
-        review,
-        headline,
-        rating,
-        favorite,
-        listened,
-      }); // Debugging log
 
       const response = await axios.put(
         `${API_BASE_URL}/api/reviews/admin/reviews/${reviewId}/update`,
