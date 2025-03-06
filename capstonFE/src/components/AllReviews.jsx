@@ -28,6 +28,9 @@ const AllReviews = () => {
       {reviews.length > 0 ? (
         reviews.map((review) => (
           <div key={review.id} className={styles.reviewCard}>
+            <h3 className={styles.headline}>{review.album_name}</h3>
+            <p className={styles.headline}>{review.album_name}</p>
+            <img src={review.album_image} alt={review.album_name} />
             <h3 className={styles.headline}>{review.headline}</h3>
             <p className={styles.author}>By: {review.username}</p>
             <p className={styles.review}>Reviewed: {review.updated_at}</p>

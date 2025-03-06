@@ -60,10 +60,12 @@ const fetchReviewsDesc = async () => {
 	try {
 		const { rows } = await client.query(
 			`
-      SELECT users.username, review, rating, favorite, headline, TO_CHAR(reviews.updated_at, 'MM/DD/YYYY') AS updated_at
+      SELECT users.username, review, rating, favorite, headline, TO_CHAR(reviews.updated_at, 'MM/DD/YYYY') AS updated_at, albums.name AS album_name, albums.image AS album_image, albums.artist AS album_artist
       FROM reviews
       INNER JOIN users
       ON reviews.user_id = users.id
+			INNER JOIN albums
+			ON reviews.album_id = albums.id
       ORDER BY reviews.created_at DESC
       LIMIT 20
     `
