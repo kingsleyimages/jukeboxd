@@ -55,23 +55,23 @@ function App() {
                             element={<UserDetails />}
                         />
                         <Route
-                            path="/admin/user/:userId/reviews"
+                            path="/admin/users/:userId/reviews"
                             element={<UserReviewsPage />}
                         />
                         <Route
-                            path="/admin/user/:userId/comments"
+                            path="/admin/users/:userId/comments"
                             element={<UserCommentsPage />}
                         />
                         <Route
-                            path="/admin/user/:userId/modify"
+                            path="/admin/users/:userId/modify"
                             element={<UserModify />}
                         />
                         <Route
-                            path="/admin/review/:reviewId/modify"
+                            path="/admin/reviews/:reviewId/modify"
                             element={<ModifyReview />}
                         />
                         <Route
-                            path="/admin/comment/:commentId/modify"
+                            path="/admin/comments/:commentId/modify"
                             element={<ModifyComment />}
                         />
                     </Route>

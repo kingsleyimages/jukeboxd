@@ -270,10 +270,10 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 40px 20px;
-    background-color: #f9f9f9;
+    background-color: #121212; /* Set background to black */
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    color: #333; /* Ensure the text color is visible */
+    color: #fff; /* Ensure the text color is visible */
 }
 
 .viewAllUsersHeader,
@@ -295,19 +295,19 @@
 .userList li,
 .reviewList li,
 .commentList li {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: #1d1d1d; /* Dark background for list items */
+    border: 1px solid #333; /* Dark border for list items */
     border-radius: 4px;
     padding: 10px;
     margin-bottom: 10px;
     transition: background-color 0.2s ease;
-    color: #333; /* Ensure the text color is visible */
+    color: #fff; /* Ensure the text color is visible */
 }
 
 .userList li:hover,
 .reviewList li:hover,
 .commentList li:hover {
-    background-color: #f1f1f1;
+    background-color: #333; /* Darker background on hover */
 }
 
 .userList a,
@@ -341,5 +341,19 @@
 }
 
 .buttonContainer a:hover {
+    background-color: #45a049;
+}
+
+.button {
+    background-color: #4CAF50;
+    color: white;
+    border: none; /* Remove border */
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover {
     background-color: #45a049;
 }
