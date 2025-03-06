@@ -234,6 +234,7 @@ img {
   margin: 0% 0 4% 0;
   font-size: 1.25rem;
   font-weight: 400;
+  color: #fff;
 }
 .updated {
   color: var(--light-gray);
