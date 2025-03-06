@@ -23,7 +23,6 @@ function UserCommentsPage() {
       }
     })
       .then((response) => {
-
         setUserComments(response.data);
         setIsLoading(false);
       })

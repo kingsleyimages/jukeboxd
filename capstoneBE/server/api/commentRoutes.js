@@ -12,11 +12,6 @@ const {
 } = require("../db/comments.js");
 const { authenticateToken, adminAuth } = require("./middlewares.js");
 
-// base route and return for the api for comments
-
-// /api/comments
-
-// create a comment for a review
 router.post(
   "/review/:reviewId/create",
   authenticateToken,
@@ -37,7 +32,7 @@ router.post(
   }
 );
 
-// fetch comment by id
+
 router.get("/:id/", async (req, res, next) => {
   try {
     const comment = await fetchCommentById(req.params.id);
@@ -47,7 +42,6 @@ router.get("/:id/", async (req, res, next) => {
   }
 });
 
-// fetch all comments
 router.get("/", async (req, res, next) => {
   try {
     const comments = await fetchComments();
@@ -67,7 +61,6 @@ router.get("/review/:reviewId/comments", async (req, res, next) => {
   }
 });
 
-// fetch all comments by a user
 router.get("/user/:userId/", async (req, res, next) => {
   try {
     const comments = await fetchCommentsByUserId(req.params.userId);
@@ -77,7 +70,7 @@ router.get("/user/:userId/", async (req, res, next) => {
   }
 });
 
-// delete a comment by id (non-admin)
+
 router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
   try {
     const comment = await fetchCommentbyCommentId(req.params.id);
@@ -94,7 +87,7 @@ router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
   }
 });
 
-// delete a comment by id (admin only)
+
 router.delete(
   "/admin/:id/delete",
   authenticateToken,
@@ -111,7 +104,6 @@ router.delete(
   }
 );
 
-// update a comment by id (non-admin)
 router.put("/:id/update", authenticateToken, async (req, res, next) => {
   try {
     const comments = await fetchCommentsByUserId(req.user.id);

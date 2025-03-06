@@ -21,7 +21,6 @@ function ReviewedAlbums() {
     })
       .then((response) => {
         console.log('Response:', response);
-      
         if (Array.isArray(response.data)) {
           setAlbums(response.data);
         } else {

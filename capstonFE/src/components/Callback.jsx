@@ -10,7 +10,7 @@ function Callback() {
 
 		if (code) {
 			localStorage.setItem("spotifyAuthCode", code);
-			navigate("/account"); // Redirect to Me page after storing code
+			navigate("/account"); 
 		}
 	}, [navigate]);
 

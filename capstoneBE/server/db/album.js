@@ -84,7 +84,7 @@ const fetchAlbumById = async (spotifyId) => {
 	}
 };
 
-//fetch tracks by album id
+
 const fetchTracksByAlbumId = async (album_id) => {
 	try {
 		const { rows } = await client.query(

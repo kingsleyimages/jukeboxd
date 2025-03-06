@@ -98,20 +98,6 @@ function Discover() {
 
         setAlbums(data.albums.items);
 
-        // save albums to database
-        // uncomment this block to save albums to database
-
-        // const formattedAlbums = data.albums.items.map(
-        //   async (album) =>
-        //     await sendAlbumsToDatabase({
-        //       spotify_id: album.id,
-        //       name: album.name,
-        //       artist: album.artists[0].name,
-        //       image: album.images[0].url,
-        //       spotifyUrl: album.external_urls.spotify,
-        //     })
-        // );
-        // await Promise.all(formattedAlbums);
       } catch (error) {
         console.error("Failed to fetch top albums!:", error);
       }
@@ -122,19 +108,15 @@ function Discover() {
 
   const handleViewDetails = async (albumId) => {
     try {
-      // Check if album exists in local database
       const localResponse = await fetch(
         `${API_BASE_URL}/api/albums/${albumId}`
       );
       const localResult = await localResponse.json().catch(() => null);
-      console.log(localResult);
-      // If album exists, navigate to that page
       if (localResult?.id) {
         navigate(`/album/${albumId}`);
         return;
       }
 
-      // If album doesn't exist, fetch it from Spotify
       const spotifyResponse = await fetch(
         `https://api.spotify.com/v1/albums/${albumId}`,
         {
@@ -146,7 +128,6 @@ function Discover() {
         }
       );
 
-      // Check for Spotify API errors
       if (!spotifyResponse.ok) {
         throw new Error("Failed to fetch album from Spotify");
       }
@@ -154,7 +135,6 @@ function Discover() {
       const spotifyResult = await spotifyResponse.json().catch(() => null);
       console.log("spotify result", spotifyResult);
 
-      //prepare album data for local database
       const albumData = {
         name: spotifyResult.name,
         artist: spotifyResult.artists[0]?.name || "unknown artist",
@@ -168,7 +148,6 @@ function Discover() {
         })),
       };
 
-      // Save the album to local database
       const saveResponse = await fetch(`${API_BASE_URL}/api/albums/create`, {
         method: "POST",
         headers: {
@@ -182,7 +161,6 @@ function Discover() {
       }
       console.log("album saved to local db");
 
-      // Navigate to the new album page
       navigate(`/album/${albumId}`);
     } catch (error) {
       console.error("Error handling album details:", error);

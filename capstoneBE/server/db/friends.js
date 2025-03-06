@@ -1,7 +1,7 @@
 const { client } = require("./index");
 const uuid = require("uuid");
 
-// create a unique friend relationship between two users
+
 const createFriend = async (userId, friendId) => {
   console.log(userId, friendId);
   try {
@@ -17,7 +17,7 @@ const createFriend = async (userId, friendId) => {
   }
 };
 
-// get all friend relationships
+
 
 const fetchAllFriends = async () => {
   try {

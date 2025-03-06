@@ -1,9 +1,7 @@
 const { client } = require("./index");
 const uuid = require("uuid");
 
-// const bcrypt = require('bcrypt');
 
-// create a review for an album
 const createReview = async (
 	spotifyAlbumId,
 	userId,
@@ -39,7 +37,7 @@ const createReview = async (
 	}
 };
 
-// fetch all reviews
+
 const fetchReviews = async () => {
 	try {
 		const { rows } = await client.query(
@@ -55,15 +53,18 @@ const fetchReviews = async () => {
 		console.log(error);
 	}
 };
-// fetch all reviews
+
+
 const fetchReviewsDesc = async () => {
 	try {
 		const { rows } = await client.query(
 			`
-      SELECT users.username, review, rating, favorite, headline, TO_CHAR(reviews.updated_at, 'MM/DD/YYYY') AS updated_at
+      SELECT users.username, review, rating, favorite, headline, TO_CHAR(reviews.updated_at, 'MM/DD/YYYY') AS updated_at, albums.name AS album_name, albums.image AS album_image, albums.artist AS album_artist
       FROM reviews
       INNER JOIN users
       ON reviews.user_id = users.id
+			INNER JOIN albums
+			ON reviews.album_id = albums.id
       ORDER BY reviews.created_at DESC
       LIMIT 20
     `
@@ -73,23 +74,7 @@ const fetchReviewsDesc = async () => {
 		console.log(error);
 	}
 };
-// fetch all reviews for an album
-// const fetchReviewsByAlbumId = async (id) => {
-//   try {
-//     const { rows } = await client.query(
-//       `
-//       SELECT * FROM reviews
-//       WHERE album_id = $1
-//     `,
-//       [id]
-//     );
-//     return rows[0];
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
-// Updated fetchReviewsByAlbumId function with JOIN to include usernames
 const fetchReviewsByAlbumId = async (id) => {
 	console.log(id);
 	try {
@@ -162,7 +147,6 @@ module.exports = {
 	// other functions
 };
 
-//update a review by id
 
 const updateReview = async (
 	id,
@@ -189,7 +173,7 @@ const updateReview = async (
 };
 //
 
-//get review by spotify id
+
 const getAlbumIdBySpotifyId = async (spotifyId) => {
 	try {
 		const { rows } = await client.query(
@@ -204,7 +188,7 @@ const getAlbumIdBySpotifyId = async (spotifyId) => {
 	}
 };
 
-// get all reviews
+
 const getAllReviews = async () => {
 	try {
 		const { rows } = await client.query(`

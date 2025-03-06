@@ -6,7 +6,6 @@ const { deleteComment, updateComment, getAllComments } = require('../db/comments
 const { deleteReview, updateReview, getAllReviews } = require('../db/review');
 
 
-
 router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const deletedComment = await deleteComment(req.params.id);
@@ -16,6 +15,7 @@ router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, ne
     res.status(500).send({ error: 'Unable to delete comment' });
   }
 });
+
 
 router.put('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
@@ -37,7 +37,6 @@ router.get('/comments', authenticateToken, adminAuth, async (req, res, next) => 
     res.status(500).send({ error: 'Unable to fetch comments' });
   }
 });
-
 
 router.delete('/users/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
@@ -87,7 +86,6 @@ router.get('/users', authenticateToken, adminAuth, async (req, res, next) => {
     res.status(500).send({ error: 'Unable to fetch users' });
   }
 });
-
 
 router.get('/users/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {

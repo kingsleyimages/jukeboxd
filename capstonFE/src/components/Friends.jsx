@@ -17,13 +17,11 @@ function Friends() {
   const [isFriendsLoading, setIsFriendsLoading] = useState(false);
   const [friendsError, setFriendsError] = useState(null);
 
-  // For debugging purposes
   useEffect(() => {
     console.log('Token in localStorage:', localStorage.getItem('token'));
     console.log('User in localStorage:', localStorage.getItem('user'));
   }, []);
 
-  // Check authentication and fetch user data
   useEffect(() => {
     const token = localStorage.getItem('token');
     console.log('Checking token:', token ? 'exists' : 'missing');
@@ -59,14 +57,11 @@ function Friends() {
           }
         }
 
-        console.log('Fetching user data from API...');
         const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        console.log('API response:', response.data);
 
         if (
           response.data &&
@@ -137,7 +132,6 @@ function Friends() {
           },
         }
       );
-      console.log('Friends list:', friendsResponse.data);
       setFriendsList(friendsResponse.data);
 
       const availableResponse = await axios.get(
@@ -148,7 +142,6 @@ function Friends() {
           },
         }
       );
-      console.log('Friends available:', availableResponse.data);
       setFriendsAvailable(availableResponse.data);
     } catch (error) {
       console.error('Error fetching friends data:', error);
@@ -176,7 +169,6 @@ function Friends() {
       }
     );
     fetchFriends(userData.id);
-    console.log('Friend added:', response.data);
   };
 
   const handleRemove = async (friend) => {
@@ -192,7 +184,6 @@ function Friends() {
       },
     });
     fetchFriends(userData.id);
-    console.log('Friend removed:', response.data);
   };
 
   return (

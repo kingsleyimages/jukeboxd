@@ -14,9 +14,6 @@ function ViewAllUsers() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const baseUrl = import.meta.env.MODE === 'production' 
-      ? import.meta.env.VITE_API_BASE_URL_PROD
-      : import.meta.env.VITE_API_BASE_URL_DEV;
 
     console.log('Fetching users...');
     axios.get(`${API_BASE_URL}/api/admin/users`, {

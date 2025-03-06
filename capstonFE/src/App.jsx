@@ -26,11 +26,11 @@ import ModifyComment from "./components/admin-components/modify-components/Modif
 function App() {
     const [token, setToken] = useState("");
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        setToken(token);
-        console.log("App loaded, userId:", token);
-    }, []);
+	useEffect(() => {
+		const token = localStorage.getItem("token");
+		setToken(token);
+
+	}, []);
 
     return (
         <>
