@@ -174,7 +174,6 @@ const AlbumDetails = ({ token }) => {
       rating: review.rating,
       favorite: review.favorite,
     });
-    console.log("Edit review:", review);
   };
 
   if (!album) return <div>Loading...</div>;

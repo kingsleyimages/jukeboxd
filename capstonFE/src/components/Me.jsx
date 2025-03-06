@@ -32,10 +32,7 @@ function Me() {
 
   const token = localStorage.getItem("token") || null;
 
-  useEffect(() => {
-    console.log("Token in localStorage:", localStorage.getItem("token"));
-    console.log("User in localStorage:", localStorage.getItem("user"));
-  }, []);
+  useEffect(() => {}, []);
 
   const updateSelf = async (id, username, email, password) => {
     try {
@@ -43,7 +40,6 @@ function Me() {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      console.log("API response (User Data):", response.data);
       if (response.data && response.data.id) {
         const userId = response.data.id;
         const updateResponse = await axios.put(
@@ -53,7 +49,6 @@ function Me() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        console.log("User updated:", updateResponse.data);
         setFormData({ username: "", email: "", password: "" });
       }
     } catch (error) {
@@ -64,13 +59,9 @@ function Me() {
 
   const userUpdate = async () => {
     try {
-      console.log("Starting userUpdate...");
-
       const response = await axios.get(`${API_BASE_URL}/api/users/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      console.log("API response (User Data):", response.data);
 
       if (response.data && response.data.id) {
         let updatedUserData = { ...response.data };
@@ -78,7 +69,6 @@ function Me() {
         const reviewsResponse = await axios.get(
           `${API_BASE_URL}/api/reviews/user/${response.data.id}`
         );
-        console.log("API response (User Reviews):", reviewsResponse.data);
 
         const reviews = reviewsResponse.data || [];
 
@@ -92,7 +82,6 @@ function Me() {
         const favoritesResponse = await axios.get(
           `${API_BASE_URL}/api/favorites/${response.data.id}`
         );
-        console.log("API response (User Favorites):", favoritesResponse);
         updatedUserData.favorites = favoritesResponse.data;
 
         setUserData(updatedUserData);
@@ -124,7 +113,6 @@ function Me() {
         setError("Failed to load account information. Please try again later.");
       }
     } finally {
-      console.log("Setting loading to false...");
       setIsLoading(false);
     }
   };
@@ -135,12 +123,10 @@ function Me() {
       const friendsReviewsResponse = await axios.get(
         `${API_BASE_URL}/api/friends/reviews/${userId}`
       );
-      console.log("Friends' Reviews:", friendsReviewsResponse.data);
 
       const friendsFavoritesResponse = await axios.get(
         `${API_BASE_URL}/api/favorites/friends/${userId}`
       );
-      console.log("Friends' Favorites:", friendsFavoritesResponse.data);
 
       setFriendsActivity({
         reviews: friendsReviewsResponse.data || [],
@@ -207,8 +193,7 @@ function Me() {
         <div className="error">{error}</div>
         <button
           className="retry-button"
-          onClick={() => window.location.reload()}
-        >
+          onClick={() => window.location.reload()}>
           Try Again
         </button>
       </div>
@@ -292,24 +277,21 @@ function Me() {
                   className={`tab-button ${
                     activeTab === "myActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("myActivity")}
-                >
+                  onClick={() => setActiveTab("myActivity")}>
                   My Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friendsActivity" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friendsActivity")}
-                >
+                  onClick={() => setActiveTab("friendsActivity")}>
                   Friends' Activity
                 </button>
                 <button
                   className={`tab-button ${
                     activeTab === "friends" ? "active" : ""
                   }`}
-                  onClick={() => setActiveTab("friends")}
-                >
+                  onClick={() => setActiveTab("friends")}>
                   See and Find Friends
                 </button>
               </div>

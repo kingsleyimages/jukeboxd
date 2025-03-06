@@ -29,7 +29,7 @@ function App() {
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		setToken(token);
-		console.log("App loaded, userId:", token);
+
 	}, []);
 
 	return (

@@ -4,7 +4,7 @@ https://jukeboxd-1.onrender.com/
 
 ## TEAM:
 
-JukeBoxd was created by Kathleen Hamrick, Nicholas Crabtree, Nate Santiago, and our two team leads: Ben Hernowitz and Scott Kingsley.
+JukeBoxd was created by Kathleen Hamrick (https://www.linkedin.com/in/kathleen-hamrick/), Nicholas Crabtree (https://www.linkedin.com/in/nicholas-crabtree-55a51b183/), Nate Santiago (https://www.linkedin.com/in/nathanael-santiago-68a001305/), and our two team leads: Ben Hernowitz (https://www.linkedin.com/in/benjamin-hernowitz/) and Scott Kingsley (https://www.linkedin.com/in/sakingsley/).
 
 We worked in lock step collaboratively across the project, but at a high level:
 
