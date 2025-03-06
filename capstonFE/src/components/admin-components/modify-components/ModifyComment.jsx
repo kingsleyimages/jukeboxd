@@ -1,15 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from '../../../css/Admin.module.css'; // Import the styles
+import styles from '../../../css/Admin.module.css'; 
 
 function ModifyComment() {
   const { commentId } = useParams();
   const navigate = useNavigate();
   const [comment, setComment] = useState('');
-  const [userId, setUserId] = useState(''); // Add state for userId
+  const [userId, setUserId] = useState(''); 
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Add state for success message
+  const [successMessage, setSuccessMessage] = useState(''); 
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
     import.meta.env.VITE_API_BASE_URL_DEV;
@@ -28,7 +28,7 @@ function ModifyComment() {
     })
       .then((response) => {
         setComment(response.data.comment || '');
-        setUserId(response.data.user_id || ''); // Set the userId from the response
+        setUserId(response.data.user_id || ''); 
       })
       .catch((error) => {
         setErrorMessage('An error occurred while fetching comment details');
@@ -45,7 +45,7 @@ function ModifyComment() {
     const token = localStorage.getItem('token');
     try {
       await axios.put(
-        `${API_BASE_URL}/api/admin/comments/${commentId}`,
+        `${API_BASE_URL}/api/admin/comments/${id}`,
         { comment },
         {
           headers: {
@@ -55,12 +55,12 @@ function ModifyComment() {
         }
       );
 
-      // Set success message
+      
       setSuccessMessage('Comment successfully modified');
-      // Clear error message
+      
       setErrorMessage('');
 
-      // Navigate back to the user's comments page after a delay
+    
       setTimeout(() => {
         navigate(`/admin/user/${userId}/comments`);
       }, 2000);
@@ -81,7 +81,7 @@ function ModifyComment() {
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            style={{ color: 'black', backgroundColor: 'white' }} // Add styles to make text visible
+            style={{ color: 'black', backgroundColor: 'white' }} 
           />
         </div>
         <button type="submit">Save Changes</button>

@@ -70,10 +70,10 @@ function UserDetails() {
     <div className={styles.userDetailsContainer}>
       <UserInfo user={user} className={styles.userInfo} />
       <div className={styles.buttonContainer}>
-        <Link to={`/admin/users/${userId}/reviews`}>
+        <Link to={`/admin/reviews/${userId}`}>
           <button className={styles.button}>View User Reviews</button>
         </Link>
-        <Link to={`/admin/users/${userId}/comments`}>
+        <Link to={`/admin/comments/${userId}/comments`}>
           <button className={styles.button}>View User Comments</button>
         </Link>
         <Link to={`/admin/users/${userId}/modify`}>

@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { authenticateToken, adminAuth } = require('./middlewares');
-const { deleteUser, fetchUserById, getAllUsers } = require('../db/user');
-const { deleteComment, updateComment, getAllComments, getUserComments } = require('../db/comments');
-const { deleteReview, updateReview, getAllReviews, getUserReviews } = require('../db/review');
+const { deleteUser, fetchUserById, getAllUsers, modifyUser } = require('../db/user');
+const { deleteComment, updateComment, getAllComments } = require('../db/comments');
+const { deleteReview, updateReview, getAllReviews } = require('../db/review');
+
 
 router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
@@ -14,6 +15,7 @@ router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, ne
     res.status(500).send({ error: 'Unable to delete comment' });
   }
 });
+
 
 router.put('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
@@ -33,16 +35,6 @@ router.get('/comments', authenticateToken, adminAuth, async (req, res, next) => 
   } catch (err) {
     console.error('Error fetching comments:', err.message);
     res.status(500).send({ error: 'Unable to fetch comments' });
-  }
-});
-
-router.get('/users/:id/comments', authenticateToken, adminAuth, async (req, res, next) => {
-  try {
-    const comments = await getUserComments(req.params.id);
-    res.status(200).json(comments);
-  } catch (err) {
-    console.error('Error fetching user comments:', err.message);
-    res.status(500).send({ error: 'Unable to fetch user comments' });
   }
 });
 
@@ -85,16 +77,6 @@ router.get('/reviews', authenticateToken, adminAuth, async (req, res, next) => {
   }
 });
 
-router.get('/users/:id/reviews', authenticateToken, adminAuth, async (req, res, next) => {
-  try {
-    const reviews = await getUserReviews(req.params.id);
-    res.status(200).json(reviews);
-  } catch (err) {
-    console.error('Error fetching user reviews:', err.message);
-    res.status(500).send({ error: 'Unable to fetch user reviews' });
-  }
-});
-
 router.get('/users', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const users = await getAllUsers();
@@ -114,5 +96,17 @@ router.get('/users/:id', authenticateToken, adminAuth, async (req, res, next) =>
     res.status(500).send({ error: 'Unable to fetch user' });
   }
 });
+
+router.put('/users/:id', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const { username, email, password, role } = req.body;
+    const updatedUser = await modifyUser(req.params.id, username, email, password, role);
+    res.status(200).send({ message: 'User updated successfully', user: updatedUser });
+  } catch (err) {
+    console.error('Error updating user:', err.message);
+    res.status(500).send({ error: 'Unable to update user' });
+  }
+});
+
 
 module.exports = router;

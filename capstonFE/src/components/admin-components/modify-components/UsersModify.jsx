@@ -44,7 +44,11 @@ function UserModify() {
     try {
       await axios.put(
         `${API_BASE_URL}/api/admin/users/${userId}`,
-        user,
+        {
+          username: user.name, // Map the name field to username
+          email: user.email,
+          role: user.role,
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -60,7 +64,7 @@ function UserModify() {
 
       // Navigate back to the users list page after a delay
       setTimeout(() => {
-        navigate(`/admin/users`);
+        navigate(`/admin/dashboard/users`);
       }, 2000);
     } catch (error) {
       setErrorMessage('An error occurred while modifying user details');
@@ -88,6 +92,15 @@ function UserModify() {
             type="email"
             value={user.email || ''}
             onChange={(e) => setUser({ ...user, email: e.target.value })}
+            style={{ color: 'black', backgroundColor: 'white' }} // Add styles to make text visible
+          />
+        </div>
+        <div>
+          <label>Role:</label>
+          <input
+            type="text"
+            value={user.role || ''}
+            onChange={(e) => setUser({ ...user, role: e.target.value })}
             style={{ color: 'black', backgroundColor: 'white' }} // Add styles to make text visible
           />
         </div>

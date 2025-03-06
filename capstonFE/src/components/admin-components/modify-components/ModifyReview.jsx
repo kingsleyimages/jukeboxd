@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from '../../../css/Admin.module.css'; // Import the styles
+import styles from '../../../css/Admin.module.css'; 
 
 function ModifyReview() {
   const { reviewId } = useParams();
@@ -11,9 +11,10 @@ function ModifyReview() {
   const [rating, setRating] = useState(0);
   const [favorite, setFavorite] = useState(false);
   const [listened, setListened] = useState(false);
-  const [userId, setUserId] = useState(''); // Add state for userId
+  const [userId, setUserId] = useState(''); 
   const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Add state for success message
+  const [successMessage, setSuccessMessage] = useState(''); 
+
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
     import.meta.env.VITE_API_BASE_URL_DEV;
@@ -53,7 +54,7 @@ function ModifyReview() {
     const token = localStorage.getItem('token');
     try {
       await axios.put(
-        `${API_BASE_URL}/api/admin/reviews/${reviewId}/update`,
+        `${API_BASE_URL}/api/admin/reviews/${id}/update`,
         { review, headline, rating, favorite, listened },
         {
           headers: {
@@ -63,12 +64,12 @@ function ModifyReview() {
         }
       );
 
-      // Set success message
+      
       setSuccessMessage('Review successfully modified');
-      // Clear error message
+    
       setErrorMessage('');
 
-      // Navigate back to the user's reviews page after a delay
+      
       setTimeout(() => {
         navigate(`/admin/user/${userId}/reviews`);
       }, 2000);
