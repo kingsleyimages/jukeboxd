@@ -6,7 +6,7 @@ const { deleteComment, updateComment, getAllComments } = require('../db/comments
 const { deleteReview, updateReview, getAllReviews } = require('../db/review');
 
 
-// Delete comment (admin only)
+
 router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const deletedComment = await deleteComment(req.params.id);
@@ -17,7 +17,6 @@ router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, ne
   }
 });
 
-// Update comment (admin only)
 router.put('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const { comment } = req.body;
@@ -29,7 +28,6 @@ router.put('/comments/:id', authenticateToken, adminAuth, async (req, res, next)
   }
 });
 
-// Get all comments (admin only)
 router.get('/comments', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const comments = await getAllComments();
@@ -40,7 +38,7 @@ router.get('/comments', authenticateToken, adminAuth, async (req, res, next) => 
   }
 });
 
-// Delete user (admin only)
+
 router.delete('/users/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     console.log(`Admin ${req.user.id} deleting user ID: ${req.params.id}`);
@@ -52,7 +50,6 @@ router.delete('/users/:id', authenticateToken, adminAuth, async (req, res, next)
   }
 });
 
-// Delete review by id (admin only)
 router.delete('/reviews/:id/delete', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const response = await deleteReview(req.params.id);
@@ -62,7 +59,6 @@ router.delete('/reviews/:id/delete', authenticateToken, adminAuth, async (req, r
   }
 });
 
-// Update a review by id (admin only)
 router.put('/reviews/:id/update', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const { review, headline, rating, favorite } = req.body;
@@ -73,7 +69,6 @@ router.put('/reviews/:id/update', authenticateToken, adminAuth, async (req, res,
   }
 });
 
-// Get all reviews (admin only)
 router.get('/reviews', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const reviews = await getAllReviews();
@@ -83,7 +78,6 @@ router.get('/reviews', authenticateToken, adminAuth, async (req, res, next) => {
   }
 });
 
-// Get all users
 router.get('/users', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const users = await getAllUsers();
@@ -94,7 +88,7 @@ router.get('/users', authenticateToken, adminAuth, async (req, res, next) => {
   }
 });
 
-// Get user by id
+
 router.get('/users/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const user = await fetchUserById(req.params.id);

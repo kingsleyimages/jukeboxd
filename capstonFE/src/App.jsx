@@ -24,76 +24,74 @@ import ModifyReview from "./components/admin-components/modify-components/Modify
 import ModifyComment from "./components/admin-components/modify-components/ModifyComment";
 
 function App() {
-	const [token, setToken] = useState("");
+    const [token, setToken] = useState("");
 
-	useEffect(() => {
-		const token = localStorage.getItem("token");
-		setToken(token);
-		console.log("App loaded, userId:", token);
-	}, []);
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        setToken(token);
+        console.log("App loaded, userId:", token);
+    }, []);
 
-	return (
-		<>
-			<BrowserRouter>
-				<Navbar />
-				<Routes>
-					<Route element={<ProtectedRoute />}>
-						<Route path="/account" element={<Me />} />
-						<Route
-							path="/admin/dashboard"
-							element={<AdminDashboard />}
-						/>
-
-						<Route
-							path="/admin/dashboard/users"
-							element={<ViewAllUsers />}
-						/>
-						<Route
-							path="/admin/dashboard/reviewed-albums"
-							element={<ReviewedAlbums />}
-						/>
-						<Route
-							path="/admin/users/:userId"
-							element={<UserDetails />}
-						/>
-						<Route
-							path="/admin/user/:userId/reviews"
-							element={<UserReviewsPage />}
-						/>
-						<Route
-							path="/admin/user/:userId/comments"
-							element={<UserCommentsPage />}
-						/>
-						<Route
-							path="/admin/user/:userId/modify"
-							element={<UserModify />}
-						/>
-						<Route
-							path="/admin/review/:reviewId/modify"
-							element={<ModifyReview />}
-						/>
-						<Route
-							path="/admin/comment/:commentId/modify"
-							element={<ModifyComment />}
-						/>
-					</Route>
-					<Route path="/callback" element={<Callback />} />
-					<Route path="/" element={<Home />} />
-					<Route path="/mixtapes" element={<Mixtapes />} />
-					<Route path="/reviews" element={<AllReviews />} />
-					<Route path="/discover" element={<Discover />} />
-					<Route path="/search" element={<Search />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/register" element={<Register />} />
-
-					<Route
-						path="/album/:albumId"
-						element={<SingleAlbumDetails token={token} />}
-					/>
-				</Routes>
-			</BrowserRouter>
-		</>
-	);
+    return (
+        <>
+            <BrowserRouter>
+                <Navbar />
+                <Routes>
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/account" element={<Me />} />
+                        <Route
+                            path="/admin/dashboard"
+                            element={<AdminDashboard />}
+                        />
+                        <Route
+                            path="/admin/dashboard/users"
+                            element={<ViewAllUsers />}
+                        />
+                        <Route
+                            path="/admin/dashboard/reviewed-albums"
+                            element={<ReviewedAlbums />}
+                        />
+                        <Route
+                            path="/admin/users/:userId"
+                            element={<UserDetails />}
+                        />
+                        <Route
+                            path="/admin/user/:userId/reviews"
+                            element={<UserReviewsPage />}
+                        />
+                        <Route
+                            path="/admin/user/:userId/comments"
+                            element={<UserCommentsPage />}
+                        />
+                        <Route
+                            path="/admin/user/:userId/modify"
+                            element={<UserModify />}
+                        />
+                        <Route
+                            path="/admin/review/:reviewId/modify"
+                            element={<ModifyReview />}
+                        />
+                        <Route
+                            path="/admin/comment/:commentId/modify"
+                            element={<ModifyComment />}
+                        />
+                    </Route>
+                    <Route path="/callback" element={<Callback />} />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/mixtapes" element={<Mixtapes />} />
+                    <Route path="/reviews" element={<AllReviews />} />
+                    <Route path="/discover" element={<Discover />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route
+                        path="/album/:albumId"
+                        element={<SingleAlbumDetails token={token} />}
+                    />
+                </Routes>
+            </BrowserRouter>
+        </>
+    );
 }
 
 export default App;

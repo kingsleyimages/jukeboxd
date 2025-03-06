@@ -23,7 +23,7 @@ function UserCommentsPage() {
       }
     })
       .then((response) => {
-        console.log('Fetched comments:', response.data);
+
         setUserComments(response.data);
         setIsLoading(false);
       })

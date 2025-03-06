@@ -2,7 +2,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
 function ModifyReview() {
   const { reviewId } = useParams();
   console.log('reviewId from useParams:', reviewId); // Debugging log
@@ -63,7 +62,7 @@ function ModifyReview() {
       }); // Debugging log
 
       const response = await axios.put(
-        `${API_BASE_URL}/api/reviews/admin/reviews/${reviewId}/update`,
+        `${API_BASE_URL}/api/admin/reviews/${reviewId}`,
         { review, headline, rating, favorite, listened },
         {
           headers: {

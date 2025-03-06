@@ -1,5 +1,5 @@
 const { client } = require("./index");
-const uuid = require("uuid");
+
 
 //get all favorite albums of a user
 

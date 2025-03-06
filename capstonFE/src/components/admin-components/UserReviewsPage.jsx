@@ -23,7 +23,6 @@ function UserReviewsPage() {
       }
     })
       .then((response) => {
-        console.log('Fetched reviews:', response.data);
         setUserReviews(response.data);
         setIsLoading(false);
       })

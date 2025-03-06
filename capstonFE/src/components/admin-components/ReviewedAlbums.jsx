@@ -21,7 +21,7 @@ function ReviewedAlbums() {
     })
       .then((response) => {
         console.log('Response:', response);
-        console.log('Fetched albums with reviews:', response.data);
+      
         if (Array.isArray(response.data)) {
           setAlbums(response.data);
         } else {

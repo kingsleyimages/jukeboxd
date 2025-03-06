@@ -1,4 +1,3 @@
-const { get } = require("../api/userRoutes");
 const { client } = require("./index");
 const uuid = require("uuid");
 

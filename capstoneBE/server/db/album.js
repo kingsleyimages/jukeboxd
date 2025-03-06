@@ -99,7 +99,7 @@ const fetchTracksByAlbumId = async (album_id) => {
 	}
 };
 
-//This function will fetch all albums that have a review attached to them
+
 const fetchAlbumsWithReviews = async () => {
 	try {
 		const SQL = `
@@ -110,7 +110,7 @@ const fetchAlbumsWithReviews = async () => {
 		const response = await client.query(SQL);
 		console.log("Fetched albums with reviews:", response.rows); // Add logging
 
-		// Group reviews by album
+	
 		const albumsMap = new Map();
 		response.rows.forEach((row) => {
 			if (!albumsMap.has(row.id)) {
@@ -132,11 +132,11 @@ const fetchAlbumsWithReviews = async () => {
 			}
 		});
 
-		// Convert the map to an array and filter out albums with no reviews
+	
 		const albums = Array.from(albumsMap.values()).filter(
 			(album) => album.reviews.length > 0
 		);
-		console.log("Processed albums with reviews:", albums); // Add logging
+		console.log("Processed albums with reviews:", albums); 
 		return albums;
 	} catch (error) {
 		console.log("Error fetching albums with reviews:", error);

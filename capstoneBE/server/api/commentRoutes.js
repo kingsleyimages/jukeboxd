@@ -8,7 +8,6 @@ const {
   fetchComments,
   deleteComment,
   updateComment,
-  getAllComments,
   fetchCommentbyCommentId,
 } = require("../db/comments.js");
 const { authenticateToken, adminAuth } = require("./middlewares.js");
