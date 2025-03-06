@@ -9,7 +9,6 @@ const {
   deleteFriend,
 } = require('../db/friends.js');
 
-// create a friend relationship between two users
 router.post('/add', async (req, res) => {
   try {
     const { userId, friendId } = req.body;
@@ -19,7 +18,6 @@ router.post('/add', async (req, res) => {
     console.log(error);
   }
 });
-// get all friend relationsps
 router.get('/all', async (req, res) => {
   try {
     const allFriends = await fetchAllFriends();
@@ -28,8 +26,7 @@ router.get('/all', async (req, res) => {
     console.log(error);
   }
 });
-//get available users to be friends for a specific user
-// this only returns users that are not already friends
+
 router.get('/available/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -40,7 +37,6 @@ router.get('/available/:userId', async (req, res) => {
   }
 });
 
-// get all friends for a specific user
 router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -50,7 +46,7 @@ router.get('/:userId', async (req, res) => {
     console.log(error);
   }
 });
-// get all reviews from friends of a specific user
+
 router.get('/reviews/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -61,7 +57,7 @@ router.get('/reviews/:userId', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-// delete a friend relationship between two users
+
 router.delete('/delete', async (req, res) => {
   try {
     console.log(req.body);

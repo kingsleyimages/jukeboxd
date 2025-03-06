@@ -1,9 +1,7 @@
 const { client } = require("./index");
 const uuid = require("uuid");
 
-// const bcrypt = require('bcrypt');
 
-// create a review for an album
 const createReview = async (
 	spotifyAlbumId,
 	userId,
@@ -39,7 +37,7 @@ const createReview = async (
 	}
 };
 
-// fetch all reviews
+
 const fetchReviews = async () => {
 	try {
 		const { rows } = await client.query(
@@ -55,7 +53,8 @@ const fetchReviews = async () => {
 		console.log(error);
 	}
 };
-// fetch all reviews
+
+
 const fetchReviewsDesc = async () => {
 	try {
 		const { rows } = await client.query(
@@ -75,23 +74,7 @@ const fetchReviewsDesc = async () => {
 		console.log(error);
 	}
 };
-// fetch all reviews for an album
-// const fetchReviewsByAlbumId = async (id) => {
-//   try {
-//     const { rows } = await client.query(
-//       `
-//       SELECT * FROM reviews
-//       WHERE album_id = $1
-//     `,
-//       [id]
-//     );
-//     return rows[0];
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
-// Updated fetchReviewsByAlbumId function with JOIN to include usernames
 const fetchReviewsByAlbumId = async (id) => {
 	console.log(id);
 	try {
@@ -164,7 +147,6 @@ module.exports = {
 	// other functions
 };
 
-//update a review by id
 
 const updateReview = async (
 	id,
@@ -191,7 +173,7 @@ const updateReview = async (
 };
 //
 
-//get review by spotify id
+
 const getAlbumIdBySpotifyId = async (spotifyId) => {
 	try {
 		const { rows } = await client.query(
@@ -206,7 +188,7 @@ const getAlbumIdBySpotifyId = async (spotifyId) => {
 	}
 };
 
-// get all reviews
+
 const getAllReviews = async () => {
 	try {
 		const { rows } = await client.query(`

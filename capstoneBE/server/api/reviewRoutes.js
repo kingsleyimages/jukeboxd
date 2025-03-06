@@ -9,10 +9,8 @@ const {
 	deleteReview,
 	updateReview,
 	getReviewById,
-	getAllReviews,
 } = require("../db/review.js");
-const { authenticate } = require("../db/user.js");
-const { authenticateToken, adminAuth } = require("./middlewares.js");
+const { authenticateToken } = require("./middlewares.js");
 
 // create a review for an album
 router.post(

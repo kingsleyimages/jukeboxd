@@ -7,13 +7,6 @@ const {
   createUser,
   authenticate,
   userExists,
-  getAllUsers,
-  getAllComments,
-  getAllReviews,
-  deleteUser,
-  modifyUser,
-  modifyUser2,
-  fetchUserById,
 } = require('../db/user.js');
 const { authenticateToken, adminAuth } = require('./middlewares.js');
 

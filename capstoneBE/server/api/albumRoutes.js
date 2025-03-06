@@ -1,21 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const { authenticateToken } = require("./middlewares");
+
 
 const {
   createAlbum,
   fetchAlbums,
   fetchAlbumById,
   createTracks,
-  fetchTracksByAlbumId,
   fetchAlbumsWithReviews,
 } = require("../db/album.js");
 
-// base route and return for the api for albums
 
-// /api/albums
-
-// create and album by saving spotify information to database
 router.post("/create", async (req, res, next) => {
 	const { spotify_id, name, artist, image, spotifyUrl, tracks } =
 		req.body;
@@ -43,7 +38,7 @@ router.post("/create", async (req, res, next) => {
 });
 
 
-// fetch all albums with reviews
+
 router.get("/reviewed", async (req, res, next) => {
 	try {
 		console.log("API route accessed: /albums/reviewed");
@@ -58,7 +53,6 @@ router.get("/reviewed", async (req, res, next) => {
 	}
 });
 
-// fetch all albums from the database
 router.get("/", async (req, res, next) => {
 	try {
 		const response = await fetchAlbums();
@@ -68,7 +62,6 @@ router.get("/", async (req, res, next) => {
 	}
 });
 
-// fetch album by id from database
 router.get("/:id", async (req, res, next) => {
 	try {
 		const response = await fetchAlbumById(req.params.id);

@@ -5,7 +5,7 @@ const {
   fetchFriendFavorites,
 } = require('../db/favorites.js');
 
-// get a users favoite albums
+
 router.get('/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
@@ -16,7 +16,6 @@ router.get('/:userId', async (req, res) => {
   }
 });
 
-// get a users friends' favorites
 router.get('/friends/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
