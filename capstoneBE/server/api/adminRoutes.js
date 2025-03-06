@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { authenticateToken, adminAuth } = require('./middlewares');
 const { deleteUser, fetchUserById, getAllUsers, modifyUser } = require('../db/user');
-const { deleteComment, updateComment, getAllComments } = require('../db/comments');
-const { deleteReview, updateReview, getAllReviews } = require('../db/review');
-
+const { deleteComment, updateComment, getAllComments, fetchCommentsByUserId } = require('../db/comments');
+const { deleteReview, updateReview, getAllReviews, getUserReviews } = require('../db/review');
 
 router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
@@ -15,7 +14,6 @@ router.delete('/comments/:id', authenticateToken, adminAuth, async (req, res, ne
     res.status(500).send({ error: 'Unable to delete comment' });
   }
 });
-
 
 router.put('/comments/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
@@ -32,6 +30,16 @@ router.get('/comments', authenticateToken, adminAuth, async (req, res, next) => 
   try {
     const comments = await getAllComments();
     res.status(200).json(comments);
+  } catch (err) {
+    console.error('Error fetching comments:', err.message);
+    res.status(500).send({ error: 'Unable to fetch comments' });
+  }
+});
+
+router.get('/users/:id/comments', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const comments = await fetchCommentsByUserId(req.params.id);
+    res.json(comments);
   } catch (err) {
     console.error('Error fetching comments:', err.message);
     res.status(500).send({ error: 'Unable to fetch comments' });
@@ -58,7 +66,7 @@ router.delete('/reviews/:id/delete', authenticateToken, adminAuth, async (req, r
   }
 });
 
-router.put('/reviews/:id/update', authenticateToken, adminAuth, async (req, res, next) => {
+router.put('/reviews/:id', authenticateToken, adminAuth, async (req, res, next) => {
   try {
     const { review, headline, rating, favorite } = req.body;
     const response = await updateReview(req.params.id, review, headline, rating, favorite);
@@ -92,7 +100,7 @@ router.get('/users/:id', authenticateToken, adminAuth, async (req, res, next) =>
     const user = await fetchUserById(req.params.id);
     res.json(user);
   } catch (err) {
-    console.error('Error fetching user', err.message);
+    console.error('Error fetching user:', err.message);
     res.status(500).send({ error: 'Unable to fetch user' });
   }
 });
@@ -108,5 +116,15 @@ router.put('/users/:id', authenticateToken, adminAuth, async (req, res, next) =>
   }
 });
 
+// Add this route to handle fetching reviews by user ID
+router.get('/users/:id/reviews', authenticateToken, adminAuth, async (req, res, next) => {
+  try {
+    const reviews = await getUserReviews(req.params.id);
+    res.json(reviews);
+  } catch (err) {
+    console.error('Error fetching reviews:', err.message);
+    res.status(500).send({ error: 'Unable to fetch reviews' });
+  }
+});
 
 module.exports = router;

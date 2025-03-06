@@ -54,7 +54,7 @@ function ModifyReview() {
     const token = localStorage.getItem('token');
     try {
       await axios.put(
-        `${API_BASE_URL}/api/admin/reviews/${id}/update`,
+        `${API_BASE_URL}/api/admin/reviews/${reviewId}`,
         { review, headline, rating, favorite, listened },
         {
           headers: {
@@ -64,14 +64,14 @@ function ModifyReview() {
         }
       );
 
-      
+      // Set success message
       setSuccessMessage('Review successfully modified');
-    
+      // Clear error message
       setErrorMessage('');
 
-      
+      // Navigate back to the user reviews page after a delay
       setTimeout(() => {
-        navigate(`/admin/user/${userId}/reviews`);
+        navigate(`/admin/users/${userId}/reviews`);
       }, 2000);
     } catch (error) {
       console.error('Error details:', error);

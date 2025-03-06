@@ -45,7 +45,7 @@ function ModifyComment() {
     const token = localStorage.getItem('token');
     try {
       await axios.put(
-        `${API_BASE_URL}/api/admin/comments/${id}`,
+        `${API_BASE_URL}/api/admin/comments/${commentId}`,
         { comment },
         {
           headers: {
@@ -55,14 +55,14 @@ function ModifyComment() {
         }
       );
 
-      
+      // Set success message
       setSuccessMessage('Comment successfully modified');
-      
+      // Clear error message
       setErrorMessage('');
 
-    
+      // Navigate back to the user comments page after a delay
       setTimeout(() => {
-        navigate(`/admin/user/${userId}/comments`);
+        navigate(`/admin/users/${userId}/comments`);
       }, 2000);
     } catch (error) {
       console.error('Error details:', error);

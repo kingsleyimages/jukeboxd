@@ -52,7 +52,7 @@ function UserReviewsPage() {
           <li key={review.id}>
             {review.headline}
             <br />
-            <Link to={`/admin/review/${review.id}/modify`}>Modify Review</Link>
+            <Link to={`/admin/reviews/${review.id}/modify`}>Modify Review</Link>
           </li>
         ))}
       </ul>

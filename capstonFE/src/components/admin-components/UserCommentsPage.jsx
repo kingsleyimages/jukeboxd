@@ -52,7 +52,7 @@ function UserCommentsPage() {
           <li key={comment.id}>
             {comment.comment}
             <br />
-            <Link to={`/admin/comment/${comment.id}/modify`}>Modify Comment</Link>
+            <Link to={`/admin/comments/${comment.id}/modify`}>Modify Comment</Link>
           </li>
         ))}
       </ul>

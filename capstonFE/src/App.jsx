@@ -55,11 +55,11 @@ function App() {
                             element={<UserDetails />}
                         />
                         <Route
-                            path="/admin/reviews/:userId/reviews"
+                            path="/admin/users/:userId/reviews"
                             element={<UserReviewsPage />}
                         />
                         <Route
-                            path="/admin/review/:userId/comments"
+                            path="/admin/users/:userId/comments"
                             element={<UserCommentsPage />}
                         />
                         <Route

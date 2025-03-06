@@ -10,7 +10,7 @@ router.use("/friends", require("./friendRoutes.js"));
 router.use("/favorites", require("./favoriteRoutes.js"));
 router.use("/listened", require("./listenedRoutes.js"));
 router.use("/admin", require("./adminRoutes.js"));
-// Base route for the API
+
 router.get("/", (req, res) => {
 	res.send("Hello World From Router api/index.js");
 });

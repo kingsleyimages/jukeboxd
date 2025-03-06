@@ -28,33 +28,29 @@ router.post('/register', async (req, res, next) => {
 
 // Login
 router.post('/login', async (req, res, next) => {
+  console.log('Login route hit');
   try {
     const { username, password } = req.body;
+    console.log('Username:', username);
+    console.log('Password:', password);
+
     const userFound = await userExists(username);
+    console.log('User found:', userFound);
+
     if (!userFound) {
+      console.log('Username not found');
       return res.status(404).send({ error: 'Username not found' });
     }
+
     const { token } = await authenticate({ username, password });
+    console.log('Token generated:', token);
+
     res.json({ token, username });
   } catch (err) {
     console.error('Authentication error', err.message);
     res.status(401).send({ error: 'Invalid login details' });
   }
 });
-
-// Get current user
-router.get('/me', authenticateToken, async (req, res, next) => {
-  try {
-    const SQL = `SELECT id, username, role FROM users WHERE id = $1;`;
-    const user = await client.query(SQL, [req.user.id]);
-    res.json(user.rows[0]);
-  } catch (err) {
-    console.error('Error fetching user', err.message);
-    res.status(500).send({ error: 'Unable to fetch user info' });
-  }
-});
-
-
 
 
 
