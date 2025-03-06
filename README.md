@@ -1,5 +1,7 @@
 # JukeBoxd
 
+https://jukeboxd-1.onrender.com/
+
 ## TEAM:
 
 JukeBoxd was created by Kathleen Hamrick, Nicholas Crabtree, Nate Santiago, and our two team leads: Ben Hernowitz and Scott Kingsley.
@@ -12,6 +14,8 @@ We worked in lock step collaboratively across the project, but at a high level:
 - **Scott and Ben** managed all aspects of the project as leads, while also leading query and route integration and making sure code was integrated cohesively through GitHub.
 
 ## BUILD DESCRIPTION:
+
+JukeBoxd is build on the PERN stack utilizing postgreSQL, Express.js, Node.js and React. We tied in the Spotify API to retrieve the music data. We used the bcrypt and Json Web Token to handle password encryption and authentication.
 
 ## FEATURES:
 
