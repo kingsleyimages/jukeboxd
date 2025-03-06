@@ -1,129 +1,129 @@
 * {
-    color: #fff;
+  color: #fff;
 }
 
 .albumWrapperMain {
-    width: 100%;
-    margin: 0 auto;
-    max-width: 1200px;
-    color: rgba(222, 222, 222, 1);
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1200px;
+  color: rgba(222, 222, 222, 1);
+  display: flex;
+  flex-direction: column;
 }
 
 .albumWrapper {
-    width: 100%;
-    margin: 0 auto;
-    max-width: 1200px;
-    color: rgba(222, 222, 222, 1);
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1200px;
+  color: rgba(222, 222, 222, 1);
+  display: flex;
+  flex-direction: column;
 }
 
 .albumList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .albumCard {
-    background-color: var(--dark-gray);
-    border-radius: 8px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background-color: var(--dark-gray);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .title {
-    font-size: 2rem;
-    font-weight: 500;
-    margin: 0;
-    line-height: 2rem;
+  font-size: 2rem;
+  font-weight: 500;
+  margin: 0;
+  line-height: 2rem;
 }
 
 .artist {
-    font-size: 1.4rem;
-    font-weight: 400;
-    margin: 0 0 1rem 0;
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
 }
 
 img {
-    width: 100%;
-    max-width: 350px;
-    margin: 0;
-    display: block;
-    border: 1px solid rgba(222, 222, 222, 1);
+  width: 100%;
+  max-width: 350px;
+  margin: 0;
+  display: block;
+  border: 1px solid rgba(222, 222, 222, 1);
 }
 
 .reviewTitle {
-    font-size: 1.5rem;
-    font-weight: 500;
-    margin: 1% 0 0 10%;
-    line-height: 2rem;
-    color: rgba(222, 222, 222, 1);
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 1% 0 0 10%;
+  line-height: 2rem;
+  color: rgba(222, 222, 222, 1);
 }
 
 .reviewList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .reviewCard {
-    background-color: var(--dark-gray);
-    border-radius: 8px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  background-color: var(--dark-gray);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .headline {
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: rgba(222, 222, 222, 1);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: rgba(222, 222, 222, 1);
 }
 
 .author,
 .favorite,
 .rating,
 .review {
-    font-size: 1rem;
-    font-weight: 400;
-    color: rgba(222, 222, 222, 1);
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(222, 222, 222, 1);
 }
 
 .author {
-    margin-bottom: 15px;
-    font-weight: 500;
+  margin-bottom: 15px;
+  font-weight: 500;
 }
 
 .rating {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 
 .link {
-    color: #6B8E23;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s ease;
+  color: #6b8e23;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
 
 .link:hover {
-    color: #ffffff;
-    text-decoration: underline;
+  color: #ffffff;
+  text-decoration: underline;
 }
 
 .loading,
 .errorMessage {
-    text-align: center;
-    padding: 60px 20px;
-    font-size: 18px;
-    color: #777;
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 18px;
+  color: #777;
 }
 
 .errorMessage {
-    color: #e83a2a;
-    background-color: #fff4f4;
-    border-radius: 8px;
-    margin-bottom: 20px;
+  color: #e83a2a;
+  background-color: #fff4f4;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
