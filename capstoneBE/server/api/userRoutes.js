@@ -52,7 +52,17 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
-
+// Get current user
+router.get('/me', authenticateToken, async (req, res, next) => {
+  try {
+    const SQL = `SELECT id, username, role FROM users WHERE id = $1;`;
+    const user = await client.query(SQL, [req.user.id]);
+    res.json(user.rows[0]);
+  } catch (err) {
+    console.error('Error fetching user', err.message);
+    res.status(500).send({ error: 'Unable to fetch user info' });
+  }
+});
 
 router.put('/:id/edit', authenticateToken, async (req, res, next) => {
   try {

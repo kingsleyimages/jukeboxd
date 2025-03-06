@@ -1,7 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import styles from '../../../css/Admin.module.css';
 
-function UserComments({ userComments, handleDeleteComment }) {
+function UserComments({ userComments, setUserComments }) {
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL_PROD ||
+    import.meta.env.VITE_API_BASE_URL_DEV;
+
+  const handleDeleteComment = (commentId) => {
+    console.log(`Deleting comment with ID: ${commentId}`);
+    const token = localStorage.getItem('token');
+    setIsLoading(true);
+    axios.delete(`${API_BASE_URL}/api/admin/comments/${commentId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((response) => {
+        console.log('Comment deleted:', response.data);
+        setUserComments(userComments.filter(comment => comment.id !== commentId));
+      })
+      .catch((error) => {
+        console.error('Error deleting comment:', error);
+        setErrorMessage("An error occurred while deleting the comment");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  if (isLoading) {
+    return <div className={styles.loading}>Loading...</div>;
+  }
+
+  if (errorMessage) {
+    return <div className={styles.errorMessage}>{errorMessage}</div>;
+  }
+
   return (
     <div className={styles.userCommentsContainer}>
       <div className={styles.userCommentsHeader}>

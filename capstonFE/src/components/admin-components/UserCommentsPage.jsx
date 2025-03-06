@@ -34,6 +34,28 @@ function UserCommentsPage() {
       });
   }, [userId]);
 
+  const handleDeleteComment = (commentId) => {
+    console.log(`Deleting comment with ID: ${commentId}`);
+    const token = localStorage.getItem('token');
+    setIsLoading(true);
+    axios.delete(`${API_BASE_URL}/api/admin/comments/${commentId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((response) => {
+        console.log('Comment deleted:', response.data);
+        setComments(comments.filter(comment => comment.id !== commentId));
+      })
+      .catch((error) => {
+        console.error('Error deleting comment:', error);
+        setErrorMessage("An error occurred while deleting the comment");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   if (isLoading) {
     return <div className={styles.loading}>Loading...</div>;
   }
@@ -52,7 +74,8 @@ function UserCommentsPage() {
           <li key={comment.id}>
             {comment.comment}
             <br />
-            <Link to={`/admin/comments/${comment.id}/modify`}>Modify Comment</Link>
+            <Link to={`/admin/comments/${comment.id}/modify`} className={styles.modifyButton}>Modify Comment</Link>
+            <button onClick={() => handleDeleteComment(comment.id)} className={styles.deleteButton}>Delete Comment</button>
           </li>
         ))}
       </ul>

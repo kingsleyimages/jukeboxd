@@ -34,6 +34,28 @@ function UserReviewsPage() {
       });
   }, [userId]);
 
+  const handleDeleteReview = (reviewId) => {
+    console.log(`Deleting review with ID: ${reviewId}`);
+    const token = localStorage.getItem('token');
+    setIsLoading(true);
+    axios.delete(`${API_BASE_URL}/api/admin/reviews/${reviewId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then((response) => {
+        console.log('Review deleted:', response.data);
+        setReviews(reviews.filter(review => review.id !== reviewId));
+      })
+      .catch((error) => {
+        console.error('Error deleting review:', error);
+        setErrorMessage("An error occurred while deleting the review");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
   if (isLoading) {
     return <div className={styles.loading}>Loading...</div>;
   }
@@ -50,9 +72,10 @@ function UserReviewsPage() {
       <ul className={styles.reviewList}>
         {reviews.map((review) => (
           <li key={review.id}>
-            {review.headline}
+            {review.review}
             <br />
-            <Link to={`/admin/reviews/${review.id}/modify`}>Modify Review</Link>
+            <Link to={`/admin/reviews/${review.id}/modify`} className={styles.modifyButton}>Modify Review</Link>
+            <button onClick={() => handleDeleteReview(review.id)} className={styles.deleteButton}>Delete Review</button>
           </li>
         ))}
       </ul>
