@@ -56,7 +56,7 @@ const fetchReviewsDesc = async () => {
   try {
     const { rows } = await client.query(
       `
-      SELECT users.username, review, rating, favorite, headline, TO_CHAR(reviews.updated_at, 'MM/DD/YYYY') AS updated_at, albums.name AS album_name, albums.image AS album_image, albums.artist AS album_artist
+      SELECT users.username, review, rating, favorite, headline, TO_CHAR(reviews.updated_at, 'MM/DD/YYYY') AS updated_at, albums.name AS album_name, albums.image AS album_image, albums.artist AS album_artist, albums.spotify_id AS album_spotify_id
       FROM reviews
       INNER JOIN users
       ON reviews.user_id = users.id
@@ -140,13 +140,13 @@ const getReviewById = async (id) => {
   }
 };
 
-const updateReview = async (
-  id,
-  review,
-  headline,
-  rating,
-  favorite
-) => {
+module.exports = {
+  getReviewById,
+  // other functions
+};
+
+
+const updateReview = async (id, review, headline, rating, favorite) => {
   try {
     const { rows } = await client.query(
       `
@@ -194,19 +194,17 @@ const markAlbumAsListened = async (user_id, spotify_id) => {
     const albumQuery = "SELECT id FROM albums WHERE spotify_id = $1";
     const albumRes = await client.query(albumQuery, [spotify_id]);
     if (albumRes.rows.length === 0) {
-      throw new Error(
-        `Album with Spotify ID ${spotify_id} not found`
-      );
+      throw new Error(`Album with Spotify ID ${spotify_id} not found`);
     }
     const album_id = albumRes.rows[0].id;
 
     const SQL = `
-    INSERT INTO listenedto (id, user_id, album_id, is_listened, created_at, updated_at) 
-    VALUES ($1, $2, $3, $4, NOW(), NOW())
-    ON CONFLICT (user_id, album_id) 
-    DO UPDATE SET is_listened = TRUE, updated_at = NOW()
-    RETURNING *;
-    `;
+		INSERT INTO listenedto (id, user_id, album_id, is_listened, created_at, updated_at) 
+		VALUES ($1, $2, $3, $4, NOW(), NOW())
+		ON CONFLICT (user_id, album_id) 
+		DO UPDATE SET is_listened = TRUE, updated_at = NOW()
+		RETURNING *;
+	  `;
 
     const response = await client.query(SQL, [
       uuid.v4(),
@@ -225,11 +223,7 @@ const markAlbumAsListened = async (user_id, spotify_id) => {
 const getlistenedto = async (user_id, spotify_id) => {
   try {
     // Validate user_id before querying the database
-    if (
-      !user_id ||
-      typeof user_id !== "string" ||
-      user_id.length !== 36
-    ) {
+    if (!user_id || typeof user_id !== "string" || user_id.length !== 36) {
       throw new Error(`Invalid UUID provided: ${user_id}`);
     }
 
@@ -238,9 +232,7 @@ const getlistenedto = async (user_id, spotify_id) => {
     const albumRes = await client.query(albumQuery, [spotify_id]);
 
     if (albumRes.rows.length === 0) {
-      throw new Error(
-        `Album with Spotify ID ${spotify_id} not found`
-      );
+      throw new Error(`Album with Spotify ID ${spotify_id} not found`);
     }
 
     const album_Id = albumRes.rows[0].id;
@@ -251,10 +243,7 @@ const getlistenedto = async (user_id, spotify_id) => {
             WHERE user_id = $1 AND album_id = $2 AND is_listened = true;
         `;
 
-    const { rows } = await client.query(listenedQuery, [
-      user_id,
-      album_Id,
-    ]);
+    const { rows } = await client.query(listenedQuery, [user_id, album_Id]);
 
     return rows;
   } catch (error) {
@@ -336,5 +325,4 @@ module.exports = {
   markAlbumAsListened,
   getlistenedto,
   getalllistened,
-  getUserReviews, 
 };

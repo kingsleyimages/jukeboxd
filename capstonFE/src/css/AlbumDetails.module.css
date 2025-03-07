@@ -145,7 +145,102 @@ img {
   margin: 1.5%;
   padding: 1%;
 }
+.reviewPageWrapper {
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 0 auto;
+}
+.reviewPageCard {
+  background-color: var(--dark-gray);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  display: flex;
+  width: 40%;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid rgba(222, 222, 222, 1);
+}
 
+.albumContainer,
+.reviewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: start;
+}
+.albumContainer {
+  width: 35%;
+  margin: 0 5%;
+  margin: 0;
+  padding: 0;
+}
+.reviewContainer {
+  width: 45%;
+  margin: 0 5%;
+  padding: 0;
+}
+.albumContainer img {
+  width: 100%;
+  max-width: 350px;
+  margin: 5% 0;
+  display: block;
+  border: 1px solid rgba(222, 222, 222, 1);
+}
+.albumContainer .author,
+.albumContainer .favorite,
+.albumContainer .rating,
+.albumContainer .review,
+.albumContainer .headline,
+.reviewContainer .author,
+.reviewContainer .favorite,
+.reviewContainer .rating,
+.reviewContainer .review,
+.reviewContainer .headline {
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+}
+.albumContainer .review {
+  margin: 5% 0;
+}
+.linkToAlbum {
+  background-color: var(--olive-green);
+  color: var(--white);
+  padding: 10px 0;
+  border-radius: 500px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 100%;
+  margin: 8px 0;
+  letter-spacing: 0.5px;
+  transition: var(--transition-default);
+  text-transform: uppercase;
+  text-align: center;
+}
+.allReviewHeader {
+  text-align: center;
+  margin: 2% 0 3% 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+.reviewContainer .review {
+  margin: 0% 0 4% 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #fff;
+}
+.updated {
+  color: var(--light-gray);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
 .headline {
   font-size: 1.5rem;
   font-weight: 500;
