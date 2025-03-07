@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from '../../css/Admin.module.css';
 
@@ -9,26 +9,27 @@ const API_BASE_URL =
 
 function UserCommentsPage() {
   const { userId } = useParams();
-  const [userComments, setUserComments] = useState([]);
+  const [comments, setComments] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    console.log(`Fetching comments for user ${userId}...`);
 
-    axios.get(`${API_BASE_URL}/api/comments/user/${userId}`, {
+    console.log('Fetching comments...');
+    axios.get(`${API_BASE_URL}/api/admin/users/${userId}/comments`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     })
       .then((response) => {
-        setUserComments(response.data);
+        console.log('Fetched comments:', response.data);
+        setComments(response.data);
         setIsLoading(false);
       })
       .catch((error) => {
-        console.error('Error fetching user comments:', error);
-        setErrorMessage("An error occurred while fetching user comments");
+        console.error('Error fetching comments:', error);
+        setErrorMessage("An error occurred while fetching comments");
         setIsLoading(false);
       });
   }, [userId]);
@@ -36,6 +37,7 @@ function UserCommentsPage() {
   const handleDeleteComment = (commentId) => {
     console.log(`Deleting comment with ID: ${commentId}`);
     const token = localStorage.getItem('token');
+    setIsLoading(true);
     axios.delete(`${API_BASE_URL}/api/admin/comments/${commentId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -43,11 +45,14 @@ function UserCommentsPage() {
     })
       .then((response) => {
         console.log('Comment deleted:', response.data);
-        setUserComments(userComments.filter(comment => comment.id !== commentId));
+        setComments(comments.filter(comment => comment.id !== commentId));
       })
       .catch((error) => {
         console.error('Error deleting comment:', error);
         setErrorMessage("An error occurred while deleting the comment");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -65,16 +70,12 @@ function UserCommentsPage() {
         <h2>User Comments</h2>
       </div>
       <ul className={styles.commentList}>
-        {userComments.map((comment) => (
-          <li key={comment.id} className={styles.commentDetails}>
-            <p><strong>Comment:</strong> {comment.comment}</p>
-            <p><strong>Review ID:</strong> {comment.review_id}</p>
-            <p><strong>Created At:</strong> {comment.created_at ? new Date(comment.created_at).toLocaleString() : 'N/A'}</p>
-            <p><strong>Updated At:</strong> {comment.updated_at ? new Date(comment.updated_at).toLocaleString() : 'N/A'}</p>
-            <button onClick={() => handleDeleteComment(comment.id)} className={styles.button}>Delete Comment</button>
-            <Link to={`/admin/comment/${comment.id}/modify`}>
-              <button className={styles.button}>Modify Comment</button>
-            </Link>
+        {comments.map((comment) => (
+          <li key={comment.id}>
+            {comment.comment}
+            <br />
+            <Link to={`/admin/comments/${comment.id}/modify`} className={styles.modifyButton}>Modify Comment</Link>
+            <button onClick={() => handleDeleteComment(comment.id)} className={styles.deleteButton}>Delete Comment</button>
           </li>
         ))}
       </ul>

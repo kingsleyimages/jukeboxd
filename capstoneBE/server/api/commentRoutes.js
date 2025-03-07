@@ -10,7 +10,7 @@ const {
   updateComment,
   fetchCommentbyCommentId,
 } = require("../db/comments.js");
-const { authenticateToken, adminAuth } = require("./middlewares.js");
+const { authenticateToken } = require("./middlewares.js");
 
 router.post(
   "/review/:reviewId/create",
@@ -51,7 +51,6 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-// fetch all comments for a review
 router.get("/review/:reviewId/comments", async (req, res, next) => {
   try {
     const comments = await fetchCommentsByReviewId(req.params.reviewId);
@@ -63,7 +62,11 @@ router.get("/review/:reviewId/comments", async (req, res, next) => {
 
 router.get("/user/:userId/", async (req, res, next) => {
   try {
-    const comments = await fetchCommentsByUserId(req.params.userId);
+    const userId = req.params.userId;
+    if (!userId) {
+      return res.status(400).send("User ID is required");
+    }
+    const comments = await fetchCommentsByUserId(userId);
     res.send(comments);
   } catch (error) {
     next(error);
@@ -88,21 +91,7 @@ router.delete("/:id/delete", authenticateToken, async (req, res, next) => {
 });
 
 
-router.delete(
-  "/admin/:id/delete",
-  authenticateToken,
-  adminAuth,
-  async (req, res, next) => {
-    try {
-      const response = await deleteComment(req.params.id);
-      res
-        .status(200)
-        .send({ message: "Comment deleted successfully", comment: response });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+
 
 router.put("/:id/update", authenticateToken, async (req, res, next) => {
   try {

@@ -1,7 +1,6 @@
 const { client } = require("./index");
 const uuid = require("uuid");
 
-
 const createReview = async (
   spotifyAlbumId,
   userId,
@@ -37,7 +36,6 @@ const createReview = async (
   }
 };
 
-
 const fetchReviews = async () => {
   try {
     const { rows } = await client.query(
@@ -54,7 +52,6 @@ const fetchReviews = async () => {
   }
 };
 
-
 const fetchReviewsDesc = async () => {
   try {
     const { rows } = await client.query(
@@ -63,8 +60,8 @@ const fetchReviewsDesc = async () => {
       FROM reviews
       INNER JOIN users
       ON reviews.user_id = users.id
-			INNER JOIN albums
-			ON reviews.album_id = albums.id
+      INNER JOIN albums
+      ON reviews.album_id = albums.id
       ORDER BY reviews.created_at DESC
       LIMIT 20
     `
@@ -125,6 +122,7 @@ WHERE
     console.log(error);
   }
 };
+
 const getReviewById = async (id) => {
   try {
     console.log("Executing query to fetch review with ID:", id); // Debugging log
@@ -165,8 +163,6 @@ const updateReview = async (id, review, headline, rating, favorite) => {
     console.log(error);
   }
 };
-//
-
 
 const getAlbumIdBySpotifyId = async (spotifyId) => {
   try {
@@ -181,7 +177,6 @@ const getAlbumIdBySpotifyId = async (spotifyId) => {
     console.error("Error fetching album UUID:", error.message);
   }
 };
-
 
 const getAllReviews = async () => {
   try {
@@ -282,6 +277,38 @@ const deleteReview = async (id) => {
     return rows[0];
   } catch (error) {
     console.log(error);
+  }
+};
+
+const getUserReviews = async (userId) => {
+  try {
+    const { rows } = await client.query(
+      `
+      SELECT 
+        reviews.id, 
+        users.username, 
+        reviews.review, 
+        reviews.rating, 
+        reviews.favorite, 
+        reviews.headline, 
+        albums.spotify_id AS album_spotify_id,
+        albums.name AS album_name, 
+        albums.image AS album_image
+      FROM 
+        reviews
+      INNER JOIN 
+        users ON reviews.user_id = users.id
+      INNER JOIN 
+        albums ON reviews.album_id = albums.id
+      WHERE 
+        reviews.user_id = $1;
+      `,
+      [userId]
+    );
+    return rows;
+  } catch (error) {
+    console.error("Error fetching user reviews:", error.message);
+    throw error;
   }
 };
 

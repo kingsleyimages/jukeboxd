@@ -48,22 +48,24 @@ const userExists = async (username) => {
   const response = await client.query(SQL, [username]);
   return response.rows.length > 0;
 };
-const modifyUser2 = async (id, username, email, password) => {
-  const SQL = `UPDATE users SET username = $2, email = $3, password = $4 WHERE id = $1 RETURNING *;`;
-  const response = await client.query(SQL, [
-    id,
-    username,
-    email,
-    await bcrypt.hash(password, 5),
-  ]);
-  return response.rows[0];
+
+const modifyUser = async (id, username, email, password, role) => {
+  try {
+    const hashedPassword = password ? await bcrypt.hash(password, 5) : null;
+    const query = `
+      UPDATE users
+      SET username = $1, email = $2, password = COALESCE($3, password), role = $4
+      WHERE id = $5
+      RETURNING *;
+    `;
+    const values = [username, email, hashedPassword, role, id];
+    const result = await client.query(query, values);
+    return result.rows[0];
+  } catch (err) {
+    throw new Error(err.message);
+  }
 };
 
-const modifyUser = async (id, username, email, role) => {
-  const SQL = `UPDATE users SET username = $1, email = $2, role = $3 WHERE id = $4 RETURNING *;`;
-  const response = await client.query(SQL, [username, email, role, id]);
-  return response.rows[0];
-};
 
 const fetchUserById = async (id) => {
   const SQL = `SELECT id, username, email, role FROM users WHERE id = $1;`;
@@ -99,5 +101,4 @@ module.exports = {
   getAllComments,
   getAllReviews,
   fetchUserById,
-  modifyUser2,
 };

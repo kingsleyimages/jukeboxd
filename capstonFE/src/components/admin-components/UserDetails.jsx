@@ -51,7 +51,7 @@ function UserDetails() {
         }
       });
       alert('User deleted successfully');
-      navigate('/admin/users'); // Redirect to the user list page after deletion
+      navigate('/admin/dashboard/users'); // Redirect to the user list page after deletion
     } catch (error) {
       console.error('Error deleting user:', error);
       alert('An error occurred while deleting the user');
@@ -70,13 +70,13 @@ function UserDetails() {
     <div className={styles.userDetailsContainer}>
       <UserInfo user={user} className={styles.userInfo} />
       <div className={styles.buttonContainer}>
-        <Link to={`/admin/user/${userId}/reviews`}>
+        <Link to={`/admin/users/${userId}/reviews`}>
           <button className={styles.button}>View User Reviews</button>
         </Link>
-        <Link to={`/admin/user/${userId}/comments`}>
+        <Link to={`/admin/users/${userId}/comments`}>
           <button className={styles.button}>View User Comments</button>
         </Link>
-        <Link to={`/admin/user/${userId}/modify`}>
+        <Link to={`/admin/users/${userId}/modify`}>
           <button className={styles.button}>Modify User</button>
         </Link>
         <button onClick={handleDeleteUser} className={styles.button}>Delete User</button>

@@ -110,7 +110,7 @@ const fetchAlbumsWithReviews = async () => {
 		const response = await client.query(SQL);
 		console.log("Fetched albums with reviews:", response.rows); // Add logging
 
-		// Group reviews by album
+	
 		const albumsMap = new Map();
 		response.rows.forEach((row) => {
 			if (!albumsMap.has(row.id)) {

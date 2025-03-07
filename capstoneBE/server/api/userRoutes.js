@@ -8,7 +8,7 @@ const {
   authenticate,
   userExists,
 } = require('../db/user.js');
-const { authenticateToken, adminAuth } = require('./middlewares.js');
+const { authenticateToken } = require('./middlewares.js');
 
 // Register
 router.post('/register', async (req, res, next) => {
@@ -28,13 +28,23 @@ router.post('/register', async (req, res, next) => {
 
 // Login
 router.post('/login', async (req, res, next) => {
+  console.log('Login route hit');
   try {
     const { username, password } = req.body;
+    console.log('Username:', username);
+    console.log('Password:', password);
+
     const userFound = await userExists(username);
+    console.log('User found:', userFound);
+
     if (!userFound) {
+      console.log('Username not found');
       return res.status(404).send({ error: 'Username not found' });
     }
+
     const { token } = await authenticate({ username, password });
+    console.log('Token generated:', token);
+
     res.json({ token, username });
   } catch (err) {
     console.error('Authentication error', err.message);
@@ -53,10 +63,6 @@ router.get('/me', authenticateToken, async (req, res, next) => {
     res.status(500).send({ error: 'Unable to fetch user info' });
   }
 });
-
-
-
-
 
 router.put('/:id/edit', authenticateToken, async (req, res, next) => {
   try {

@@ -78,10 +78,11 @@
 
 /* Button styling */
 .button,
-.delete-button {
+.delete-button,
+.modify-button {
     padding: 10px 20px;
-    background-color: #6B8E23;
-    color: white;
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
     border: none;
     border-radius: 8px;
     font-size: 16px;
@@ -91,8 +92,9 @@
 }
 
 .button:hover,
-.delete-button:hover {
-    background-color: #556B2F;
+.delete-button:hover,
+.modify-button:hover {
+    background-color: #45a049; /* Darker green on hover */
 }
 
 /* User Info container */
@@ -170,4 +172,191 @@
 .review-details:hover,
 .comment-details:hover {
     background-color: #333333;
+}
+
+.formContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.formContainer h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.formContainer label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+    /* Ensure the label text is visible */
+}
+
+.formContainer input[type="text"],
+.formContainer input[type="email"],
+.formContainer input[type="number"],
+.formContainer textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.formContainer input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.formContainer button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.formContainer button:hover {
+    background-color: #45a049;
+}
+
+.message {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dashboardContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #121212; /* Black background */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    color: #fff; /* White text */
+}
+
+.dashboardContainer h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #fff; /* White text */
+}
+
+.dashboardContainer a {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.dashboardContainer a:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.viewAllUsersContainer,
+.userDetailsContainer,
+.userReviewsContainer,
+.userCommentsContainer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #121212; /* Set background to black */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #fff; /* Ensure the text color is visible */
+}
+
+.viewAllUsersHeader,
+.userDetailsHeader,
+.userReviewsHeader,
+.userCommentsHeader {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.userList,
+.reviewList,
+.commentList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.userList li,
+.reviewList li,
+.commentList li {
+    background-color: #1d1d1d; /* Dark background for list items */
+    border: 1px solid #333; /* Dark border for list items */
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s ease;
+    color: #fff; /* Ensure the text color is visible */
+}
+
+.userList li:hover,
+.reviewList li:hover,
+.commentList li:hover {
+    background-color: #333; /* Darker background on hover */
+}
+
+.userList a,
+.reviewList a,
+.commentList a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.userList a:hover,
+.reviewList a:hover,
+.commentList a:hover {
+    text-decoration: underline;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.buttonContainer a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.buttonContainer a:hover {
+    background-color: #45a049;
+}
+
+.button {
+    background-color: #4CAF50;
+    color: white;
+    border: none; /* Remove border */
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover {
+    background-color: #45a049;
 }
