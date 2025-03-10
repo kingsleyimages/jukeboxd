@@ -565,3 +565,80 @@ img:hover {
     width: 90%;
   }
 }
+
+/*AllReviews*/
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .reviewPageWrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .allReviewHeader {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .reviewPageCard {
+    flex-direction: column;
+  }
+  
+  .albumContainer {
+    width: 100%;
+    padding: 1.25rem;
+  }
+  
+  .albumContainer img {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .allReviews {
+    padding: 0.75rem;
+  }
+  
+  .allReviewHeader {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .reviewPageWrapper {
+    gap: 1.5rem;
+  }
+  
+  .reviewPageCard {
+    border-radius: 6px;
+  }
+  
+  .albumContainer {
+    padding: 1rem;
+  }
+  
+  .albumContainer img {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .reviewContainer {
+    padding: 1rem;
+  }
+  
+  .reviewContainer .headline {
+    font-size: 1.3rem;
+  }
+  
+  .review {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .linkToAlbum {
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    width: 100%;
+    text-align: center;
+  }
+}
