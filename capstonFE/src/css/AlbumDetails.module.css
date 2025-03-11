@@ -121,7 +121,7 @@ img {
   margin: 0 auto;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   color: #1d1d1d;
   flex-wrap: wrap;
 }
@@ -180,8 +180,8 @@ img {
   padding: 0;
 }
 .reviewContainer {
-  width: 45%;
-  margin: 0 5%;
+  width: 80%;
+  margin: 0 auto;
   padding: 0;
 }
 .albumContainer img {
@@ -347,8 +347,8 @@ img:hover {
   border: none;
   border-radius: 8px;
   padding: 24px;
-  margin: 0 0 24px 0;
-  width: calc(33.33% - 16px);
+  margin: 0 1.5% 24px;
+  width: 30%;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   transition: var(--transition-default);
   position: relative;
@@ -579,16 +579,16 @@ img:hover {
     font-size: 2rem;
     margin-bottom: 1.5rem;
   }
-  
+
   .reviewPageCard {
     flex-direction: column;
   }
-  
+
   .albumContainer {
     width: 100%;
     padding: 1.25rem;
   }
-  
+
   .albumContainer img {
     width: 180px;
     height: 180px;
@@ -599,42 +599,42 @@ img:hover {
   .allReviews {
     padding: 0.75rem;
   }
-  
+
   .allReviewHeader {
     font-size: 1.75rem;
     margin-bottom: 1.25rem;
   }
-  
+
   .reviewPageWrapper {
     gap: 1.5rem;
   }
-  
+
   .reviewPageCard {
     border-radius: 6px;
   }
-  
+
   .albumContainer {
     padding: 1rem;
   }
-  
+
   .albumContainer img {
     width: 150px;
     height: 150px;
   }
-  
+
   .reviewContainer {
     padding: 1rem;
   }
-  
+
   .reviewContainer .headline {
     font-size: 1.3rem;
   }
-  
+
   .review {
     font-size: 0.95rem;
     line-height: 1.5;
   }
-  
+
   .linkToAlbum {
     padding: 0.5rem 1rem;
     font-size: 0.95rem;
