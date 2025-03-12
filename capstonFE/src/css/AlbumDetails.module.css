@@ -172,17 +172,16 @@ img {
   flex-wrap: wrap;
   flex-direction: column;
   justify-content: start;
+  padding: 2%;
 }
 .albumContainer {
   width: 35%;
   margin: 0 5%;
   margin: 0;
-  padding: 0;
 }
 .reviewContainer {
   width: 80%;
   margin: 0 auto;
-  padding: 0;
 }
 .albumContainer img {
   width: 100%;
@@ -568,25 +567,49 @@ img:hover {
 
 /*AllReviews*/
 /* Responsive styles */
+@media (max-width: 1500px) {
+  .reviewPageWrapper {
+    width: 100%;
+  }
+  .reviewPageCard {
+    flex-direction: column;
+  }
+  .albumContainer,
+  .reviewContainer {
+    width: 100%;
+  }
+  .albumContainer img {
+    width: 100%;
+    max-width: 250px;
+  }
+}
 @media (max-width: 1024px) {
   .reviewPageWrapper {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .allReviewHeader {
     font-size: 2rem;
     margin-bottom: 1.5rem;
   }
 
-  .reviewPageCard {
+  /* .reviewPageCard {
+    flex-direction: column;
+  } */
+  .reviewPageWrapper {
     flex-direction: column;
   }
 
   .albumContainer {
-    width: 100%;
+    width: 80%;
+    margin: 0 auto;
     padding: 1.25rem;
+  }
+  .reviewPageCard {
+    width: 80%;
+    margin: 5% auto;
   }
 
   .albumContainer img {
