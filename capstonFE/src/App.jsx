@@ -22,7 +22,7 @@ import UserCommentsPage from "./components/admin-components/UserCommentsPage";
 import UserModify from "./components/admin-components/modify-components/UsersModify";
 import ModifyReview from "./components/admin-components/modify-components/ModifyReview";
 import ModifyComment from "./components/admin-components/modify-components/ModifyComment";
-
+import InactivityLogoutTimer from './components/InactivtyLogoutTimer';
 function App() {
     const [token, setToken] = useState("");
 
@@ -34,6 +34,7 @@ function App() {
     return (
         <>
             <BrowserRouter>
+             <InactivityLogoutTimer />
                 <Navbar />
                 <Routes>
                     <Route element={<ProtectedRoute />}>
