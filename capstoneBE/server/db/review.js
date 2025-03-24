@@ -1,3 +1,4 @@
+const { get } = require("../api");
 const { client } = require("./index");
 const uuid = require("uuid");
 
@@ -10,7 +11,6 @@ const createReview = async (
   favorite
 ) => {
   console.log("DB generation of review");
-  // console.log(albumId, userId, review, headline, rating, favorite);
   try {
     const albumId = await getAlbumIdBySpotifyId(spotifyAlbumId);
     if (!albumId) {
@@ -94,6 +94,7 @@ const fetchReviewsByAlbumId = async (id) => {
 // fetch all reviews by a user
 const fetchReviewsByUserId = async (id) => {
   try {
+    console.log(`Fetching reviews for user ID: ${id}`);
     const { rows } = await client.query(
       `
       SELECT 
@@ -117,9 +118,11 @@ WHERE
     `,
       [id]
     );
+    console.log(`Fetched reviews for user ID: ${id}`, rows);
     return rows;
   } catch (error) {
-    console.log(error);
+    console.error(`Error fetching reviews for user ID: ${id}`, error.message);
+    throw error;
   }
 };
 
@@ -139,12 +142,6 @@ const getReviewById = async (id) => {
     throw error;
   }
 };
-
-module.exports = {
-  getReviewById,
-  // other functions
-};
-
 
 const updateReview = async (id, review, headline, rating, favorite) => {
   try {
@@ -199,12 +196,12 @@ const markAlbumAsListened = async (user_id, spotify_id) => {
     const album_id = albumRes.rows[0].id;
 
     const SQL = `
-		INSERT INTO listenedto (id, user_id, album_id, is_listened, created_at, updated_at) 
-		VALUES ($1, $2, $3, $4, NOW(), NOW())
-		ON CONFLICT (user_id, album_id) 
-		DO UPDATE SET is_listened = TRUE, updated_at = NOW()
-		RETURNING *;
-	  `;
+        INSERT INTO listenedto (id, user_id, album_id, is_listened, created_at, updated_at) 
+        VALUES ($1, $2, $3, $4, NOW(), NOW())
+        ON CONFLICT (user_id, album_id) 
+        DO UPDATE SET is_listened = TRUE, updated_at = NOW()
+        RETURNING *;
+      `;
 
     const response = await client.query(SQL, [
       uuid.v4(),
@@ -266,6 +263,7 @@ const getalllistened = async (user_id) => {
 // delete a review by id
 const deleteReview = async (id) => {
   try {
+    console.log(`Deleting review with ID: ${id}`);
     const { rows } = await client.query(
       `
       DELETE FROM reviews
@@ -274,14 +272,17 @@ const deleteReview = async (id) => {
     `,
       [id]
     );
+    console.log(`Deleted review with ID: ${id}`, rows[0]);
     return rows[0];
   } catch (error) {
-    console.log(error);
+    console.error(`Error deleting review with ID: ${id}`, error.message);
+    throw error;
   }
 };
 
 const getUserReviews = async (userId) => {
   try {
+    console.log(`Fetching reviews for user ID: ${userId}`);
     const { rows } = await client.query(
       `
       SELECT 
@@ -305,9 +306,10 @@ const getUserReviews = async (userId) => {
       `,
       [userId]
     );
+    console.log(`Fetched reviews for user ID: ${userId}`, rows);
     return rows;
   } catch (error) {
-    console.error("Error fetching user reviews:", error.message);
+    console.error(`Error fetching user reviews for user ID: ${userId}`, error.message);
     throw error;
   }
 };
@@ -325,4 +327,5 @@ module.exports = {
   markAlbumAsListened,
   getlistenedto,
   getalllistened,
+  getUserReviews,
 };
