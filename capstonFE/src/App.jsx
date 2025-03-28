@@ -7,7 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Me from "./components/Me";
 import Home from "./components/Home";
 import Mixtapes from "./components/Mixtapes";
-// import Search from "./components/Search";
+import Search from "./components/Search";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Callback from "./components/Callback";
