@@ -49,7 +49,8 @@ function App() {
                     <Route path="/mixtapes" element={<Mixtapes />} />
                     <Route path="/reviews" element={<AllReviews />} />
                     <Route path="/discover" element={<Discover />} />
-                    <Route path="/search" element={<Search />} />
+                    {/* <Route path="/search" element={<Search />} /> */}
+                     <Route path="/results/:searchInput" element={<Results />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/album/:albumId" element={<SingleAlbumDetails />} />
