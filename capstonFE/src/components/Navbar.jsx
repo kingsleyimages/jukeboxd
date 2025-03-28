@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import jukeboxdLogo from "../images/jukeboxdLogoTransparent.png";
+import App from "./Search";
 
 function Navbar() {
   const { isLoggedIn, isAdmin, logout } = useContext(AuthContext);
@@ -27,7 +28,8 @@ function Navbar() {
             <Link to="/">Home</Link>
             <Link to="/discover">Albums</Link>
             <Link to="/reviews">Reviews</Link>
-            <Link to="/search">Search</Link>
+            {/* <Link to="/search">Search</Link> */}
+            <App />
             <Link to="/account">Account</Link>
             {isAdmin && <Link to="/admin/dashboard">Admin Dashboard</Link>}
             <button onClick={handleLogout}>Log out</button>
@@ -37,13 +39,16 @@ function Navbar() {
             <Link to="/">Home</Link>
             <Link to="/discover">Albums</Link>
             <Link to="/reviews">Reviews</Link>
-            <Link to="/search">Search</Link>
+            <App />
+            {/* <Link to="/search">Search</Link> */}
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
           </>
         )}
       </nav>
+      
     </div>
+    
   );
 }
 
