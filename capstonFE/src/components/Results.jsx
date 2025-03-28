@@ -14,12 +14,7 @@ function Results() {
   const { searchInput } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { results } = location.state || { results: [] };
-  const [albums, setAlbums] = useState(results);
-
-  useEffect(() => {
-    setAlbums(results);
-  }, [results]);
+  const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
     const fetchAccessToken = async () => {
@@ -46,16 +41,69 @@ function Results() {
     fetchAccessToken();
   }, []);
 
+  useEffect(() => {
+    // Fetch albums when searchInput or accessToken changes
+    const fetchAlbums = async () => {
+      if (!accessToken || !searchInput) return;
+
+      const artistParams = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + accessToken,
+        },
+      };
+
+      try {
+        // Fetch artist ID
+        const artistResponse = await fetch(
+          `https://api.spotify.com/v1/search?q=${searchInput}&type=artist`,
+          artistParams
+        );
+        const artistData = await artistResponse.json();
+
+        if (!artistData.artists || !artistData.artists.items.length) {
+          console.error("No artist found");
+          return;
+        }
+
+        const artistID = artistData.artists.items[0].id;
+
+        // Fetch albums
+        const albumsResponse = await fetch(
+          `https://api.spotify.com/v1/artists/${artistID}/albums?include_groups=album&market=US&limit=50`,
+          artistParams
+        );
+        const albumsData = await albumsResponse.json();
+
+        if (!albumsData.items) {
+          console.error("No albums found");
+          return;
+        }
+
+        setAlbums(albumsData.items);
+        console.log(albumsData.items);
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+      }
+    };
+
+    fetchAlbums();
+  }, [accessToken, searchInput]);
+
   const handleViewDetails = async (albumId) => {
     try {
+      console.log("Navigating to album with ID:", albumId);
+
       // Check if album exists in local database
       const localResponse = await fetch(
         `${API_BASE_URL}/api/albums/${albumId}`
       );
+      console.log("Local response status:", localResponse.status);
 
       if (!localResponse.ok) {
         console.error(
-          "local album fetch failed with status",
+          "Local album fetch failed with status",
           localResponse.status
         );
       }
@@ -64,6 +112,7 @@ function Results() {
 
       // If album exists, navigate to that page
       if (localResult?.id) {
+        console.log("Album found in local database. Navigating...");
         navigate(`/album/${albumId}`);
         return;
       }
@@ -79,11 +128,11 @@ function Results() {
           },
         }
       );
+      console.log("Spotify response status:", spotifyResponse.status);
 
-      // Check for Spotify API errors
       if (!spotifyResponse.ok) {
         console.error(
-          "spotify fetch failed with status",
+          "Spotify fetch failed with status",
           spotifyResponse.status
         );
         return;
@@ -92,7 +141,7 @@ function Results() {
       const spotifyResult = await spotifyResponse.json().catch(() => null);
 
       if (!spotifyResult) {
-        console.error("failed to parse Spotify API response as JSON");
+        console.error("Failed to parse Spotify API response as JSON");
         return;
       }
 
@@ -118,12 +167,14 @@ function Results() {
         },
         body: JSON.stringify(albumData),
       });
+      console.log("Save response status:", saveResponse.status);
 
       if (!saveResponse.ok) {
-        throw new Error("failed to save album to local db");
+        throw new Error("Failed to save album to local db");
       }
 
       // Navigate to the new album page
+      console.log("Navigating to album page:", `/album/${albumId}`);
       navigate(`/album/${albumId}`);
     } catch (error) {
       console.error("Error handling album details:", error);
@@ -138,7 +189,10 @@ function Results() {
           <Card key={album.id} className={styles.card}>
             <Card.Img src={album.images[0].url} className={styles.img} />
             <Card.Body>
-              <Card.Title className={styles.title}>{album.name}</Card.Title>
+              <Card.Title className={styles.title}>
+                {album.id}
+                {album.name}
+              </Card.Title>
               <Card.Text className={styles.release}>
                 Release Date: <br /> {album.release_date}
               </Card.Text>
