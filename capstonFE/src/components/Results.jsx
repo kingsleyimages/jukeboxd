@@ -82,7 +82,6 @@ function Results() {
         }
 
         setAlbums(albumsData.items);
-        console.log(albumsData.items);
       } catch (error) {
         console.error("Error fetching albums:", error);
       }
@@ -93,13 +92,10 @@ function Results() {
 
   const handleViewDetails = async (albumId) => {
     try {
-      console.log("Navigating to album with ID:", albumId);
-
       // Check if album exists in local database
       const localResponse = await fetch(
         `${API_BASE_URL}/api/albums/${albumId}`
       );
-      console.log("Local response status:", localResponse.status);
 
       if (!localResponse.ok) {
         console.error(
@@ -128,7 +124,6 @@ function Results() {
           },
         }
       );
-      console.log("Spotify response status:", spotifyResponse.status);
 
       if (!spotifyResponse.ok) {
         console.error(
@@ -167,14 +162,13 @@ function Results() {
         },
         body: JSON.stringify(albumData),
       });
-      console.log("Save response status:", saveResponse.status);
 
       if (!saveResponse.ok) {
         throw new Error("Failed to save album to local db");
       }
 
       // Navigate to the new album page
-      console.log("Navigating to album page:", `/album/${albumId}`);
+
       navigate(`/album/${albumId}`);
     } catch (error) {
       console.error("Error handling album details:", error);
