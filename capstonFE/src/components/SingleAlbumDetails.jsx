@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import ReviewCard from "./ReviewCard";
 import styles from "../css/AlbumDetails.module.css";
+import { AuthContext } from "./AuthContext"; // Import AuthContext
 
-const AlbumDetails = ({ token }) => {
+const AlbumDetails = () => {
   const { albumId } = useParams();
+  const { token, user } = useContext(AuthContext); // Access token and user from AuthContext
   const [isListened, setIsListened] = useState(false);
   const [album, setAlbum] = useState(null);
   const [reviews, setReviews] = useState([]);
-  const [userId, setUserId] = useState(null);
   const [editingReview, setEditingReview] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     headline: "",
     review: "",
@@ -43,16 +43,7 @@ const AlbumDetails = ({ token }) => {
     };
 
     fetchAlbumDetails();
-
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        setUserId(payload.id);
-      } catch (error) {
-        console.error("Invalid token format", error.message);
-      }
-    }
-  }, [albumId, token]);
+  }, [albumId]);
 
   useEffect(() => {
     const fetchListenedStatus = async () => {
@@ -112,7 +103,7 @@ const AlbumDetails = ({ token }) => {
     }
 
     const userAlreadyReviewed = reviews.some(
-      (review) => review.user_id === userId
+      (review) => review.user_id === user.id
     );
 
     if (!editingReview && userAlreadyReviewed) {
@@ -305,7 +296,7 @@ const AlbumDetails = ({ token }) => {
               <ReviewCard
                 key={review.id}
                 review={review}
-                userId={userId}
+                userId={user?.id}
                 onEditClick={handleEditClick}
                 onDeleteClick={handleDeleteClick}
                 token={token}
