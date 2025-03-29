@@ -1,48 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import '../App.css';
+import React, { useState, useEffect, useContext } from "react"; // Added useContext
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "./AuthContext"; // Import AuthContext
+import "../App.css";
 
 export const handleLogout = (navigate) => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  navigate('/');
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  navigate("/");
 };
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useContext(AuthContext); // Consume AuthContext's login function
 
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL_PROD ||
     import.meta.env.VITE_API_BASE_URL_DEV;
 
   const [isLoginMode, setIsLoginMode] = useState(
-    location.pathname === '/login'
+    location.pathname === "/login"
   );
-
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
-    email: '',
-    confirmPassword: '',
+    username: "",
+    password: "",
+    email: "",
+    confirmPassword: "",
   });
 
   useEffect(() => {
-    setError('');
-    setSuccessMessage('');
+    setError("");
+    setSuccessMessage("");
     setFormData({
-      username: '',
-      password: '',
-      email: '',
-      confirmPassword: '',
+      username: "",
+      password: "",
+      email: "",
+      confirmPassword: "",
     });
 
-    setIsLoginMode(location.pathname === '/login');
+    setIsLoginMode(location.pathname === "/login");
   }, [location.pathname]);
 
   const handleChange = (e) => {
@@ -55,7 +56,7 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     try {
@@ -65,10 +66,8 @@ function Login() {
       });
 
       if (!response.data.token) {
-        throw new Error('Invalid response from server');
+        throw new Error("Invalid response from server");
       }
-
-      localStorage.setItem('token', response.data.token);
 
       const userResponse = await axios.get(`${API_BASE_URL}/api/users/me`, {
         headers: { Authorization: `Bearer ${response.data.token}` },
@@ -76,24 +75,26 @@ function Login() {
 
       const userRole = userResponse.data.role;
 
-      localStorage.setItem(
-        'user',
-        JSON.stringify({ username: userResponse.data.username, role: userRole })
-      );
+      // Update global auth state via login function from AuthContext
+      login({
+        token: response.data.token,
+        username: userResponse.data.username,
+        role: userRole,
+      });
 
-      window.dispatchEvent(new Event('storage'));
-
-      if (userRole === 'admin') {
-        navigate('/admin/dashboard');
+      // Redirect based on user role
+      if (userRole === "admin") {
+        navigate("/admin/dashboard");
       } else {
-        navigate('/');
+        navigate("/");
       }
     } catch (err) {
-      let errorMessage = 'Login failed. Please check your credentials.';
+      let errorMessage = "Login failed. Please check your credentials.";
       if (err.response) {
-        errorMessage = err.response.data?.message || `Error: ${err.response.data}`;
+        errorMessage =
+          err.response.data?.message || `Error: ${err.response.data}`;
       } else if (err.request) {
-        errorMessage = 'No response from server. Please check your connection.';
+        errorMessage = "No response from server. Please check your connection.";
       }
       setError(errorMessage);
     } finally {
@@ -103,17 +104,17 @@ function Login() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     if (!formData.username || !formData.password || !formData.email) {
-      setError('All fields are required');
+      setError("All fields are required");
       setIsLoading(false);
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       setIsLoading(false);
       return;
     }
@@ -123,22 +124,22 @@ function Login() {
         username: formData.username,
         password: formData.password,
         email: formData.email,
-        role: 'user',
+        role: "user",
       });
 
       if (response.status === 201 || response.status === 200) {
-        navigate('/login', {
-          state: { message: 'Registration successful...time to rock & roll!' },
+        navigate("/login", {
+          state: { message: "Registration successful...time to rock & roll!" },
         });
       }
     } catch (err) {
-      let errorMessage = 'Registration failed. Please try again.';
+      let errorMessage = "Registration failed. Please try again.";
 
       if (err.response) {
         errorMessage =
           err.response.data?.message || `Server error: ${err.response.status}`;
       } else if (err.request) {
-        errorMessage = 'No response from server. Please check your connection.';
+        errorMessage = "No response from server. Please check your connection.";
       }
 
       setError(errorMessage);
@@ -148,7 +149,7 @@ function Login() {
   };
 
   const switchMode = () => {
-    navigate(isLoginMode ? '/register' : '/login');
+    navigate(isLoginMode ? "/register" : "/login");
   };
 
   useEffect(() => {
@@ -162,11 +163,11 @@ function Login() {
     <div className="auth-page">
       <div className="auth-container">
         <div className="auth-header">
-          <h1>{isLoginMode ? 'Welcome back' : 'Create an account'}</h1>
+          <h1>{isLoginMode ? "Welcome back" : "Create an account"}</h1>
           <p>
             {isLoginMode
-              ? 'Log in to access your account'
-              : 'Join our community and discover new music'}
+              ? "Log in to access your account"
+              : "Join our community and discover new music"}
           </p>
         </div>
 
@@ -178,7 +179,8 @@ function Login() {
 
         <form
           onSubmit={isLoginMode ? handleLogin : handleRegister}
-          className="auth-form">
+          className="auth-form"
+        >
           <div className="form-group">
             <label htmlFor="username">Username</label>
             <input
@@ -188,7 +190,7 @@ function Login() {
               value={formData.username}
               onChange={handleChange}
               placeholder={
-                isLoginMode ? 'Your username' : 'Choose a unique username'
+                isLoginMode ? "Your username" : "Choose a unique username"
               }
               required
             />
@@ -218,7 +220,7 @@ function Login() {
               value={formData.password}
               onChange={handleChange}
               placeholder={
-                isLoginMode ? 'Your password' : 'Create a secure password'
+                isLoginMode ? "Your password" : "Create a secure password"
               }
               required
             />
@@ -254,11 +256,11 @@ function Login() {
           <button type="submit" className="auth-button" disabled={isLoading}>
             {isLoading
               ? isLoginMode
-                ? 'Logging in...'
-                : 'Creating Account...'
+                ? "Logging in..."
+                : "Creating Account..."
               : isLoginMode
-              ? 'Log In'
-              : 'Sign Up'}
+              ? "Log In"
+              : "Sign Up"}
           </button>
         </form>
 
@@ -266,14 +268,15 @@ function Login() {
           <p>
             {isLoginMode
               ? "Don't have an account? "
-              : 'Already have an account? '}
+              : "Already have an account? "}
             <a
               href="#"
               onClick={(e) => {
                 e.preventDefault();
                 switchMode();
-              }}>
-              {isLoginMode ? 'Sign up' : 'Log in'}
+              }}
+            >
+              {isLoginMode ? "Sign up" : "Log in"}
             </a>
           </p>
         </div>
