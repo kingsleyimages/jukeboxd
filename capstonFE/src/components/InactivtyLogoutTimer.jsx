@@ -9,7 +9,7 @@ const InactivityLogoutTimer = () => {
     const expireTimeString = localStorage.getItem("expireTime");
     const expireTime = expireTimeString ? parseInt(expireTimeString, 10) : 0;
 
-    // console.log("Checking inactivity:", { expireTime, now: Date.now() }); // Debugging log
+        
 
     if (expireTime < Date.now() && location.pathname !== "/") {
       localStorage.removeItem("token");
@@ -20,11 +20,11 @@ const InactivityLogoutTimer = () => {
     }
   };
 
-  const updateExpiryTime = () => {
-    const expireTime = Date.now() + 5 * 60 * 1000;
-    localStorage.setItem("expireTime", expireTime.toString());
-    // console.log('Updated expireTime:', expireTime); // Debugging log
-  };
+    const updateExpiryTime = () => {
+        const expireTime = Date.now() + 5 * 60 * 1000; 
+        localStorage.setItem('expireTime', expireTime.toString());
+   
+    };
 
   useEffect(() => {
     const interval = setInterval(() => {
