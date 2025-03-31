@@ -128,12 +128,18 @@ const AlbumDetails = () => {
       });
 
       if (response.ok) {
-        const updatedReview = await response.json().catch(() => null);
-        setReviews((prevReviews) =>
-          prevReviews.map((review) =>
-            review.id === updatedReview.id ? updatedReview : review
-          )
-        );
+        const updatedReview = await response.json();
+
+        if (editingReview) {
+          setReviews((prevReviews) =>
+            prevReviews.map((review) =>
+              review.id === updatedReview.id ? updatedReview : review
+            )
+          );
+        } else {
+          setReviews((prevReviews) => [updatedReview, ...prevReviews]);
+        }
+
         setEditingReview(null);
         setFormData({ headline: "", review: "", rating: 1, favorite: false });
       } else {
