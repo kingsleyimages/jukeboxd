@@ -184,7 +184,7 @@ function Results() {
             <Card.Img src={album.images[0].url} className={styles.img} />
             <Card.Body>
               <Card.Title className={styles.title}>
-                {album.id}
+                {/* {album.id} */}
                 {album.name}
               </Card.Title>
               <Card.Text className={styles.release}>
@@ -193,12 +193,14 @@ function Results() {
               <Button
                 target="_blank"
                 href={album.external_urls.spotify}
-                className={styles.button}>
+                className={styles.button}
+              >
                 Album Link
               </Button>
               <Button
                 className={styles.button}
-                onClick={() => handleViewDetails(album.id)}>
+                onClick={() => handleViewDetails(album.id)}
+              >
                 View Details
               </Button>
             </Card.Body>
