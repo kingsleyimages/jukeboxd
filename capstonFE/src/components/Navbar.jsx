@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "./AuthContext";
 import jukeboxdLogo from "../images/jukeboxdLogoTransparent.png";
@@ -7,48 +7,88 @@ import App from "./Search";
 function Navbar() {
   const { isLoggedIn, isAdmin, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to toggle menu
 
   const handleLogout = () => {
     logout();
     navigate("/"); // Redirect home
+    setIsMenuOpen(false); // Close menu on logout
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen); // Toggle menu state
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false); // Close menu when a link is clicked
   };
 
   return (
     <div className="nav-container">
       <nav>
-        <Link to="/">
+        {/* Logo */}
+        <Link to="/" onClick={closeMenu}>
           <img
             src={jukeboxdLogo}
             alt="Jukeboxd logo"
             style={{ width: "70px" }}
           />
         </Link>
-        {isLoggedIn ? (
-          <>
-            <Link to="/">Home</Link>
-            <Link to="/discover">Albums</Link>
-            <Link to="/reviews">Reviews</Link>
-            {/* <Link to="/search">Search</Link> */}
-            <App />
-            <Link to="/account">Account</Link>
-            {isAdmin && <Link to="/admin/dashboard">Admin Dashboard</Link>}
-            <button onClick={handleLogout}>Log out</button>
-          </>
-        ) : (
-          <>
-            <Link to="/">Home</Link>
-            <Link to="/discover">Albums</Link>
-            <Link to="/reviews">Reviews</Link>
-            <App />
-            {/* <Link to="/search">Search</Link> */}
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </>
-        )}
+
+        {/* Hamburger Menu Button */}
+        <button className="hamburger-menu" onClick={toggleMenu}>
+          ☰
+        </button>
+
+        {/* Navigation Links */}
+        <div className={`nav-links ${isMenuOpen ? "open" : ""}`}>
+          {isLoggedIn ? (
+            <>
+              <Link to="/" onClick={closeMenu}>
+                Home
+              </Link>
+              <Link to="/discover" onClick={closeMenu}>
+                Albums
+              </Link>
+              <Link to="/reviews" onClick={closeMenu}>
+                Reviews
+              </Link>
+              {/* <Link to="/search">Search</Link> */}
+              <App />
+              <Link to="/account" onClick={closeMenu}>
+                Account
+              </Link>
+              {isAdmin && (
+                <Link to="/admin/dashboard" onClick={closeMenu}>
+                  Admin Dashboard
+                </Link>
+              )}
+              <button onClick={handleLogout}>Log out</button>
+            </>
+          ) : (
+            <>
+              <Link to="/" onClick={closeMenu}>
+                Home
+              </Link>
+              <Link to="/discover" onClick={closeMenu}>
+                Albums
+              </Link>
+              <Link to="/reviews" onClick={closeMenu}>
+                Reviews
+              </Link>
+              <App />
+              {/* <Link to="/search">Search</Link> */}
+              <Link to="/login" onClick={closeMenu}>
+                Login
+              </Link>
+              <Link to="/register" onClick={closeMenu}>
+                Register
+              </Link>
+            </>
+          )}
+        </div>
       </nav>
-      
     </div>
-    
   );
 }
 
