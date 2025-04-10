@@ -1558,7 +1558,7 @@ nav a.active::after {
      transform: translateX(0);
    }
  }
- 
+
  .menu-overlay {
    display: none;
    position: fixed;
@@ -1572,4 +1572,22 @@ nav a.active::after {
 
  .menu-overlay.open {
    display: block;
+ }
+
+ .favorite-indicator {
+   color: gold;
+   font-size: 16px;
+   margin-left: 8px;
+ }
+
+ .review-item {
+   margin-bottom: 16px;
+   padding: 12px;
+   background-color: #f9f9f9;
+   border-radius: 8px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ }
+
+ .review-item:hover {
+   background-color: #f1f1f1;
  }

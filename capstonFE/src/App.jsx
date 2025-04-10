@@ -13,7 +13,7 @@ import Callback from "./components/Callback";
 import AllReviews from "./components/AllReviews";
 import SingleAlbumDetails from "./components/SingleAlbumDetails";
 import Results from "./components/Results";
-import Admin from "./components/admin-components/Admin"; // Import the Admin component
+import Admin from "./components/admin-components/Admin"; 
 import InactivityLogoutTimer from "./components/InactivtyLogoutTimer";
 
 function App() {
