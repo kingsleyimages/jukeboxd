@@ -1,0 +1,54 @@
+.navBarKT {
+  background-color: var(--purple-light) !important;
+  border-bottom: 1px solid var(--purple-dark) !important;
+}
+.navLinkKT,
+.navBrandKT {
+  color: var(--text-color) !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 1.7rem !important;
+  font-family: "Caveat Regular" !important;
+}
+.navLinkKT:hover {
+  color: var(--purple-dark) !important;
+}
+.navbar-collapseKT {
+  justify-content: end;
+}
+.navLogoKT {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+@media (max-width: 600px) {
+  .navBarKT {
+    flex-wrap: nowrap !important;
+  }
+  .navBarKT button {
+    width: 16% !important;
+    max-width: 100% !important;
+  }
+  .navbar-collapseKT {
+    justify-content: end;
+    width: 100%;
+    position: absolute;
+    top: 68px;
+    left: 0;
+    background-color: var(--purple-dark);
+  }
+
+  .navLinkKT {
+    font-size: 1.3rem !important;
+    padding-left: 25px !important;
+    border-bottom: 1px solid var(--purple-light) !important;
+    color: var(--purple-light) !important;
+  }
+  .navLogoKT {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+  }
+}
