@@ -9,7 +9,7 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL_PROD ||
   import.meta.env.VITE_API_BASE_URL_DEV;
 
-function Search() {
+function Search({ closeMenu }) {
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
 
@@ -21,6 +21,7 @@ function Search() {
     }
     navigate(`/results/${searchInput}`);
     setSearchInput("");
+    closeMenu();
   };
   return (
     <Container className={styles.searchContainer}>

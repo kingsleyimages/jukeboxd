@@ -13,15 +13,17 @@ import Callback from "./components/Callback";
 import AllReviews from "./components/AllReviews";
 import SingleAlbumDetails from "./components/SingleAlbumDetails";
 import Results from "./components/Results";
-import Admin from "./components/admin-components/Admin"; 
+import Admin from "./components/admin-components/Admin";
 import InactivityLogoutTimer from "./components/InactivtyLogoutTimer";
+import NavbarRedux from "./components/NavbarRedux";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
         <InactivityLogoutTimer />
-        <Navbar />
+        {/* <Navbar /> */}
+        <NavbarRedux />
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/account" element={<Me />} />
