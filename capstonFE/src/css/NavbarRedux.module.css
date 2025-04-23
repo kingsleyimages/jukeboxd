@@ -1,54 +1,63 @@
-.navBarKT {
-  background-color: var(--purple-light) !important;
-  border-bottom: 1px solid var(--purple-dark) !important;
-}
-.navLinkKT,
-.navBrandKT {
-  color: var(--text-color) !important;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: 1.7rem !important;
-  font-family: "Caveat Regular" !important;
-}
-.navLinkKT:hover {
-  color: var(--purple-dark) !important;
-}
-.navbar-collapseKT {
-  justify-content: end;
-}
-.navLogoKT {
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
+.logoImg {
+  width: 75px;
+  height: 75px;
 }
 
-@media (max-width: 600px) {
-  .navBarKT {
-    flex-wrap: nowrap !important;
-  }
-  .navBarKT button {
-    width: 16% !important;
-    max-width: 100% !important;
-  }
-  .navbar-collapseKT {
-    justify-content: end;
-    width: 100%;
-    position: absolute;
-    top: 68px;
-    left: 0;
-    background-color: var(--purple-dark);
-  }
+.navBarJukeboxd {
+  width: 100%;
+  max-width: none;
+  max-height: 100px;
+  background-color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 16px 0;
 
-  .navLinkKT {
-    font-size: 1.3rem !important;
-    padding-left: 25px !important;
-    border-bottom: 1px solid var(--purple-light) !important;
-    color: var(--purple-light) !important;
+  border-bottom: 1px solid #333;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+  margin: 0 0 0 0;
+}
+
+.linkWrapper {
+  justify-content: end !important;
+}
+.linkAlign {
+  align-items: center !important;
+}
+.linkStyle {
+  color: #b3b3b3 !important;
+  text-decoration: none !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  letter-spacing: 0.5px !important;
+  margin: 0 16px !important;
+  transition: color 0.2s ease, background-color 0.2s ease !important;
+  padding: 8px 12px !important;
+  border-radius: 4px !important;
+}
+.toggler {
+  color: #fff !important;
+  border: 1px solid #fff !important;
+}
+.toggler span {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat;
+  background-size: contain;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+}
+
+@media screen and (max-width: 991px) {
+  .linkAlign {
+    width: 50%;
+    margin-left: 50%;
+    align-items: end !important;
+    background-color: #000;
   }
-  .navLogoKT {
-    width: 40px;
-    height: 40px;
-    margin-right: 5px;
+}
+
+@media screen and (max-width: 425px) {
+  .linkAlign {
+    width: 90%;
+    margin-left: 10%;
   }
 }

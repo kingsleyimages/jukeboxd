@@ -165,8 +165,9 @@ h6 {
 }
 
 body {
-  background-color: #1d1d1d;
-  font-family: Montserrat, Arial, sans-serif;
+  background-color: #1d1d1d !important;
+  font-family: Montserrat, Arial, sans-serif !important;
+  padding-top: 100px !important;
 }
 
 /* Authentication Styles */
