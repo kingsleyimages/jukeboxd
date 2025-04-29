@@ -1,6 +1,7 @@
-import { motion } from "framer-motion";
+import { animate, motion, useMotionValue } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useMeasure from "react-use-measure";
 
 export default function AlbumCarousel() {
   const [albums, setAlbums] = useState([]);
@@ -30,32 +31,42 @@ export default function AlbumCarousel() {
     fetchAlbumsFromDB();
   }, []);
 
-  const duplicatedAlbums =
-    albums.length > 0 ? [...albums, ...albums, ...albums] : [];
+  // const duplicatedAlbums = albums.length > 0 ? [...albums, ...albums] : [];
+  const duplicatedAlbums = [...albums];
+  let [ref, { width }] = useMeasure();
+  const xTranslation = useMotionValue(0);
+
+  useEffect(() => {
+    if (width === 0) return; // Avoid running animation if width is not measured
+
+    const finalPosition = -width * 2.55; // Scroll to the negative width of the container
+    const controls = animate(xTranslation, [0, finalPosition], {
+      ease: "linear",
+      duration: 50, // Adjust speed as needed
+      repeat: Infinity,
+      repeatType: "loop",
+    });
+    return () => controls.stop(); // Cleanup animation on unmount
+  }, [xTranslation, width]);
 
   return (
-    <div className="overflow-hidden w-full bg-black py-4 relative">
+    <div className=" w-full bg-black py-4 relative">
       <motion.div
+        ref={ref}
         className="flex w-max gap-4 items-center"
         style={{
           display: "flex",
-          flexDirection: "row",
-          whiteSpace: "nowrap",
-        }}
-        animate={{ x: ["0%", "-100%"] }}
-        transition={{
-          repeat: Infinity,
-          duration: 20,
-          ease: "linear",
-        }}
-      >
-        {duplicatedAlbums.map((album, index) => (
+          x: xTranslation, // Bind motion value to the x position
+        }}>
+        {[
+          ...duplicatedAlbums.slice(5, 20),
+          ...duplicatedAlbums.slice(5, 20),
+        ].map((album, index) => (
           <img
             key={index}
             src={album.image}
             alt={album.name}
-            className="w-40 h-40 object-cover rounded-xl inline-block cursor-pointer"
-            style={{ display: "inline-block" }}
+            className="w-40 h-40 object-cover rounded-xl cursor-pointer inline-block"
             onClick={() => navigate(`/album/${album.spotify_id}`)}
           />
         ))}
