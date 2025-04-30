@@ -1,7 +1,6 @@
-import { animate, motion, useMotionValue } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useMeasure from "react-use-measure";
 
 export default function AlbumCarousel() {
   const [albums, setAlbums] = useState([]);
@@ -31,42 +30,41 @@ export default function AlbumCarousel() {
     fetchAlbumsFromDB();
   }, []);
 
-  // const duplicatedAlbums = albums.length > 0 ? [...albums, ...albums] : [];
-  const duplicatedAlbums = [...albums];
-  let [ref, { width }] = useMeasure();
-  const xTranslation = useMotionValue(0);
+  const duplicatedAlbums = [...albums.slice(5, 30), ...albums.slice(5, 30)];
+
+  const controls = useAnimation();
 
   useEffect(() => {
-    if (width === 0) return; // Avoid running animation if width is not measured
-
-    const finalPosition = -width * 2.55; // Scroll to the negative width of the container
-    const controls = animate(xTranslation, [0, finalPosition], {
-      ease: "linear",
-      duration: 50, // Adjust speed as needed
-      repeat: Infinity,
-      repeatType: "loop",
-    });
-    return () => controls.stop(); // Cleanup animation on unmount
-  }, [xTranslation, width]);
+    if (duplicatedAlbums.length > 0) {
+      const totalWidth = duplicatedAlbums.length * 200; // Assuming each image is 180px wide (adjust as needed)
+      controls.start({
+        x: [0, -totalWidth / 2], // Start at 0 and move left
+        transition: {
+          duration: 20, // Adjust speed as needed
+          ease: "linear",
+          repeat: Infinity, // Loop infinitely
+        },
+      });
+    }
+  }, [duplicatedAlbums, controls]);
 
   return (
-    <div className=" w-full bg-black py-4 relative">
+    <div className="overflow-hidden w-full bg-black py-4 relative">
       <motion.div
-        ref={ref}
         className="flex w-max gap-4 items-center"
+        animate={controls}
         style={{
           display: "flex",
-          x: xTranslation, // Bind motion value to the x position
+          flexDirection: "row",
+          whiteSpace: "nowrap",
         }}>
-        {[
-          ...duplicatedAlbums.slice(5, 20),
-          ...duplicatedAlbums.slice(5, 20),
-        ].map((album, index) => (
+        {duplicatedAlbums.map((album, index) => (
           <img
             key={index}
             src={album.image}
             alt={album.name}
-            className="w-40 h-40 object-cover rounded-xl cursor-pointer inline-block"
+            className="w-40 h-40 object-cover rounded-xl inline-block cursor-pointer"
+            style={{ display: "inline-block" }}
             onClick={() => navigate(`/album/${album.spotify_id}`)}
           />
         ))}
