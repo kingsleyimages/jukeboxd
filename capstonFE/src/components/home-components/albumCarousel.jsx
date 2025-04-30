@@ -30,17 +30,18 @@ export default function AlbumCarousel() {
     fetchAlbumsFromDB();
   }, []);
 
-  const duplicatedAlbums = [...albums.slice(5, 30), ...albums.slice(5, 30)];
+  //create copy of albums array to create infinite scroll using last 25 albums in array to make sure most recent albums are shown
+  const duplicatedAlbums = [...albums.slice(-25), ...albums.slice(-25)];
 
   const controls = useAnimation();
 
   useEffect(() => {
     if (duplicatedAlbums.length > 0) {
-      const totalWidth = duplicatedAlbums.length * 200; // Assuming each image is 180px wide (adjust as needed)
+      const totalWidth = duplicatedAlbums.length * 200; // Assuming each image is 200px wide (adjust as needed)
       controls.start({
         x: [0, -totalWidth / 2], // Start at 0 and move left
         transition: {
-          duration: 20, // Adjust speed as needed
+          duration: 50, // Adjust speed as needed
           ease: "linear",
           repeat: Infinity, // Loop infinitely
         },
