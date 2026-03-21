@@ -3,8 +3,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Container, Row, Card, Button } from "react-bootstrap";
 import styles from "../css/Search.module.css";
 
-const clientId = import.meta.env.VITE_CLIENT_ID;
-const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL_PROD ||
   import.meta.env.VITE_API_BASE_URL_DEV;
@@ -18,23 +16,17 @@ function Results() {
 
   useEffect(() => {
     const fetchAccessToken = async () => {
-      const authParams = {
+      const response = await fetch(`${API_BASE_URL}/api/spotify/token`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body:
-          "grant_type=client_credentials&client_id=" +
-          clientId +
-          "&client_secret=" +
-          clientSecret,
-      };
-
-      const response = await fetch(
-        "https://accounts.spotify.com/api/token",
-        authParams
-      );
-      const data = await response.json();
+      });
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data?.access_token) {
+        console.error(
+          "Failed to fetch Spotify access token:",
+          data?.error || "Unknown error"
+        );
+        return;
+      }
       setAccessToken(data.access_token);
     };
 
