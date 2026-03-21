@@ -4,7 +4,6 @@ import styles from "../css/Discover.module.css";
 
 function Discover() {
   const [albums, setAlbums] = useState([]);
-  const [accessToken, setAccessToken] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const API_BASE_URL =
@@ -24,106 +23,29 @@ function Discover() {
   };
 
   useEffect(() => {
-    async function fetchAccessToken() {
+    async function getTopAlbums() {
       try {
-        if (!API_BASE_URL) {
-          setErrorMessage("Frontend API base URL is not configured.");
-          await loadLocalAlbums();
-          return;
-        }
-
-        const response = await fetch(`${API_BASE_URL}/api/spotify/token`, {
-          method: "POST",
-        });
-
+        const response = await fetch(
+          `${API_BASE_URL}/api/spotify/new-releases?limit=50`
+        );
         const data = await response.json().catch(() => null);
 
         if (!response.ok) {
           setErrorMessage(
-            `Spotify token request failed: ${
-              data?.error_description || data?.error || "Unknown error"
-            }. Showing local albums instead.`
+            `Spotify error: ${
+              data?.error || "Unable to load new releases."
+            } Showing local albums instead.`
           );
           await loadLocalAlbums();
-          throw new Error(
-            `Error fetching access token: ${
-              data?.error_description || data?.error || "Unknown error"
-            }`
-          );
+          return;
         }
 
-        if (!data?.access_token) {
-          throw new Error("Spotify token response missing access_token");
-        }
-
-        setAccessToken(data.access_token);
-      } catch (error) {
-        console.error("Failed to fetch access token:", error);
-        await loadLocalAlbums();
-      }
-    }
-
-    fetchAccessToken();
-  }, []);
-
-  useEffect(() => {
-    async function getTopAlbums() {
-      if (!accessToken) return;
-
-      const spotifyBlocked = localStorage.getItem("spotifyBlocked") === "true";
-      if (spotifyBlocked) {
-        setErrorMessage(
-          "Spotify access is currently blocked for this app owner account. Showing local albums instead."
-        );
-        await loadLocalAlbums();
-        return;
-      }
-
-      try {
-        const response = await fetch(
-          // "https://jukeboxd-znlr.onrender.com/api/albums",
-          "https://api.spotify.com/v1/browse/new-releases?limit=50",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const rawBody = await response.text();
-        let data = null;
-        try {
-          data = rawBody ? JSON.parse(rawBody) : null;
-        } catch {
-          data = null;
-        }
-
-        if (!response.ok) {
-          if (response.status === 403) {
-            localStorage.setItem("spotifyBlocked", "true");
-            setErrorMessage(
-              "Spotify access is currently blocked for this app owner account. Showing local albums instead."
-            );
-            await loadLocalAlbums();
-            return;
-          }
-          throw new Error(
-            `Error fetching albums: ${
-              data?.error?.message || rawBody || "Unknown error"
-            }`
-          );
-        }
-
-        if (!data.albums || !data.albums.items) {
+        if (!data?.albums?.items) {
           throw new Error("Invalid data format received from Spotify API");
         }
 
         setAlbums(data.albums.items);
         setErrorMessage("");
-  localStorage.removeItem("spotifyBlocked");
-
       } catch (error) {
         console.error("Failed to fetch top albums!:", error);
         await loadLocalAlbums();
@@ -131,7 +53,7 @@ function Discover() {
     }
 
     getTopAlbums();
-  }, [accessToken]);
+  }, []);
 
   const handleViewDetails = async (albumId) => {
     try {
@@ -145,14 +67,7 @@ function Discover() {
       }
 
       const spotifyResponse = await fetch(
-        `https://api.spotify.com/v1/albums/${albumId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
+        `${API_BASE_URL}/api/spotify/albums/${albumId}`
       );
 
       if (!spotifyResponse.ok) {
@@ -160,7 +75,6 @@ function Discover() {
       }
 
       const spotifyResult = await spotifyResponse.json().catch(() => null);
-      console.log("spotify result", spotifyResult);
 
       const albumData = {
         name: spotifyResult.name,
@@ -177,23 +91,19 @@ function Discover() {
 
       const saveResponse = await fetch(`${API_BASE_URL}/api/albums/create`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(albumData),
       });
 
       if (!saveResponse.ok) {
         throw new Error("failed to save album to local db");
       }
-      console.log("album saved to local db");
 
       navigate(`/album/${albumId}`);
     } catch (error) {
       console.error("Error handling album details:", error);
     }
   };
-  console.log(albums);
   return (
     <>
       <h1 className={styles.pageHeader}>
