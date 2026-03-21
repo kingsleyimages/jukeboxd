@@ -3,12 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Container, InputGroup, FormControl, Button } from "react-bootstrap";
 import styles from "../css/Search.module.css";
 
-const clientId = import.meta.env.VITE_CLIENT_ID;
-const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL_PROD ||
-  import.meta.env.VITE_API_BASE_URL_DEV;
-
 function Search({ closeMenu }) {
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
