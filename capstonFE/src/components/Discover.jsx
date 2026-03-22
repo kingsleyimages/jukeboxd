@@ -26,7 +26,7 @@ function Discover() {
     async function getTopAlbums() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/api/spotify/new-releases?limit=50`
+          `${API_BASE_URL}/api/spotify/new-releases?limit=30`,
         );
         const data = await response.json().catch(() => null);
 
@@ -34,7 +34,7 @@ function Discover() {
           setErrorMessage(
             `Spotify error: ${
               data?.error || "Unable to load new releases."
-            } Showing local albums instead.`
+            } Showing local albums instead.`,
           );
           await loadLocalAlbums();
           return;
@@ -58,7 +58,7 @@ function Discover() {
   const handleViewDetails = async (albumId) => {
     try {
       const localResponse = await fetch(
-        `${API_BASE_URL}/api/albums/${albumId}`
+        `${API_BASE_URL}/api/albums/${albumId}`,
       );
       const localResult = await localResponse.json().catch(() => null);
       if (localResult?.id) {
@@ -67,7 +67,7 @@ function Discover() {
       }
 
       const spotifyResponse = await fetch(
-        `${API_BASE_URL}/api/spotify/albums/${albumId}`
+        `${API_BASE_URL}/api/spotify/albums/${albumId}`,
       );
 
       if (!spotifyResponse.ok) {
@@ -136,16 +136,20 @@ function Discover() {
               <div>
                 <button
                   className={styles.button}
-                  onClick={() => handleViewDetails(album.spotify_id || album.id)}
-                >
+                  onClick={() =>
+                    handleViewDetails(album.spotify_id || album.id)
+                  }>
                   View Details
                 </button>
                 <a
-                  href={album.external_urls?.spotify || album.spotifyurl || album.spotifyUrl}
+                  href={
+                    album.external_urls?.spotify ||
+                    album.spotifyurl ||
+                    album.spotifyUrl
+                  }
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={styles.link}
-                >
+                  className={styles.link}>
                   Listen on Spotify
                 </a>
               </div>
