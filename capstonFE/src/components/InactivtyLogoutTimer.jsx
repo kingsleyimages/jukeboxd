@@ -1,37 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const InactivityLogoutTimer = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const intervalRef = useRef(null);
 
   const checkForInactivity = () => {
     const expireTimeString = localStorage.getItem("expireTime");
     const expireTime = expireTimeString ? parseInt(expireTimeString, 10) : 0;
 
-        
-
-    if (expireTime < Date.now() && location.pathname !== "/") {
+    if (
+      expireTime < Date.now() &&
+      location.pathname !== "/" &&
+      localStorage.getItem("token")
+    ) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
       localStorage.removeItem("token");
-      localStorage.removeItem("expireTime"); // Clear expireTime after logout
-      alert("You have been logged out due to inactivity."); // Notify the user
-      navigate("/"); // Redirect to the main page
-      window.location.reload(); // Force a page refresh
+      localStorage.removeItem("expireTime");
+      alert("You have been logged out due to inactivity.");
+      navigate("/");
+      window.location.reload();
     }
   };
 
-    const updateExpiryTime = () => {
-        const expireTime = Date.now() + 5 * 60 * 1000; 
-        localStorage.setItem('expireTime', expireTime.toString());
-   
-    };
+  const updateExpiryTime = () => {
+    const expireTime = Date.now() + 5 * 60 * 1000;
+    localStorage.setItem("expireTime", expireTime.toString());
+  };
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       checkForInactivity();
     }, 5000); // Check for inactivity every 5 seconds
 
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalRef.current);
   }, [location]); // Add `location` as a dependency to re-check on route changes
 
   useEffect(() => {

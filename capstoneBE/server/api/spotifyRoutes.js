@@ -2,10 +2,16 @@ const express = require("express");
 const axios = require("axios");
 const router = express.Router();
 
-const normalizeLimit = (rawLimit, fallback = 10, max = 10) => {
-  const parsed = Number.parseInt(rawLimit, 10);
+const normalizeLimit = (rawLimit, fallback = 20, max = 20) => {
+  const parsed = Number.parseInt(rawLimit, 20);
   if (Number.isNaN(parsed)) return fallback;
   return Math.min(Math.max(parsed, 1), max);
+};
+
+const normalizeOffset = (rawOffset, fallback = 0, max = 1000) => {
+  const parsed = Number.parseInt(rawOffset, 10);
+  if (Number.isNaN(parsed)) return fallback;
+  return Math.min(Math.max(parsed, 0), max);
 };
 
 // Cache token in memory to avoid hammering the token endpoint
@@ -36,7 +42,7 @@ const getSpotifyToken = async () => {
     {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       timeout: 10_000,
-    }
+    },
   );
   const tokenData = tokenResponse?.data;
   if (!tokenData?.access_token) {
@@ -64,11 +70,15 @@ const sendSpotifyError = (error, res) => {
 router.get("/new-releases", async (req, res, next) => {
   try {
     const token = await getSpotifyToken();
-    const limit = normalizeLimit(req.query.limit, 10, 10);
+    const limit = normalizeLimit(req.query.limit, 20, 20);
+    const randomOffset = Math.floor(Math.random() * 200);
+    const offset = normalizeOffset(req.query.offset, randomOffset, 1000);
     const params = {
       q: "tag:new",
+      market: "US",
       type: "album",
       limit,
+      offset,
     };
     // Use search with tag:new — browse/new-releases requires elevated Spotify app permissions
     const spotifyRes = await axios.get("https://api.spotify.com/v1/search", {
@@ -87,8 +97,9 @@ router.get("/new-releases", async (req, res, next) => {
 router.get("/search", async (req, res, next) => {
   try {
     const { q, type = "artist" } = req.query;
-    const limit = normalizeLimit(req.query.limit, 10, 10);
-    if (!q) return res.status(400).json({ error: "Missing query parameter 'q'" });
+    const limit = normalizeLimit(req.query.limit, 20, 20);
+    if (!q)
+      return res.status(400).json({ error: "Missing query parameter 'q'" });
     const token = await getSpotifyToken();
     const params = {
       q,
@@ -124,7 +135,7 @@ router.get("/artists/:artistId/albums", async (req, res, next) => {
         params,
         headers: { Authorization: `Bearer ${token}` },
         timeout: 10_000,
-      }
+      },
     );
     const data = spotifyRes.data;
     res.status(200).json(data);
@@ -137,10 +148,13 @@ router.get("/albums/:albumId", async (req, res, next) => {
   try {
     const { albumId } = req.params;
     const token = await getSpotifyToken();
-    const spotifyRes = await axios.get(`https://api.spotify.com/v1/albums/${albumId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-      timeout: 10_000,
-    });
+    const spotifyRes = await axios.get(
+      `https://api.spotify.com/v1/albums/${albumId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 10_000,
+      },
+    );
     const data = spotifyRes.data;
     res.status(200).json(data);
   } catch (error) {
@@ -151,10 +165,14 @@ router.get("/albums/:albumId", async (req, res, next) => {
 router.post("/token", async (req, res, next) => {
   try {
     if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
-      return res.status(500).json({ error: "Spotify credentials are not configured on the server" });
+      return res.status(500).json({
+        error: "Spotify credentials are not configured on the server",
+      });
     }
     const access_token = await getSpotifyToken();
-    res.status(200).json({ access_token, token_type: "Bearer", expires_in: 3600 });
+    res
+      .status(200)
+      .json({ access_token, token_type: "Bearer", expires_in: 3600 });
   } catch (error) {
     return sendSpotifyError(error, res);
   }
