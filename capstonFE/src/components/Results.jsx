@@ -8,67 +8,36 @@ const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL_DEV;
 
 function Results() {
-  const [accessToken, setAccessToken] = useState("");
   const { searchInput } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const [albums, setAlbums] = useState([]);
 
   useEffect(() => {
-    const fetchAccessToken = async () => {
-      const response = await fetch(`${API_BASE_URL}/api/spotify/token`, {
-        method: "POST",
-      });
-      const data = await response.json().catch(() => null);
-      if (!response.ok || !data?.access_token) {
-        console.error(
-          "Failed to fetch Spotify access token:",
-          data?.error || "Unknown error"
-        );
-        return;
-      }
-      setAccessToken(data.access_token);
-    };
-
-    fetchAccessToken();
-  }, []);
-
-  useEffect(() => {
-    // Fetch albums when searchInput or accessToken changes
     const fetchAlbums = async () => {
-      if (!accessToken || !searchInput) return;
-
-      const artistParams = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + accessToken,
-        },
-      };
+      if (!searchInput) return;
 
       try {
-        // Fetch artist ID
+        // Search for artist via backend proxy
         const artistResponse = await fetch(
-          `https://api.spotify.com/v1/search?q=${searchInput}&type=artist`,
-          artistParams
+          `${API_BASE_URL}/api/spotify/search?q=${encodeURIComponent(searchInput)}&type=artist&limit=1`
         );
-        const artistData = await artistResponse.json();
+        const artistData = await artistResponse.json().catch(() => null);
 
-        if (!artistData.artists || !artistData.artists.items.length) {
+        if (!artistData?.artists?.items?.length) {
           console.error("No artist found");
           return;
         }
 
         const artistID = artistData.artists.items[0].id;
 
-        // Fetch albums
+        // Fetch albums via backend proxy
         const albumsResponse = await fetch(
-          `https://api.spotify.com/v1/artists/${artistID}/albums?include_groups=album&market=US&limit=50`,
-          artistParams
+          `${API_BASE_URL}/api/spotify/artists/${artistID}/albums?market=US&limit=50`
         );
-        const albumsData = await albumsResponse.json();
+        const albumsData = await albumsResponse.json().catch(() => null);
 
-        if (!albumsData.items) {
+        if (!albumsData?.items) {
           console.error("No albums found");
           return;
         }
@@ -80,7 +49,7 @@ function Results() {
     };
 
     fetchAlbums();
-  }, [accessToken, searchInput]);
+  }, [searchInput]);
 
   const handleViewDetails = async (albumId) => {
     try {
@@ -105,16 +74,9 @@ function Results() {
         return;
       }
 
-      // If album doesn't exist, fetch it from Spotify
+      // If album doesn't exist, fetch it from Spotify via backend proxy
       const spotifyResponse = await fetch(
-        `https://api.spotify.com/v1/albums/${albumId}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-        }
+        `${API_BASE_URL}/api/spotify/albums/${albumId}`
       );
 
       if (!spotifyResponse.ok) {
