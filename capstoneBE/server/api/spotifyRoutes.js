@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 const router = express.Router();
 
 const normalizeLimit = (rawLimit, fallback = 10, max = 10) => {
@@ -14,25 +15,34 @@ let _tokenExpiresAt = 0;
 const getSpotifyToken = async () => {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  if (!clientId || !clientSecret) throw new Error("Spotify credentials not configured");
+  if (!clientId || !clientSecret) {
+    const error = new Error("Spotify credentials not configured on server");
+    error.status = 500;
+    throw error;
+  }
 
   // Return cached token if still valid (with 30-second buffer)
   if (_cachedToken && Date.now() < _tokenExpiresAt - 30_000) {
     return _cachedToken;
   }
 
-  const tokenResponse = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
+  const tokenResponse = await axios.post(
+    "https://accounts.spotify.com/api/token",
+    new URLSearchParams({
       grant_type: "client_credentials",
       client_id: clientId,
       client_secret: clientSecret,
     }).toString(),
-  });
-  const tokenData = await tokenResponse.json().catch(() => null);
-  if (!tokenResponse.ok || !tokenData?.access_token) {
-    throw new Error(tokenData?.error_description || "Failed to get Spotify token");
+    {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      timeout: 10_000,
+    }
+  );
+  const tokenData = tokenResponse?.data;
+  if (!tokenData?.access_token) {
+    const error = new Error("Failed to get Spotify token");
+    error.status = 502;
+    throw error;
   }
 
   _cachedToken = tokenData.access_token;
@@ -40,28 +50,37 @@ const getSpotifyToken = async () => {
   return _cachedToken;
 };
 
+const sendSpotifyError = (error, res) => {
+  const status = error?.response?.status || error?.status || 500;
+  const message =
+    error?.response?.data?.error?.message ||
+    error?.response?.data?.error_description ||
+    error?.message ||
+    "Spotify error";
+
+  return res.status(status).json({ error: message });
+};
+
 router.get("/new-releases", async (req, res, next) => {
   try {
     const token = await getSpotifyToken();
     const limit = normalizeLimit(req.query.limit, 10, 10);
-    const params = new URLSearchParams({
+    const params = {
       q: "tag:new",
       type: "album",
-      limit: String(limit),
-    });
+      limit,
+    };
     // Use search with tag:new — browse/new-releases requires elevated Spotify app permissions
-    const spotifyRes = await fetch(
-      `https://api.spotify.com/v1/search?${params.toString()}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    const data = await spotifyRes.json().catch(() => null);
-    if (!spotifyRes.ok) {
-      return res.status(spotifyRes.status).json({ error: data?.error?.message || "Spotify error" });
-    }
+    const spotifyRes = await axios.get("https://api.spotify.com/v1/search", {
+      params,
+      headers: { Authorization: `Bearer ${token}` },
+      timeout: 10_000,
+    });
+    const data = spotifyRes.data;
     // Normalize to the same shape as browse/new-releases so Discover.jsx needs no changes
     res.status(200).json({ albums: data.albums });
   } catch (error) {
-    next(error);
+    return sendSpotifyError(error, res);
   }
 });
 
@@ -71,22 +90,20 @@ router.get("/search", async (req, res, next) => {
     const limit = normalizeLimit(req.query.limit, 10, 10);
     if (!q) return res.status(400).json({ error: "Missing query parameter 'q'" });
     const token = await getSpotifyToken();
-    const params = new URLSearchParams({
+    const params = {
       q,
       type,
-      limit: String(limit),
+      limit,
+    };
+    const spotifyRes = await axios.get("https://api.spotify.com/v1/search", {
+      params,
+      headers: { Authorization: `Bearer ${token}` },
+      timeout: 10_000,
     });
-    const spotifyRes = await fetch(
-      `https://api.spotify.com/v1/search?${params.toString()}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    const data = await spotifyRes.json().catch(() => null);
-    if (!spotifyRes.ok) {
-      return res.status(spotifyRes.status).json({ error: data?.error?.message || "Spotify error" });
-    }
+    const data = spotifyRes.data;
     res.status(200).json(data);
   } catch (error) {
-    next(error);
+    return sendSpotifyError(error, res);
   }
 });
 
@@ -96,22 +113,23 @@ router.get("/artists/:artistId/albums", async (req, res, next) => {
     const { market = "US" } = req.query;
     const limit = normalizeLimit(req.query.limit, 10, 10);
     const token = await getSpotifyToken();
-    const params = new URLSearchParams({
+    const params = {
       include_groups: "album",
       market,
-      limit: String(limit),
-    });
-    const spotifyRes = await fetch(
-      `https://api.spotify.com/v1/artists/${artistId}/albums?${params.toString()}`,
-      { headers: { Authorization: `Bearer ${token}` } }
+      limit,
+    };
+    const spotifyRes = await axios.get(
+      `https://api.spotify.com/v1/artists/${artistId}/albums`,
+      {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 10_000,
+      }
     );
-    const data = await spotifyRes.json().catch(() => null);
-    if (!spotifyRes.ok) {
-      return res.status(spotifyRes.status).json({ error: data?.error?.message || "Spotify error" });
-    }
+    const data = spotifyRes.data;
     res.status(200).json(data);
   } catch (error) {
-    next(error);
+    return sendSpotifyError(error, res);
   }
 });
 
@@ -119,17 +137,14 @@ router.get("/albums/:albumId", async (req, res, next) => {
   try {
     const { albumId } = req.params;
     const token = await getSpotifyToken();
-    const spotifyRes = await fetch(
-      `https://api.spotify.com/v1/albums/${albumId}`,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    const data = await spotifyRes.json().catch(() => null);
-    if (!spotifyRes.ok) {
-      return res.status(spotifyRes.status).json({ error: data?.error?.message || "Spotify error" });
-    }
+    const spotifyRes = await axios.get(`https://api.spotify.com/v1/albums/${albumId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      timeout: 10_000,
+    });
+    const data = spotifyRes.data;
     res.status(200).json(data);
   } catch (error) {
-    next(error);
+    return sendSpotifyError(error, res);
   }
 });
 
@@ -141,7 +156,7 @@ router.post("/token", async (req, res, next) => {
     const access_token = await getSpotifyToken();
     res.status(200).json({ access_token, token_type: "Bearer", expires_in: 3600 });
   } catch (error) {
-    next(error);
+    return sendSpotifyError(error, res);
   }
 });
 
